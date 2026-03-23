@@ -13,31 +13,31 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --red:        #004A09;
-      --red-dark:   #003006;
-      --red-glow:   rgba(0,74,9,0.15);
+      --red:        #295135;
+      --red-dark:   #1e3d28;
+      --red-glow:   rgba(41,81,53,0.15);
       --white:      #FFFFFF;
       --off-white:  #F5F7F5;
       --light:      #E8EDE8;
-      --mid:        #B8C8B8;
-      --dark-mid:   #5A6B5A;
-      --dark:       #1B5E20;
-      --black:      #145218;
-      --accent-blue:#4FC3F7;
-      --accent-gold:#FFD600;
-      --green:      #00C853;
-      --shadow-red: 0 0 20px rgba(0,74,9,0.3);
+      --mid:        #93A893;
+      --dark-mid:   #3D5244;
+      --dark:       #295135;
+      --black:      #1e3d28;
+      --accent-blue:#0288D1;
+      --accent-gold:#F9A825;
+      --green:      #2E7D32;
+      --shadow-red: 0 0 20px rgba(41,81,53,0.3);
       --shadow-sm:  0 1px 4px rgba(0,0,0,.12);
       --shadow:     0 4px 20px rgba(0,0,0,.16);
       --shadow-lg:  0 8px 40px rgba(0,0,0,.22);
-      --border:     #D8E0D8;
+      --border:     #C8D4C8;
       --radius:     2px;
     }
 
     body {
       font-family: 'Roboto', 'Segoe UI', sans-serif;
       background: var(--off-white);
-      color: var(--dark);
+      color: #1A2E1F;
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -48,8 +48,8 @@
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(0,74,9,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,74,9,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(41,81,53,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(41,81,53,0.04) 1px, transparent 1px);
       background-size: 40px 40px;
       pointer-events: none;
       z-index: 0;
@@ -126,7 +126,7 @@
       background: transparent;
       border: none;
       border-bottom: 3px solid transparent;
-      color: rgba(255,255,255,.42);
+      color: rgba(255,255,255,.6);
       padding: 0 26px;
       cursor: pointer;
       font-size: .75rem;
@@ -147,7 +147,7 @@
     .nav-tab.active {
       color: var(--white);
       border-bottom-color: var(--red);
-      background: rgba(0,74,9,.18);
+      background: rgba(41,81,53,.25);
     }
 
     .nav-tab.active .tab-icon { color: var(--red); }
@@ -241,21 +241,22 @@
 
     .page-title {
       font-size: 2.4rem;
-      font-weight: 700;
+      font-weight: 900;
       letter-spacing: 6px;
       text-transform: uppercase;
-      color: var(--dark);
+      color: #1A2E1F;
       line-height: 1;
     }
 
     .page-title span { color: var(--red); }
 
     .page-subtitle {
-      font-size: .65rem;
+      font-size: .68rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: var(--dark-mid);
+      color: #3D5244;
       margin-top: 5px;
+      font-weight: 500;
     }
 
     /* ═══ BANNER ═══ */
@@ -299,7 +300,7 @@
 
     .banner-body li {
       font-size: .85rem;
-      color: rgba(255,255,255,.8);
+      color: rgba(255,255,255,.9);
       padding: 3px 0;
       list-style: none;
       font-weight: 500;
@@ -323,9 +324,9 @@
     }
 
     .list-bar label {
-      font-size: .65rem;
+      font-size: .68rem;
       letter-spacing: 3px;
-      color: var(--dark-mid);
+      color: #2A3F2E;
       font-weight: 700;
       text-transform: uppercase;
     }
@@ -359,16 +360,16 @@
 
     .count-num {
       font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--dark);
+      font-weight: 900;
+      color: #1A2E1F;
       line-height: 1;
     }
 
     .count-label {
-      font-size: .62rem;
+      font-size: .65rem;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--dark-mid);
+      color: #3D5244;
       font-weight: 700;
     }
 
@@ -504,7 +505,7 @@
       transform: translateY(-2px);
     }
 
-    .show-card.status-soon:hover { box-shadow: 0 0 22px rgba(0,74,9,.22); }
+    .show-card.status-soon:hover { box-shadow: 0 0 22px rgba(41,81,53,.22); }
 
     /* Card header */
     .card-head {
@@ -553,14 +554,14 @@
     .card-meta {
       font-size: .72rem;
       letter-spacing: 1px;
-      color: rgba(255,255,255,.5);
+      color: rgba(255,255,255,.75);
       margin-top: 5px;
       font-family: 'Share Tech Mono', monospace;
     }
 
     .card-loc {
       font-size: .72rem;
-      color: rgba(255,255,255,.4);
+      color: rgba(255,255,255,.65);
       margin-top: 3px;
     }
 
@@ -597,7 +598,7 @@
     }
 
     .status-badge.s-upcoming { background: rgba(79,195,247,.15); color: var(--accent-blue); border: 1px solid rgba(79,195,247,.3); }
-    .status-badge.s-soon     { background: rgba(0,74,9,.18); color: #3a9c47; border: 1px solid rgba(0,74,9,.35); }
+    .status-badge.s-soon     { background: rgba(41,81,53,.18); color: #295135; border: 1px solid rgba(41,81,53,.35); }
     .status-badge.s-today    { background: rgba(0,230,118,.15); color: var(--green); border: 1px solid rgba(0,230,118,.3); }
     .status-badge.s-past     { background: rgba(255,255,255,.05); color: rgba(255,255,255,.3); border: 1px solid rgba(255,255,255,.08); }
 
@@ -626,9 +627,9 @@
     }
 
     .pill-national {
-      background: rgba(0,74,9,.12);
-      color: #2e7d32;
-      border: 1.5px solid rgba(0,74,9,.3);
+      background: rgba(41,81,53,.12);
+      color: #295135;
+      border: 1.5px solid rgba(41,81,53,.3);
     }
 
     .pill-local {
@@ -690,13 +691,13 @@
     }
 
     .filter-pill.active[data-filter="all"] {
-      background: #2e7d32;
-      border-color: #2e7d32;
+      background: #295135;
+      border-color: #295135;
     }
 
     .filter-pill.active[data-filter="national"] {
-      background: #2e7d32;
-      border-color: #2e7d32;
+      background: #295135;
+      border-color: #295135;
     }
 
     .filter-pill.active[data-filter="local"] {
@@ -717,7 +718,7 @@
     }
 
     .filter-pill[data-filter="all"] .pill-dot { background: var(--dark-mid); }
-    .filter-pill[data-filter="national"] .pill-dot { background: #2e7d32; }
+    .filter-pill[data-filter="national"] .pill-dot { background: #295135; }
     .filter-pill[data-filter="local"] .pill-dot { background: #0277bd; }
     .filter-pill[data-filter="rep"] .pill-dot { background: #f57f17; }
     .filter-pill.active .pill-dot { background: rgba(255,255,255,.7); }
@@ -850,7 +851,7 @@
       display: block;
       background: rgba(0,200,83,.08);
       border: 1px solid rgba(0,200,83,.25);
-      color: #2e7d32;
+      color: #295135;
     }
 
     .sheet-test-result.error {
@@ -893,17 +894,17 @@
     }
 
     .prog-label {
-      font-size: .62rem;
+      font-size: .65rem;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--dark-mid);
+      color: #2A3F2E;
       font-weight: 700;
     }
 
     .prog-num {
       font-size: .85rem;
       font-weight: 700;
-      color: var(--dark);
+      color: #1A2E1F;
       font-family: 'Share Tech Mono', monospace;
     }
 
@@ -960,6 +961,7 @@
       border-bottom: 1px solid var(--light);
       font-size: .82rem;
       font-weight: 500;
+      color: #1A2E1F;
       transition: opacity .2s;
     }
 
@@ -1118,8 +1120,8 @@
 
     .cal-year-txt {
       font-size: 3rem;
-      font-weight: 700;
-      color: var(--dark);
+      font-weight: 900;
+      color: #1A2E1F;
       letter-spacing: 4px;
       line-height: 1;
     }
@@ -1419,7 +1421,7 @@
 
     .feed-dot.dot-show    .feed-dot-inner { background: var(--red); color: var(--white); }
     .feed-dot.dot-tip     .feed-dot-inner { background: rgba(79,195,247,.15); border: 1px solid rgba(79,195,247,.3); }
-    .feed-dot.dot-alert   .feed-dot-inner { background: rgba(0,74,9,.12); border: 1px solid rgba(0,74,9,.3); }
+    .feed-dot.dot-alert   .feed-dot-inner { background: rgba(41,81,53,.12); border: 1px solid rgba(41,81,53,.3); }
     .feed-dot.dot-update  .feed-dot-inner { background: rgba(0,230,118,.1); border: 1px solid rgba(0,230,118,.25); }
     .feed-dot.dot-stat    .feed-dot-inner { background: var(--light); }
 
@@ -1472,7 +1474,7 @@
       font-size: 1rem;
       font-weight: 700;
       letter-spacing: .5px;
-      color: var(--dark);
+      color: #1A2E1F;
       margin-bottom: 6px;
       line-height: 1.3;
     }
@@ -1606,10 +1608,10 @@
     .widget-head {
       background: var(--dark);
       padding: 10px 16px;
-      font-size: .62rem;
+      font-size: .65rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: rgba(255,255,255,.7);
+      color: rgba(255,255,255,.9);
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -1634,24 +1636,24 @@
       border-radius: 2px;
     }
 
-    .stat-item.stat-total   { border-left-color: #2e7d32; background: rgba(46,125,50,.06); }
+    .stat-item.stat-total   { border-left-color: #295135; background: rgba(41,81,53,.06); }
     .stat-item.stat-upcoming { border-left-color: #0277bd; background: rgba(2,119,189,.06); }
     .stat-item.stat-past    { border-left-color: #f57f17; background: rgba(245,127,23,.06); }
     .stat-item.stat-avg     { border-left-color: #00C853; background: rgba(0,200,83,.06); }
 
     .stat-value {
       font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--dark);
+      font-weight: 900;
+      color: #1A2E1F;
       line-height: 1;
       font-family: 'Share Tech Mono', monospace;
     }
 
     .stat-label {
-      font-size: .6rem;
+      font-size: .62rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--dark-mid);
+      color: #2A3F2E;
       font-weight: 700;
       margin-top: 3px;
     }
@@ -1699,7 +1701,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      color: var(--dark);
+      color: #1A2E1F;
     }
 
     .upcoming-item:hover .ui-name { color: var(--red); }
@@ -1916,7 +1918,7 @@
       letter-spacing: 1px;
     }
 
-    .col-chip.req { background: rgba(0,74,9,.08); color: var(--red); border: 1px solid rgba(0,74,9,.2); }
+    .col-chip.req { background: rgba(41,81,53,.08); color: var(--red); border: 1px solid rgba(41,81,53,.2); }
     .col-chip.opt { background: var(--light); color: var(--dark-mid); border: 1px solid var(--border); }
 
     .import-drop {
@@ -1929,7 +1931,7 @@
       margin-bottom: 14px;
     }
 
-    .import-drop.drag-over { border-color: var(--red); background: rgba(0,74,9,.04); }
+    .import-drop.drag-over { border-color: var(--red); background: rgba(41,81,53,.04); }
 
     .import-drop p { color: var(--dark-mid); font-size: .85rem; margin-bottom: 6px; }
     .import-drop .drop-icon { font-size: 2.5rem; margin-bottom: 12px; line-height: 1; }
@@ -2362,30 +2364,37 @@ const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct
 const DOW          = ['Su','Mo','Tu','We','Th','Fr','Sa'];
 
 const DEFAULT_TASKS = [
-  'Submit booth application & pay registration fee',
-  'Sign booth contract / confirm space assignment',
-  'Book hotel accommodations for staff',
-  'Book flights / arrange ground transportation',
-  'Design booth graphics & display materials',
-  'Order booth display hardware (banners, walls, shelves)',
-  'Order promotional giveaways / branded swag',
-  'Print product literature, brochures & catalogs',
-  'Confirm electrical, A/V & internet booth needs',
-  'Prepare product demos & sales presentations',
-  'Brief and train booth staff',
-  'Set up lead-capture system (app, scanner, forms)',
-  'Send pre-show email campaign to prospects',
-  'Pack & ship all booth materials to venue',
-  'Confirm shipment delivery & drayage arrangements',
-  'Conduct on-site booth setup & check-in',
-  'Post-show: collect leads and send follow-up emails'
+  'Approved by Sales. Waiting for MKTG to Approve.',
+  'Email Form Submitter to request invoice, shipping address, and extra needs',
+  'Confirm sample needs with Inside Sales, Demos w/ WH, Literature can be ordered',
+  'Send Invoice to Accounting to processing credit',
+  'Send Credit Note/Confirmation to Form Submitter',
+  'Confirm needs are met and Complete'
 ];
 
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
 
 // ─────────────────────────────────────
 //  STATE
 // ─────────────────────────────────────
 let shows       = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+// Migrate existing shows to the new checklist
+(function migrateChecklists() {
+  let changed = false;
+  shows.forEach(s => {
+    if (!s.checklist || s.checklist.length !== DEFAULT_TASKS.length ||
+        !s.checklist.some(item => item.text === DEFAULT_TASKS[0])) {
+      s.checklist = DEFAULT_TASKS.map(text => ({ id: uid(), text, completed: false }));
+      changed = true;
+    }
+  });
+  if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(shows));
+})();
+
 let feedEvents  = JSON.parse(localStorage.getItem(FEED_KEY) || '[]');
 let calYear     = new Date().getFullYear();
 let sortBy      = 'date';
@@ -2419,10 +2428,6 @@ function addFeedEvent(type, title, body, showId) {
     ts: Date.now()
   });
   persistFeed();
-}
-
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2);
 }
 
 // ─────────────────────────────────────
@@ -2860,7 +2865,7 @@ function renderMonth(name, mi) {
 
   const filteredShows = filterType === 'all' ? shows : shows.filter(s => (s.eventType || 'national') === filterType);
 
-  const DOT_COLORS = { national: '#2e7d32', local: '#0277bd', rep: '#f57f17' };
+  const DOT_COLORS = { national: '#295135', local: '#0277bd', rep: '#f57f17' };
 
   for (let d = 1; d <= daysInMonth; d++) {
     const ds     = `${calYear}-${String(mi+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -3171,7 +3176,7 @@ function renderFeedSidebar() {
     <div class="widget-body">
       <div class="stats-grid">
         <div class="stat-item stat-total">
-          <div class="stat-value" style="color:#2e7d32">${shows.length}</div>
+          <div class="stat-value" style="color:#295135">${shows.length}</div>
           <div class="stat-label">Total Shows</div>
         </div>
         <div class="stat-item stat-upcoming">
@@ -3199,8 +3204,8 @@ function renderFeedSidebar() {
     <div class="widget-head">EVENT TYPES <span class="wh-accent">◆</span></div>
     <div class="widget-body">
       <div class="stats-grid">
-        <div class="stat-item" style="border-left-color:#2e7d32;background:rgba(46,125,50,.06)">
-          <div class="stat-value" style="color:#2e7d32">${natCount}</div>
+        <div class="stat-item" style="border-left-color:#295135;background:rgba(41,81,53,.06)">
+          <div class="stat-value" style="color:#295135">${natCount}</div>
           <div class="stat-label">National</div>
         </div>
         <div class="stat-item" style="border-left-color:#0277bd;background:rgba(2,119,189,.06)">
@@ -3242,12 +3247,10 @@ function renderFeedSidebar() {
 
   // ── Phase progress ──
   const phaseData = [
-    { label: 'Pre-booking',   tasks: [0,1] },
-    { label: 'Travel & Hotel',tasks: [2,3] },
-    { label: 'Design & Print',tasks: [4,5,6,7] },
-    { label: 'Logistics',     tasks: [8,9,10,11] },
-    { label: 'Marketing',     tasks: [12] },
-    { label: 'Execution',     tasks: [13,14,15,16] },
+    { label: 'Approval',     tasks: [0] },
+    { label: 'Coordination', tasks: [1,2] },
+    { label: 'Accounting',   tasks: [3,4] },
+    { label: 'Completion',   tasks: [5] },
   ];
 
   let phaseHtml = '';
