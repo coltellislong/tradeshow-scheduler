@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tradeshow Scheduler</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --radius: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: var(--gray-900);
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    }
+    .navbar h1 { font-size: 18px; font-weight: 600; margin-right: 32px; white-space: nowrap; }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-links button {
+      background: none;
+      border: none;
+      color: var(--gray-400);
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: .15s;
+    }
+    .nav-links button:hover { color: white; background: rgba(255,255,255,.08); }
+    .nav-links button.active { color: white; background: var(--primary); }
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .notification-bell {
+      position: relative;
+      background: none;
+      border: none;
+      color: var(--gray-400);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 6px;
+    }
+    .notification-bell:hover { color: white; }
+    .notification-badge {
+      position: absolute;
+      top: 0; right: 0;
+      background: var(--danger);
+      color: white;
+      font-size: 10px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .btn-add {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: .15s;
+    }
+    .btn-add:hover { background: var(--primary-dark); }
+
+    /* ── Main ── */
+    .main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+    /* ── Notification Panel ── */
+    .notification-panel {
+      display: none;
+      position: absolute;
+      top: 56px;
+      right: 24px;
+      width: 380px;
+      max-height: 480px;
+      overflow-y: auto;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 30px rgba(0,0,0,.18);
+      z-index: 200;
+    }
+    .notification-panel.open { display: block; }
+    .notification-panel h3 { padding: 16px; border-bottom: 1px solid var(--gray-200); font-size: 15px; }
+    .notif-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .notif-item .notif-title { font-weight: 600; color: var(--gray-800); }
+    .notif-item .notif-date { color: var(--gray-500); font-size: 12px; margin-top: 2px; }
+    .notif-empty { padding: 32px; text-align: center; color: var(--gray-400); }
+
+    /* ── List View ── */
+    .show-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      margin-bottom: 12px;
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+    }
+    .show-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      gap: 16px;
+    }
+    .show-header:hover { background: var(--gray-50); }
+    .show-status {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .status-upcoming { background: var(--warning); }
+    .status-soon { background: var(--danger); animation: pulse 1.5s infinite; }
+    .status-completed { background: var(--success); }
+    .status-future { background: var(--gray-300); }
+    @keyframes pulse { 0%,100%{ opacity: 1; } 50%{ opacity: .4; } }
+    .show-info { flex: 1; }
+    .show-name { font-weight: 600; font-size: 16px; }
+    .show-meta { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+    .show-progress { text-align: right; }
+    .progress-bar {
+      width: 120px; height: 6px;
+      background: var(--gray-200);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .progress-fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width .3s; }
+    .progress-text { font-size: 12px; color: var(--gray-500); }
+    .show-actions { display: flex; gap: 6px; }
+    .btn-icon {
+      background: none;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      width: 32px; height: 32px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-500);
+      transition: .15s;
+    }
+    .btn-icon:hover { background: var(--gray-100); color: var(--gray-700); }
+    .btn-icon.delete:hover { background: #fef2f2; color: var(--danger); border-color: #fecaca; }
+    .chevron { transition: transform .2s; font-size: 12px; color: var(--gray-400); }
+    .chevron.open { transform: rotate(90deg); }
+
+    /* ── Checklist ── */
+    .show-body { display: none; padding: 0 20px 16px 46px; }
+    .show-body.open { display: block; }
+    .checklist { list-style: none; }
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 14px;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] {
+      width: 18px; height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .checklist .task-text { flex: 1; }
+    .checklist .task-text.done { text-decoration: line-through; color: var(--gray-400); }
+    .checklist .btn-remove-task {
+      background: none; border: none; color: var(--gray-300);
+      cursor: pointer; font-size: 16px; padding: 2px 4px;
+    }
+    .checklist .btn-remove-task:hover { color: var(--danger); }
+    .add-task-row {
+      display: flex; gap: 8px; margin-top: 8px;
+    }
+    .add-task-row input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+    }
+    .add-task-row input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+    .add-task-row button {
+      padding: 8px 14px;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .add-task-row button:hover { background: var(--gray-200); }
+
+    /* ── Calendar View ── */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .calendar-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .calendar-grid { grid-template-columns: 1fr; } }
+    .month-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+    }
+    .month-card-header {
+      padding: 10px 14px;
+      font-weight: 600;
+      font-size: 14px;
+      background: var(--gray-800);
+      color: white;
+    }
+    .month-card-header.has-shows { background: var(--primary); }
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      padding: 8px;
+      font-size: 11px;
+    }
+    .day-label { text-align: center; font-weight: 600; color: var(--gray-400); padding: 4px 0; font-size: 10px; }
+    .day-cell {
+      text-align: center;
+      padding: 4px 2px;
+      border-radius: 4px;
+      min-height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .day-cell.today { background: var(--primary); color: white; font-weight: 700; border-radius: 50%; }
+    .day-cell.show-day { background: #dbeafe; color: var(--primary-dark); font-weight: 600; cursor: pointer; }
+    .day-cell.show-day:hover { background: #bfdbfe; }
+    .month-shows {
+      padding: 8px 14px 12px;
+      border-top: 1px solid var(--gray-100);
+    }
+    .month-show-item {
+      font-size: 12px;
+      padding: 4px 8px;
+      margin-bottom: 4px;
+      background: #eff6ff;
+      border-radius: 4px;
+      border-left: 3px solid var(--primary);
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .month-show-item:hover { background: #dbeafe; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 12px;
+      width: 480px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    }
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header h2 { font-size: 18px; }
+    .modal-close {
+      background: none; border: none; font-size: 22px; color: var(--gray-400);
+      cursor: pointer; padding: 4px;
+    }
+    .modal-close:hover { color: var(--gray-700); }
+    .modal-body { padding: 24px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--gray-700); }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .btn { padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: .15s; }
+    .btn-cancel { background: var(--gray-100); color: var(--gray-700); }
+    .btn-cancel:hover { background: var(--gray-200); }
+    .btn-save { background: var(--primary); color: white; }
+    .btn-save:hover { background: var(--primary-dark); }
+
+    /* ── Year header ── */
+    .view-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .view-header h2 { font-size: 22px; font-weight: 700; }
+    .year-nav { display: flex; gap: 8px; align-items: center; }
+    .year-nav button {
+      background: white; border: 1px solid var(--gray-200); border-radius: 6px;
+      padding: 6px 12px; cursor: pointer; font-size: 14px;
+    }
+    .year-nav button:hover { background: var(--gray-100); }
+    .year-nav span { font-weight: 600; font-size: 16px; min-width: 50px; text-align: center; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray-400);
+    }
+    .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+    .empty-state p { font-size: 15px; margin-bottom: 16px; }
+
+    /* ── Filter bar ── */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 6px 14px;
+      border: 1px solid var(--gray-200);
+      background: white;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: .15s;
+    }
+    .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <h1>Tradeshow Scheduler</h1>
+  <div class="nav-links">
+    <button class="active" onclick="switchView('list')" id="nav-list">List View</button>
+    <button onclick="switchView('calendar')" id="nav-calendar">Calendar View</button>
+  </div>
+  <div class="nav-right">
+    <button class="notification-bell" onclick="toggleNotifications()" id="bell-btn" title="Notifications">
+      &#128276;
+      <span class="notification-badge" id="notif-badge" style="display:none">0</span>
+    </button>
+    <button class="btn-add" onclick="openModal()">+ Add Show</button>
+  </div>
+</nav>
+
+<!-- Notification Panel -->
+<div class="notification-panel" id="notif-panel">
+  <h3>Upcoming Shows (within 30 days)</h3>
+  <div id="notif-list"></div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+  <!-- List View -->
+  <div id="list-view">
+    <div class="view-header">
+      <h2>All Tradeshows</h2>
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('all')">All</button>
+        <button class="filter-btn" onclick="setFilter('soon')">Within 30 Days</button>
+        <button class="filter-btn" onclick="setFilter('upcoming')">Upcoming</button>
+        <button class="filter-btn" onclick="setFilter('completed')">Completed</button>
+      </div>
+    </div>
+    <div id="show-list"></div>
+  </div>
+
+  <!-- Calendar View -->
+  <div id="calendar-view" style="display:none">
+    <div class="view-header">
+      <h2>Year Calendar</h2>
+      <div class="year-nav">
+        <button onclick="changeYear(-1)">&#9664;</button>
+        <span id="year-display"></span>
+        <button onclick="changeYear(1)">&#9654;</button>
+      </div>
+    </div>
+    <div class="calendar-grid" id="calendar-grid"></div>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2 id="modal-title">Add Tradeshow</h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+      <div class="form-group">
+        <label>Show Name *</label>
+        <input type="text" id="show-name" placeholder="e.g. CES 2026">
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="show-location" placeholder="e.g. Las Vegas, NV">
+      </div>
+      <div class="form-group">
+        <label>Start Date *</label>
+        <input type="date" id="show-start">
+      </div>
+      <div class="form-group">
+        <label>End Date *</label>
+        <input type="date" id="show-end">
+      </div>
+      <div class="form-group">
+        <label>Booth Number</label>
+        <input type="text" id="show-booth" placeholder="e.g. Hall B, #1234">
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="show-notes" placeholder="Additional details..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-save" onclick="saveShow()">Save Show</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──
+let shows = JSON.parse(localStorage.getItem('tradeshows') || '[]');
+let currentView = 'list';
+let currentYear = new Date().getFullYear();
+let currentFilter = 'all';
+let editingId = null;
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+const DEFAULT_TASKS = [
+  'Book booth/space',
+  'Confirm registration',
+  'Design booth graphics',
+  'Order promotional materials',
+  'Arrange travel & hotel',
+  'Ship booth equipment',
+  'Prepare product demos',
+  'Create handouts & brochures',
+  'Schedule staff assignments',
+  'Plan social media promotion',
+  'Set up lead capture system',
+  'Post-show follow-up plan'
+];
+
+// ── Persistence ──
+function save() {
+  localStorage.setItem('tradeshows', JSON.stringify(shows));
+}
+
+// ── Utilities ──
+function generateId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function daysUntil(dateStr) {
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  const target = new Date(dateStr + 'T00:00:00');
+  return Math.ceil((target - now) / 86400000);
+}
+
+function getShowStatus(show) {
+  const dStart = daysUntil(show.startDate);
+  const dEnd = daysUntil(show.endDate);
+  if (dEnd < 0) return 'completed';
+  if (dStart <= 30 && dStart >= 0) return 'soon';
+  if (dStart > 30) return 'future';
+  return 'upcoming'; // currently happening
+}
+
+function getProgress(show) {
+  if (!show.tasks || show.tasks.length === 0) return 0;
+  const done = show.tasks.filter(t => t.done).length;
+  return Math.round((done / show.tasks.length) * 100);
+}
+
+// ── Views ──
+function switchView(view) {
+  currentView = view;
+  document.getElementById('list-view').style.display = view === 'list' ? 'block' : 'none';
+  document.getElementById('calendar-view').style.display = view === 'calendar' ? 'block' : 'none';
+  document.getElementById('nav-list').classList.toggle('active', view === 'list');
+  document.getElementById('nav-calendar').classList.toggle('active', view === 'calendar');
+  render();
+}
+
+// ── List Rendering ──
+function renderList() {
+  const container = document.getElementById('show-list');
+  let filtered = [...shows].sort((a, b) => a.startDate.localeCompare(b.startDate));
+
+  if (currentFilter === 'soon') filtered = filtered.filter(s => getShowStatus(s) === 'soon');
+  else if (currentFilter === 'upcoming') filtered = filtered.filter(s => ['soon', 'future', 'upcoming'].includes(getShowStatus(s)));
+  else if (currentFilter === 'completed') filtered = filtered.filter(s => getShowStatus(s) === 'completed');
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">&#128197;</div><p>No tradeshows found. Click "+ Add Show" to get started.</p></div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(show => {
+    const status = getShowStatus(show);
+    const progress = getProgress(show);
+    const d = daysUntil(show.startDate);
+    let statusLabel = '';
+    if (status === 'completed') statusLabel = 'Completed';
+    else if (status === 'soon') statusLabel = `${d} day${d !== 1 ? 's' : ''} away`;
+    else if (status === 'upcoming') statusLabel = 'Happening now';
+    else statusLabel = `${d} days away`;
+
+    return `
+      <div class="show-card" id="card-${show.id}">
+        <div class="show-header" onclick="toggleCard('${show.id}')">
+          <span class="chevron" id="chev-${show.id}">&#9654;</span>
+          <div class="show-status status-${status}" title="${statusLabel}"></div>
+          <div class="show-info">
+            <div class="show-name">${esc(show.name)}</div>
+            <div class="show-meta">${formatDate(show.startDate)} – ${formatDate(show.endDate)}${show.location ? ' &middot; ' + esc(show.location) : ''}${show.booth ? ' &middot; Booth: ' + esc(show.booth) : ''}</div>
+          </div>
+          <div class="show-progress">
+            <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+            <div class="progress-text">${progress}% ready</div>
+          </div>
+          <div class="show-actions">
+            <button class="btn-icon" onclick="event.stopPropagation(); editShow('${show.id}')" title="Edit">&#9998;</button>
+            <button class="btn-icon delete" onclick="event.stopPropagation(); deleteShow('${show.id}')" title="Delete">&#128465;</button>
+          </div>
+        </div>
+        <div class="show-body" id="body-${show.id}">
+          <h4 style="font-size:13px;color:var(--gray-500);margin-bottom:8px">PLANNING CHECKLIST</h4>
+          <ul class="checklist">
+            ${(show.tasks || []).map((task, i) => `
+              <li>
+                <input type="checkbox" ${task.done ? 'checked' : ''} onchange="toggleTask('${show.id}', ${i})">
+                <span class="task-text ${task.done ? 'done' : ''}">${esc(task.text)}</span>
+                <button class="btn-remove-task" onclick="removeTask('${show.id}', ${i})" title="Remove">&times;</button>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="add-task-row">
+            <input type="text" placeholder="Add a task..." id="newtask-${show.id}" onkeydown="if(event.key==='Enter') addTask('${show.id}')">
+            <button onclick="addTask('${show.id}')">Add</button>
+          </div>
+          ${show.notes ? `<p style="margin-top:12px;font-size:13px;color:var(--gray-500)"><strong>Notes:</strong> ${esc(show.notes)}</p>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
+
+function toggleCard(id) {
+  const body = document.getElementById('body-' + id);
+  const chev = document.getElementById('chev-' + id);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+// ── Calendar Rendering ──
+function renderCalendar() {
+  document.getElementById('year-display').textContent = currentYear;
+  const grid = document.getElementById('calendar-grid');
+  const today = new Date();
+
+  grid.innerHTML = MONTHS.map((month, mi) => {
+    const firstDay = new Date(currentYear, mi, 1).getDay();
+    const daysInMonth = new Date(currentYear, mi + 1, 0).getDate();
+    const monthShows = shows.filter(s => {
+      const start = new Date(s.startDate + 'T00:00:00');
+      const end = new Date(s.endDate + 'T00:00:00');
+      return (start.getFullYear() === currentYear && start.getMonth() === mi) ||
+             (end.getFullYear() === currentYear && end.getMonth() === mi) ||
+             (start <= new Date(currentYear, mi, 1) && end >= new Date(currentYear, mi, daysInMonth));
+    });
+
+    const showDays = new Set();
+    monthShows.forEach(s => {
+      const start = new Date(s.startDate + 'T00:00:00');
+      const end = new Date(s.endDate + 'T00:00:00');
+      for (let d = new Date(Math.max(start, new Date(currentYear, mi, 1))); d <= end && d.getMonth() === mi; d.setDate(d.getDate() + 1)) {
+        showDays.add(d.getDate());
+      }
+    });
+
+    let daysCells = DAYS.map(d => `<div class="day-label">${d}</div>`).join('');
+    for (let i = 0; i < firstDay; i++) daysCells += '<div class="day-cell"></div>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const isToday = today.getFullYear() === currentYear && today.getMonth() === mi && today.getDate() === d;
+      const isShow = showDays.has(d);
+      daysCells += `<div class="day-cell ${isToday ? 'today' : ''} ${isShow ? 'show-day' : ''}">${d}</div>`;
+    }
+
+    const showItems = monthShows.map(s =>
+      `<div class="month-show-item" onclick="switchView('list'); setTimeout(()=>{toggleCard('${s.id}')},100)" title="${esc(s.name)}">${esc(s.name)} (${formatDate(s.startDate)})</div>`
+    ).join('');
+
+    return `
+      <div class="month-card">
+        <div class="month-card-header ${monthShows.length ? 'has-shows' : ''}">${month} ${currentYear}${monthShows.length ? ` — ${monthShows.length} show${monthShows.length > 1 ? 's' : ''}` : ''}</div>
+        <div class="day-grid">${daysCells}</div>
+        ${showItems ? `<div class="month-shows">${showItems}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function changeYear(delta) {
+  currentYear += delta;
+  renderCalendar();
+}
+
+// ── Notifications ──
+function updateNotifications() {
+  const upcoming = shows
+    .filter(s => { const d = daysUntil(s.startDate); return d >= 0 && d <= 30; })
+    .sort((a, b) => a.startDate.localeCompare(b.startDate));
+
+  const badge = document.getElementById('notif-badge');
+  const list = document.getElementById('notif-list');
+
+  if (upcoming.length === 0) {
+    badge.style.display = 'none';
+    list.innerHTML = '<div class="notif-empty">No upcoming shows in the next 30 days.</div>';
+    return;
+  }
+
+  badge.style.display = 'flex';
+  badge.textContent = upcoming.length;
+
+  list.innerHTML = upcoming.map(s => {
+    const d = daysUntil(s.startDate);
+    const progress = getProgress(s);
+    return `
+      <div class="notif-item">
+        <div class="notif-title">${esc(s.name)}</div>
+        <div class="notif-date">${formatDate(s.startDate)}${s.location ? ' — ' + esc(s.location) : ''}</div>
+        <div style="margin-top:4px;font-size:12px;color:${d <= 7 ? 'var(--danger)' : 'var(--warning)'}">
+          ${d === 0 ? 'Starts today!' : d === 1 ? 'Starts tomorrow!' : d + ' days away'} &middot; ${progress}% prepared
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleNotifications() {
+  const panel = document.getElementById('notif-panel');
+  panel.classList.toggle('open');
+}
+
+// Close notification panel when clicking elsewhere
+document.addEventListener('click', e => {
+  const panel = document.getElementById('notif-panel');
+  const bell = document.getElementById('bell-btn');
+  if (!panel.contains(e.target) && !bell.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+});
+
+// ── Modal ──
+function openModal(id) {
+  editingId = id || null;
+  document.getElementById('modal-title').textContent = id ? 'Edit Tradeshow' : 'Add Tradeshow';
+  if (id) {
+    const s = shows.find(s => s.id === id);
+    document.getElementById('show-name').value = s.name;
+    document.getElementById('show-location').value = s.location || '';
+    document.getElementById('show-start').value = s.startDate;
+    document.getElementById('show-end').value = s.endDate;
+    document.getElementById('show-booth').value = s.booth || '';
+    document.getElementById('show-notes').value = s.notes || '';
+  } else {
+    document.getElementById('show-name').value = '';
+    document.getElementById('show-location').value = '';
+    document.getElementById('show-start').value = '';
+    document.getElementById('show-end').value = '';
+    document.getElementById('show-booth').value = '';
+    document.getElementById('show-notes').value = '';
+  }
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('show-name').focus();
+}
+
+function closeModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function saveShow() {
+  const name = document.getElementById('show-name').value.trim();
+  const startDate = document.getElementById('show-start').value;
+  const endDate = document.getElementById('show-end').value;
+  if (!name || !startDate || !endDate) { alert('Please fill in name, start date, and end date.'); return; }
+  if (endDate < startDate) { alert('End date must be on or after start date.'); return; }
+
+  const data = {
+    name,
+    location: document.getElementById('show-location').value.trim(),
+    startDate,
+    endDate,
+    booth: document.getElementById('show-booth').value.trim(),
+    notes: document.getElementById('show-notes').value.trim()
+  };
+
+  if (editingId) {
+    const idx = shows.findIndex(s => s.id === editingId);
+    shows[idx] = { ...shows[idx], ...data };
+  } else {
+    shows.push({
+      id: generateId(),
+      ...data,
+      tasks: DEFAULT_TASKS.map(t => ({ text: t, done: false }))
+    });
+  }
+
+  save();
+  closeModal();
+  render();
+}
+
+function editShow(id) { openModal(id); }
+
+function deleteShow(id) {
+  if (!confirm('Delete this tradeshow?')) return;
+  shows = shows.filter(s => s.id !== id);
+  save();
+  render();
+}
+
+// ── Tasks ──
+function toggleTask(showId, taskIdx) {
+  const show = shows.find(s => s.id === showId);
+  show.tasks[taskIdx].done = !show.tasks[taskIdx].done;
+  save();
+  render();
+}
+
+function addTask(showId) {
+  const input = document.getElementById('newtask-' + showId);
+  const text = input.value.trim();
+  if (!text) return;
+  const show = shows.find(s => s.id === showId);
+  show.tasks.push({ text, done: false });
+  input.value = '';
+  save();
+  // Remember open state
+  renderList();
+  document.getElementById('body-' + showId).classList.add('open');
+  document.getElementById('chev-' + showId).classList.add('open');
+}
+
+function removeTask(showId, taskIdx) {
+  const show = shows.find(s => s.id === showId);
+  show.tasks.splice(taskIdx, 1);
+  save();
+  renderList();
+  document.getElementById('body-' + showId).classList.add('open');
+  document.getElementById('chev-' + showId).classList.add('open');
+}
+
+// ── Filter ──
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderList();
+}
+
+// ── Render ──
+function render() {
+  renderList();
+  renderCalendar();
+  updateNotifications();
+}
+
+// ── Init ──
+render();
+</script>
+</body>
+</html>
