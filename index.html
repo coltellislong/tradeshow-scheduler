@@ -21,8 +21,8 @@
       --light:      #E8EDE8;
       --mid:        #B8C8B8;
       --dark-mid:   #5A6B5A;
-      --dark:       #111A11;
-      --black:      #080D08;
+      --dark:       #1B5E20;
+      --black:      #145218;
       --accent-blue:#4FC3F7;
       --accent-gold:#FFD600;
       --green:      #00C853;
@@ -372,12 +372,109 @@
       font-weight: 700;
     }
 
+    /* ═══ VIEW TOGGLE ═══ */
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      margin-left: 12px;
+    }
+
+    .view-toggle-btn {
+      background: var(--off-white);
+      border: 1.5px solid var(--border);
+      color: var(--dark-mid);
+      width: 32px; height: 32px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem;
+      transition: all .15s;
+      border-radius: 2px;
+    }
+
+    .view-toggle-btn:hover { border-color: var(--mid); color: var(--red); }
+    .view-toggle-btn.active { background: var(--red); border-color: var(--red); color: var(--white); }
+
+    /* ═══ SEARCH BAR ═══ */
+    .search-input {
+      padding: 7px 12px 7px 30px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-size: .78rem;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      color: var(--dark);
+      border-radius: var(--radius);
+      width: 200px;
+      transition: border-color .15s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235A6B5A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 8px center;
+    }
+
+    .search-input:focus { outline: none; border-color: var(--red); }
+
     /* ═══ CARDS GRID ═══ */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
       gap: 24px;
     }
+
+    /* ═══ TILES VIEW ═══ */
+    .cards-grid.view-tiles {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .cards-grid.view-tiles .show-card .card-body,
+    .cards-grid.view-tiles .show-card .card-toggle { display: none !important; }
+
+    .cards-grid.view-tiles .show-card .card-head { padding: 14px 16px 12px 18px; }
+    .cards-grid.view-tiles .show-card .card-name { font-size: .88rem; }
+    .cards-grid.view-tiles .show-card .card-meta { font-size: .65rem; }
+    .cards-grid.view-tiles .show-card .card-btns { display: none; }
+
+    /* ═══ LIST VIEW (rows) ═══ */
+    .cards-grid.view-list {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .cards-grid.view-list .show-card {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .cards-grid.view-list .show-card .card-head {
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .cards-grid.view-list .show-card .card-head-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .cards-grid.view-list .show-card .card-head-top > div:first-child {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    .cards-grid.view-list .show-card .card-name { font-size: .88rem; white-space: nowrap; }
+    .cards-grid.view-list .show-card .card-meta { font-size: .68rem; margin-top: 0; }
+    .cards-grid.view-list .show-card .card-loc { display: none; }
+    .cards-grid.view-list .show-card .status-badge { margin-top: 0; }
+    .cards-grid.view-list .show-card .event-type-pill { margin-top: 0; }
+    .cards-grid.view-list .show-card .card-body,
+    .cards-grid.view-list .show-card .card-toggle { display: none !important; }
+    .cards-grid.view-list .show-card::before { width: 3px; }
 
     /* ═══ SHOW CARD ═══ */
     .show-card {
@@ -593,8 +690,8 @@
     }
 
     .filter-pill.active[data-filter="all"] {
-      background: var(--dark);
-      border-color: var(--dark);
+      background: #2e7d32;
+      border-color: #2e7d32;
     }
 
     .filter-pill.active[data-filter="national"] {
@@ -919,7 +1016,7 @@
 
     .add-task-row button {
       padding: 6px 14px;
-      background: var(--dark);
+      background: var(--red);
       color: var(--white);
       border: none;
       cursor: pointer;
@@ -1320,7 +1417,7 @@
       justify-content: center;
     }
 
-    .feed-dot.dot-show    .feed-dot-inner { background: var(--dark); }
+    .feed-dot.dot-show    .feed-dot-inner { background: var(--red); color: var(--white); }
     .feed-dot.dot-tip     .feed-dot-inner { background: rgba(79,195,247,.15); border: 1px solid rgba(79,195,247,.3); }
     .feed-dot.dot-alert   .feed-dot-inner { background: rgba(0,74,9,.12); border: 1px solid rgba(0,74,9,.3); }
     .feed-dot.dot-update  .feed-dot-inner { background: rgba(0,230,118,.1); border: 1px solid rgba(0,230,118,.25); }
@@ -1534,7 +1631,13 @@
       background: var(--off-white);
       padding: 10px 12px;
       border-left: 3px solid var(--red);
+      border-radius: 2px;
     }
+
+    .stat-item.stat-total   { border-left-color: #2e7d32; background: rgba(46,125,50,.06); }
+    .stat-item.stat-upcoming { border-left-color: #0277bd; background: rgba(2,119,189,.06); }
+    .stat-item.stat-past    { border-left-color: #f57f17; background: rgba(245,127,23,.06); }
+    .stat-item.stat-avg     { border-left-color: #00C853; background: rgba(0,200,83,.06); }
 
     .stat-value {
       font-size: 1.8rem;
@@ -1614,29 +1717,6 @@
       font-family: 'Share Tech Mono', monospace;
     }
 
-    /* Tips widget */
-    .tip-item {
-      padding: 8px 0;
-      border-bottom: 1px solid var(--light);
-    }
-
-    .tip-item:last-child { border-bottom: none; }
-
-    .tip-tag {
-      font-size: .58rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--accent-blue);
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .tip-text {
-      font-size: .8rem;
-      color: var(--dark-mid);
-      line-height: 1.5;
-    }
-
     /* Phase checklist */
     .phase-list { list-style: none; }
 
@@ -1662,7 +1742,7 @@
     /* ═══ MODAL ═══ */
     .overlay {
       position: fixed; inset: 0;
-      background: rgba(13,13,13,.7);
+      background: rgba(27,94,32,.45);
       z-index: 800;
       display: flex;
       align-items: center;
@@ -1692,7 +1772,7 @@
       border-bottom: 3px solid var(--red);
     }
 
-    .modal-head.danger { border-bottom-color: var(--red); background: #0a110a; }
+    .modal-head.danger { border-bottom-color: var(--red); background: var(--dark); }
 
     .modal-head h2 {
       font-size: .9rem;
@@ -1772,13 +1852,13 @@
     }
 
     .btn-primary {
-      background: var(--dark);
+      background: var(--red);
       color: var(--white);
       clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
       padding-right: 26px;
     }
 
-    .btn-primary:hover { background: var(--red); }
+    .btn-primary:hover { background: var(--red-dark); }
 
     .btn-secondary {
       background: var(--off-white);
@@ -1858,7 +1938,7 @@
       display: inline-block;
       margin-top: 8px;
       padding: 8px 20px;
-      background: var(--dark);
+      background: var(--red);
       color: var(--white);
       font-size: .72rem;
       font-weight: 700;
@@ -1869,7 +1949,7 @@
       transition: background .15s;
     }
 
-    .file-label:hover { background: var(--red); }
+    .file-label:hover { background: var(--red-dark); }
 
     .imp-status { font-size: .85rem; margin-bottom: 10px; font-weight: 600; }
 
@@ -2022,6 +2102,12 @@
         <option value="name">Name A–Z</option>
         <option value="progress">Progress</option>
       </select>
+      <input type="text" class="search-input" id="search-input" placeholder="Search shows..." oninput="renderList()">
+      <div class="view-toggle">
+        <button class="view-toggle-btn active" data-view="cards" onclick="setViewMode('cards')" title="Cards">▣</button>
+        <button class="view-toggle-btn" data-view="tiles" onclick="setViewMode('tiles')" title="Tiles">▦</button>
+        <button class="view-toggle-btn" data-view="list" onclick="setViewMode('list')" title="List">☰</button>
+      </div>
     </div>
     <div class="filter-bar" style="margin-bottom:24px">
       <span class="filter-bar-label">Filter</span>
@@ -2295,18 +2381,6 @@ const DEFAULT_TASKS = [
   'Post-show: collect leads and send follow-up emails'
 ];
 
-const PLANNING_TIPS = [
-  { tag: 'SHIPPING', text: 'Ship booth materials 2–3 weeks early to avoid rush freight charges and ensure on-time delivery to the venue.' },
-  { tag: 'LEAD GEN', text: 'Pre-register your badge scanner or lead app before arriving — setup at the show is time-consuming.' },
-  { tag: 'STAFF', text: 'Schedule staff shifts in advance. Fatigue sets in fast — ensure everyone gets breaks and coverage.' },
-  { tag: 'BUDGET', text: 'Budget 20–30% above your estimate for unexpected costs: drayage, electricity overage, last-minute printing.' },
-  { tag: 'OUTREACH', text: 'Send pre-show emails to your prospect list 2 weeks before — invite them to visit your booth with an incentive.' },
-  { tag: 'DESIGN', text: 'Use high-contrast booth graphics visible from 20 feet. Your key message should be readable in 3 seconds.' },
-  { tag: 'TECH', text: 'Bring backup cables, adapters, extension cords, and a portable battery for emergencies on the show floor.' },
-  { tag: 'FOLLOW-UP', text: 'Send personalized follow-up emails within 48 hours of the show closing while conversations are still fresh.' },
-  { tag: 'NETWORKING', text: 'Schedule dinner or meetings with key prospects before or after show hours — off-floor time is valuable.' },
-  { tag: 'METRICS', text: 'Define your success metrics before the show: # leads, # demos, # partnerships. Review them during teardown.' },
-];
 
 // ─────────────────────────────────────
 //  STATE
@@ -2316,6 +2390,7 @@ let feedEvents  = JSON.parse(localStorage.getItem(FEED_KEY) || '[]');
 let calYear     = new Date().getFullYear();
 let sortBy      = 'date';
 let filterType  = 'all';
+let viewMode    = 'cards';
 let editId      = null;
 let delId       = null;
 let expanded    = {};
@@ -2468,17 +2543,35 @@ const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', 
 // ─────────────────────────────────────
 //  LIST VIEW
 // ─────────────────────────────────────
+function setViewMode(mode) {
+  viewMode = mode;
+  document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
+  renderList();
+}
+
 function renderList() {
   const grid  = document.getElementById('cards-grid');
   const empty = document.getElementById('empty-state');
   document.getElementById('count-num').textContent = shows.length;
 
-  const filtered = filterType === 'all'
+  const searchTerm = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+
+  let filtered = filterType === 'all'
     ? shows
     : shows.filter(s => (s.eventType || 'national') === filterType);
 
+  if (searchTerm) {
+    filtered = filtered.filter(s =>
+      s.name.toLowerCase().includes(searchTerm) ||
+      (s.location || '').toLowerCase().includes(searchTerm) ||
+      (s.startDate || '').includes(searchTerm) ||
+      (s.eventType || '').toLowerCase().includes(searchTerm)
+    );
+  }
+
   if (!filtered.length) {
     grid.innerHTML = '';
+    grid.className = 'cards-grid';
     empty.classList.remove('hidden');
     return;
   }
@@ -2492,6 +2585,7 @@ function renderList() {
     return 0;
   });
 
+  grid.className = 'cards-grid' + (viewMode !== 'cards' ? ' view-' + viewMode : '');
   grid.innerHTML = sorted.map(cardHTML).join('');
 }
 
@@ -2986,20 +3080,6 @@ function renderFeedTimeline() {
     });
   });
 
-  // Interleave a random tip
-  const tip = PLANNING_TIPS[Math.floor(Date.now() / 86400000) % PLANNING_TIPS.length];
-  items.splice(Math.min(3, items.length), 0, {
-    synthetic: true,
-    urgency: 'tip',
-    icon: '◆',
-    typeTag: 't-tip',
-    typeLabel: 'PRO TIP',
-    title: tip.tag,
-    bodyHtml: tip.text,
-    showId: null,
-    ts: null
-  });
-
   if (!items.length) {
     container.innerHTML = `
       <div class="empty">
@@ -3090,20 +3170,20 @@ function renderFeedSidebar() {
     <div class="widget-head">STATS <span class="wh-accent">◆</span></div>
     <div class="widget-body">
       <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-value">${shows.length}</div>
+        <div class="stat-item stat-total">
+          <div class="stat-value" style="color:#2e7d32">${shows.length}</div>
           <div class="stat-label">Total Shows</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-value">${upcoming.length}</div>
+        <div class="stat-item stat-upcoming">
+          <div class="stat-value" style="color:#0277bd">${upcoming.length}</div>
           <div class="stat-label">Upcoming</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-value">${past.length}</div>
+        <div class="stat-item stat-past">
+          <div class="stat-value" style="color:#f57f17">${past.length}</div>
           <div class="stat-label">Completed</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-value">${avgPct}%</div>
+        <div class="stat-item stat-avg">
+          <div class="stat-value" style="color:#00C853">${avgPct}%</div>
           <div class="stat-label">Avg Plan</div>
         </div>
       </div>
@@ -3119,15 +3199,15 @@ function renderFeedSidebar() {
     <div class="widget-head">EVENT TYPES <span class="wh-accent">◆</span></div>
     <div class="widget-body">
       <div class="stats-grid">
-        <div class="stat-item">
+        <div class="stat-item" style="border-left-color:#2e7d32;background:rgba(46,125,50,.06)">
           <div class="stat-value" style="color:#2e7d32">${natCount}</div>
           <div class="stat-label">National</div>
         </div>
-        <div class="stat-item">
+        <div class="stat-item" style="border-left-color:#0277bd;background:rgba(2,119,189,.06)">
           <div class="stat-value" style="color:#0277bd">${locCount}</div>
           <div class="stat-label">Local</div>
         </div>
-        <div class="stat-item">
+        <div class="stat-item" style="border-left-color:#f57f17;background:rgba(245,127,23,.06)">
           <div class="stat-value" style="color:#f57f17">${repCount}</div>
           <div class="stat-label">Rep Events</div>
         </div>
@@ -3201,20 +3281,7 @@ function renderFeedSidebar() {
     </div>`;
   }
 
-  // ── Tips ──
-  const tipHtml = `
-  <div class="sidebar-widget">
-    <div class="widget-head">INTEL FEED <span class="wh-accent">◆</span></div>
-    <div class="widget-body">
-      ${PLANNING_TIPS.slice(0,4).map(t => `
-      <div class="tip-item">
-        <div class="tip-tag">${t.tag}</div>
-        <div class="tip-text">${t.text}</div>
-      </div>`).join('')}
-    </div>
-  </div>`;
-
-  sidebar.innerHTML = countdownHtml + statsHtml + typeBreakdownHtml + upHtml + phaseHtml + tipHtml;
+  sidebar.innerHTML = countdownHtml + statsHtml + typeBreakdownHtml + upHtml + phaseHtml;
 }
 
 // ─────────────────────────────────────
