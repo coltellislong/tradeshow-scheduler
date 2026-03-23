@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tradeshow Scheduler</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+    header { background: #1a1a2e; color: #fff; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.5rem; font-weight: 600; }
+    .btn { padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: background 0.2s; }
+    .btn-primary { background: #4361ee; color: #fff; }
+    .btn-primary:hover { background: #3a56d4; }
+    .btn-danger { background: #e63946; color: #fff; }
+    .btn-danger:hover { background: #c1121f; }
+    .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+    .btn-success { background: #2a9d8f; color: #fff; }
+    .btn-success:hover { background: #238a7e; }
+    main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+    .card { background: #fff; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1rem; overflow: hidden; }
+    .card-header { padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+    .card-header h2 { font-size: 1.1rem; }
+    .card-body { padding: 1.25rem; }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+    .badge-upcoming { background: #d4edda; color: #155724; }
+    .badge-past { background: #f8d7da; color: #721c24; }
+    .badge-low { background: #e2e3e5; color: #383d41; }
+    .badge-medium { background: #fff3cd; color: #856404; }
+    .badge-high { background: #ffe0b2; color: #e65100; }
+    .badge-critical { background: #f8d7da; color: #c1121f; }
+    .show-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; margin: 0.75rem 0; font-size: 0.875rem; color: #555; }
+    .show-meta span { display: flex; align-items: center; gap: 0.3rem; }
+    .needs-list { list-style: none; margin-top: 0.75rem; }
+    .needs-list li { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.875rem; }
+    .needs-list li:last-child { border-bottom: none; }
+    .needs-list li.completed span.need-text { text-decoration: line-through; color: #999; }
+    .need-text { flex: 1; }
+    .need-assignee { color: #888; font-size: 0.8rem; }
+    .empty { text-align: center; padding: 3rem; color: #888; }
+    .days-until { font-size: 0.8rem; color: #888; margin-left: 0.5rem; }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; justify-content: center; align-items: center; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: #fff; border-radius: 10px; padding: 1.5rem; width: 90%; max-width: 500px; }
+    .modal h2 { margin-bottom: 1rem; font-size: 1.2rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; font-weight: 500; color: #444; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
+    .btn-cancel { background: #e2e3e5; color: #333; }
+    .btn-cancel:hover { background: #ccc; }
+    .inline-form { display: flex; gap: 0.5rem; margin-top: 0.75rem; align-items: flex-end; }
+    .inline-form input, .inline-form select { padding: 0.4rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.85rem; }
+    .inline-form input[type="text"] { flex: 1; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tradeshow Scheduler</h1>
+    <button class="btn btn-primary" onclick="openAddShowModal()">+ Add Tradeshow</button>
+  </header>
+
+  <main>
+    <div style="margin-bottom:1rem; display:flex; gap:0.5rem; align-items:center;">
+      <label><input type="checkbox" id="filterUpcoming" onchange="render()"> Upcoming only</label>
+    </div>
+    <div id="showList"></div>
+  </main>
+
+  <!-- Add/Edit Tradeshow Modal -->
+  <div class="modal-overlay" id="showModal">
+    <div class="modal">
+      <h2 id="showModalTitle">Add Tradeshow</h2>
+      <input type="hidden" id="editShowId">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="showName" placeholder="e.g. CES 2026">
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="showLocation" placeholder="e.g. Las Vegas">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="date" id="showStart">
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="date" id="showEnd">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Booth Number</label>
+        <input type="text" id="showBooth" placeholder="e.g. A42">
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="showNotes" placeholder="Additional notes..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-cancel" onclick="closeModal('showModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveShow()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function loadShows() {
+      return JSON.parse(localStorage.getItem('tradeshows') || '[]');
+    }
+
+    function saveShows(shows) {
+      localStorage.setItem('tradeshows', JSON.stringify(shows));
+    }
+
+    function genId() {
+      return Math.random().toString(36).substring(2, 10);
+    }
+
+    function daysUntil(dateStr) {
+      const diff = new Date(dateStr + 'T00:00:00') - new Date(new Date().toISOString().split('T')[0] + 'T00:00:00');
+      return Math.ceil(diff / 86400000);
+    }
+
+    function isUpcoming(show) {
+      return daysUntil(show.start_date) >= 0;
+    }
+
+    function openAddShowModal() {
+      document.getElementById('showModalTitle').textContent = 'Add Tradeshow';
+      document.getElementById('editShowId').value = '';
+      document.getElementById('showName').value = '';
+      document.getElementById('showLocation').value = '';
+      document.getElementById('showStart').value = '';
+      document.getElementById('showEnd').value = '';
+      document.getElementById('showBooth').value = '';
+      document.getElementById('showNotes').value = '';
+      document.getElementById('showModal').classList.add('active');
+    }
+
+    function openEditShowModal(id) {
+      const show = loadShows().find(s => s.id === id);
+      if (!show) return;
+      document.getElementById('showModalTitle').textContent = 'Edit Tradeshow';
+      document.getElementById('editShowId').value = id;
+      document.getElementById('showName').value = show.name;
+      document.getElementById('showLocation').value = show.location;
+      document.getElementById('showStart').value = show.start_date;
+      document.getElementById('showEnd').value = show.end_date;
+      document.getElementById('showBooth').value = show.booth_number;
+      document.getElementById('showNotes').value = show.notes;
+      document.getElementById('showModal').classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function saveShow() {
+      const name = document.getElementById('showName').value.trim();
+      const location = document.getElementById('showLocation').value.trim();
+      const start = document.getElementById('showStart').value;
+      const end = document.getElementById('showEnd').value;
+      const booth = document.getElementById('showBooth').value.trim();
+      const notes = document.getElementById('showNotes').value.trim();
+      const editId = document.getElementById('editShowId').value;
+
+      if (!name || !location || !start || !end) {
+        alert('Please fill in name, location, and dates.');
+        return;
+      }
+      if (end < start) {
+        alert('End date must be on or after start date.');
+        return;
+      }
+
+      const shows = loadShows();
+      if (editId) {
+        const idx = shows.findIndex(s => s.id === editId);
+        if (idx !== -1) {
+          shows[idx] = { ...shows[idx], name, location, start_date: start, end_date: end, booth_number: booth, notes };
+        }
+      } else {
+        shows.push({ id: genId(), name, location, start_date: start, end_date: end, booth_number: booth, notes, needs: [] });
+      }
+      saveShows(shows);
+      closeModal('showModal');
+      render();
+    }
+
+    function deleteShow(id) {
+      if (!confirm('Delete this tradeshow?')) return;
+      saveShows(loadShows().filter(s => s.id !== id));
+      render();
+    }
+
+    function addNeed(showId) {
+      const input = document.getElementById('need-input-' + showId);
+      const priority = document.getElementById('need-priority-' + showId);
+      const assignee = document.getElementById('need-assignee-' + showId);
+      const desc = input.value.trim();
+      if (!desc) return;
+
+      const shows = loadShows();
+      const show = shows.find(s => s.id === showId);
+      if (!show) return;
+      show.needs.push({ id: genId(), description: desc, status: 'pending', priority: priority.value, assignee: assignee.value.trim() });
+      saveShows(shows);
+      render();
+    }
+
+    function toggleNeed(showId, needId) {
+      const shows = loadShows();
+      const show = shows.find(s => s.id === showId);
+      if (!show) return;
+      const need = show.needs.find(n => n.id === needId);
+      if (!need) return;
+      need.status = need.status === 'completed' ? 'pending' : 'completed';
+      saveShows(shows);
+      render();
+    }
+
+    function removeNeed(showId, needId) {
+      const shows = loadShows();
+      const show = shows.find(s => s.id === showId);
+      if (!show) return;
+      show.needs = show.needs.filter(n => n.id !== needId);
+      saveShows(shows);
+      render();
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function render() {
+      let shows = loadShows();
+      const upcomingOnly = document.getElementById('filterUpcoming').checked;
+      if (upcomingOnly) shows = shows.filter(isUpcoming);
+      shows.sort((a, b) => a.start_date.localeCompare(b.start_date));
+
+      const container = document.getElementById('showList');
+      if (shows.length === 0) {
+        container.innerHTML = '<div class="empty"><p>No tradeshows yet.</p><p>Click "+ Add Tradeshow" to get started.</p></div>';
+        return;
+      }
+
+      container.innerHTML = shows.map(show => {
+        const upcoming = isUpcoming(show);
+        const days = daysUntil(show.start_date);
+        const daysText = upcoming ? (days === 0 ? 'Today!' : `in ${days} day${days !== 1 ? 's' : ''}`) : 'Past';
+        const pending = show.needs.filter(n => n.status !== 'completed').length;
+
+        return `
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>${escapeHtml(show.name)}
+                  <span class="badge ${upcoming ? 'badge-upcoming' : 'badge-past'}">${upcoming ? 'Upcoming' : 'Past'}</span>
+                  <span class="days-until">${daysText}</span>
+                </h2>
+              </div>
+              <div style="display:flex;gap:0.3rem;">
+                <button class="btn btn-sm btn-primary" onclick="openEditShowModal('${show.id}')">Edit</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteShow('${show.id}')">Delete</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="show-meta">
+                <span>📍 ${escapeHtml(show.location)}</span>
+                <span>📅 ${show.start_date} → ${show.end_date}</span>
+                ${show.booth_number ? `<span>🏢 Booth ${escapeHtml(show.booth_number)}</span>` : ''}
+                <span>📋 ${pending}/${show.needs.length} needs pending</span>
+              </div>
+              ${show.notes ? `<p style="font-size:0.85rem;color:#666;margin-top:0.5rem;">${escapeHtml(show.notes)}</p>` : ''}
+              <ul class="needs-list">
+                ${show.needs.map(n => `
+                  <li class="${n.status === 'completed' ? 'completed' : ''}">
+                    <input type="checkbox" ${n.status === 'completed' ? 'checked' : ''} onchange="toggleNeed('${show.id}','${n.id}')">
+                    <span class="badge badge-${n.priority}">${n.priority}</span>
+                    <span class="need-text">${escapeHtml(n.description)}</span>
+                    ${n.assignee ? `<span class="need-assignee">@${escapeHtml(n.assignee)}</span>` : ''}
+                    <button class="btn btn-sm btn-danger" onclick="removeNeed('${show.id}','${n.id}')">✕</button>
+                  </li>
+                `).join('')}
+              </ul>
+              <div class="inline-form">
+                <input type="text" id="need-input-${show.id}" placeholder="Add a need..." onkeydown="if(event.key==='Enter')addNeed('${show.id}')">
+                <select id="need-priority-${show.id}">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                  <option value="critical">Critical</option>
+                </select>
+                <input type="text" id="need-assignee-${show.id}" placeholder="Assignee" style="width:100px;">
+                <button class="btn btn-sm btn-success" onclick="addNeed('${show.id}')">Add</button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    render();
+  </script>
+</body>
+</html>
