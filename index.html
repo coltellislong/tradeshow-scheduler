@@ -630,6 +630,151 @@
       margin-top: 4px;
     }
 
+    /* ═══ GOOGLE SHEET CONNECTION ═══ */
+    .sheet-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Share Tech Mono', monospace;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+
+    .sheet-status.disconnected {
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.5);
+      border: 1.5px solid rgba(255,255,255,.15);
+    }
+
+    .sheet-status.disconnected:hover {
+      color: rgba(255,255,255,.8);
+      border-color: rgba(255,255,255,.3);
+    }
+
+    .sheet-status.connected {
+      background: rgba(0,200,83,.12);
+      color: var(--green);
+      border: 1.5px solid rgba(0,200,83,.3);
+    }
+
+    .sheet-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .sheet-status.disconnected .sheet-dot { background: rgba(255,255,255,.3); }
+    .sheet-status.connected .sheet-dot { background: var(--green); animation: pulse-dot 2s infinite; }
+
+    .sheet-sync-btn {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,.2);
+      color: rgba(255,255,255,.6);
+      padding: 5px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-family: 'Share Tech Mono', monospace;
+      transition: all .15s;
+    }
+
+    .sheet-sync-btn:hover { color: var(--white); border-color: rgba(255,255,255,.4); }
+    .sheet-sync-btn.syncing { color: var(--accent-blue); border-color: var(--accent-blue); }
+
+    .sheet-setup-steps {
+      list-style: none;
+      counter-reset: step;
+      padding: 0;
+    }
+
+    .sheet-setup-steps li {
+      counter-increment: step;
+      padding: 12px 0 12px 44px;
+      position: relative;
+      font-size: .85rem;
+      line-height: 1.6;
+      border-bottom: 1px solid var(--light);
+    }
+
+    .sheet-setup-steps li:last-child { border-bottom: none; }
+
+    .sheet-setup-steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 28px;
+      height: 28px;
+      background: var(--red);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .75rem;
+      font-weight: 700;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .sheet-url-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 2px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .8rem;
+      margin-top: 8px;
+      transition: border-color .15s;
+    }
+
+    .sheet-url-input:focus { outline: none; border-color: var(--red); }
+
+    .sheet-test-result {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 2px;
+      font-size: .78rem;
+      font-family: 'Share Tech Mono', monospace;
+      display: none;
+    }
+
+    .sheet-test-result.success {
+      display: block;
+      background: rgba(0,200,83,.08);
+      border: 1px solid rgba(0,200,83,.25);
+      color: #2e7d32;
+    }
+
+    .sheet-test-result.error {
+      display: block;
+      background: rgba(244,67,54,.08);
+      border: 1px solid rgba(244,67,54,.25);
+      color: #c62828;
+    }
+
+    .sheet-info-bar {
+      background: var(--light);
+      padding: 10px 16px;
+      font-size: .72rem;
+      color: var(--dark-mid);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .sheet-info-bar strong { color: var(--dark); }
+
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; }
       50% { opacity: .3; }
@@ -949,15 +1094,144 @@
       font-size: .65rem;
       font-weight: 600;
       position: relative;
+      cursor: pointer;
+      transition: all .2s ease;
+      border-radius: 3px;
+    }
+
+    .day:not(:empty):hover {
+      background: rgba(0, 200, 83, 0.18);
+      transform: scale(1.25);
+      z-index: 2;
+      box-shadow: 0 0 8px rgba(0, 200, 83, 0.25);
     }
 
     .day.past { color: var(--mid); }
     .day.today { background: var(--red); color: var(--white); font-weight: 700; }
-    .day.show-start { background: var(--dark); color: var(--white); cursor: pointer; font-weight: 700; }
-    .day.show-span  { background: rgba(26,26,26,.08); color: var(--dark); }
-    .day.show-end   { background: rgba(26,26,26,.08); color: var(--dark); }
-    .day.show-single { background: var(--dark); color: var(--white); cursor: pointer; font-weight: 700; }
-    .day.show-start:hover, .day.show-single:hover { background: var(--red); }
+    .day.today:hover { background: rgba(0, 200, 83, 0.35); color: var(--dark); }
+    .day.has-event { font-weight: 700; }
+    .day.has-event:hover { background: rgba(0, 200, 83, 0.3); }
+
+    /* Day event dot — color set per event type via inline style */
+    .day.has-event::after {
+      content: '';
+      position: absolute;
+      bottom: 1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--dot-color, var(--green));
+    }
+
+    /* ═══ DAY PANE (slide-in from right) ═══ */
+    .day-pane-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      z-index: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+    .day-pane-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .day-pane {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 380px;
+      max-width: 90vw;
+      height: 100vh;
+      background: var(--white);
+      border-left: 3px solid var(--red);
+      box-shadow: -4px 0 30px rgba(0,0,0,.18);
+      z-index: 610;
+      transform: translateX(100%);
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .day-pane.open { transform: translateX(0); }
+
+    .day-pane-head {
+      background: var(--dark);
+      color: var(--white);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .day-pane-head h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .day-pane-head .day-pane-close {
+      background: none;
+      border: 1px solid rgba(255,255,255,.2);
+      color: var(--white);
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .18s;
+    }
+    .day-pane-head .day-pane-close:hover { background: var(--red); border-color: var(--red); }
+
+    .day-pane-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+    }
+
+    .day-pane-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--dark-mid);
+      font-size: .9rem;
+    }
+    .day-pane-empty .empty-icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+
+    .day-pane-card {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--red);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .day-pane-card h4 {
+      font-size: .95rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .day-pane-card p {
+      font-size: .8rem;
+      color: var(--dark-mid);
+      line-height: 1.6;
+    }
+    .day-pane-card .dp-prog {
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: 700;
+      color: var(--green);
+      font-size: .8rem;
+      margin-top: 6px;
+    }
+    .day-pane-card .dp-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .day-pane-card .dp-actions button { flex: 1; font-size: .7rem; }
 
     /* Cal Popup */
     .cal-popup {
@@ -1700,6 +1974,10 @@
   </div>
 
   <div class="nav-actions">
+    <button class="sheet-status disconnected" id="sheet-status-btn" onclick="openSheetModal()">
+      <span class="sheet-dot"></span><span id="sheet-status-label">Connect Sheet</span>
+    </button>
+    <button class="sheet-sync-btn hidden" id="sheet-sync-btn" onclick="syncFromSheet()" title="Sync from Google Sheet">↻ Sync</button>
     <button class="nav-btn-import nav-btn" onclick="openImport()">↑ Import</button>
     <button class="nav-btn nav-btn-primary" onclick="openAdd()">+ Add Show</button>
   </div>
@@ -1878,6 +2156,44 @@
   </div>
 </div>
 
+<!-- ══════════ GOOGLE SHEET MODAL ══════════ -->
+<div class="overlay hidden" id="sheet-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="sheet-modal-title">Connect Google Sheet</h2>
+      <button class="modal-x" onclick="closeSheetModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <ol class="sheet-setup-steps">
+        <li>Create a Google Sheet with these columns:
+          <div class="col-chips" style="margin-top:8px">
+            <span class="col-chip req">Show Name ✦</span>
+            <span class="col-chip req">Start Date ✦</span>
+            <span class="col-chip opt">End Date</span>
+            <span class="col-chip opt">Location</span>
+            <span class="col-chip opt">Booth Number</span>
+            <span class="col-chip opt">Notes</span>
+            <span class="col-chip opt">Event Type</span>
+          </div>
+        </li>
+        <li>Go to <strong>File → Share → Publish to web</strong></li>
+        <li>Select <strong>Entire Document</strong> and format <strong>Comma-separated values (.csv)</strong>, then click <strong>Publish</strong></li>
+        <li>Paste your Google Sheet URL below (either the published link or the regular sheet URL):
+          <input type="text" class="sheet-url-input" id="sheet-url-input"
+            placeholder="https://docs.google.com/spreadsheets/d/your-sheet-id/...">
+        </li>
+      </ol>
+      <div class="sheet-test-result" id="sheet-test-result"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" id="sheet-disconnect-btn" onclick="disconnectSheet()" style="display:none">Disconnect</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-secondary" onclick="closeSheetModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="testAndConnectSheet()">Connect & Sync</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════ IMPORT MODAL ══════════ -->
 <div class="overlay hidden" id="imp-overlay">
   <div class="modal" style="max-width:620px">
@@ -1929,6 +2245,16 @@
 <!-- ══════════ CALENDAR POPUP ══════════ -->
 <div class="cal-popup hidden" id="cal-popup"></div>
 
+<!-- ══════════ DAY PANE (slide-in) ══════════ -->
+<div class="day-pane-overlay" id="day-pane-overlay"></div>
+<div class="day-pane" id="day-pane">
+  <div class="day-pane-head">
+    <h3 id="day-pane-title">March 23, 2026</h3>
+    <button class="day-pane-close" onclick="closeDayPane()">✕</button>
+  </div>
+  <div class="day-pane-body" id="day-pane-body"></div>
+</div>
+
 <script>
 'use strict';
 
@@ -1938,6 +2264,7 @@
 const STORAGE_KEY  = 'ts_shows_v3';
 const NOTIF_KEY    = 'ts_last_notif';
 const FEED_KEY     = 'ts_feed_v1';
+const SHEET_KEY    = 'ts_sheet_id';
 const MONTHS       = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DOW          = ['Su','Mo','Tu','We','Th','Fr','Sa'];
@@ -2433,31 +2760,30 @@ function renderMonth(name, mi) {
 
   const filteredShows = filterType === 'all' ? shows : shows.filter(s => (s.eventType || 'national') === filterType);
 
+  const DOT_COLORS = { national: '#2e7d32', local: '#0277bd', rep: '#f57f17' };
+
   for (let d = 1; d <= daysInMonth; d++) {
     const ds     = `${calYear}-${String(mi+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const starts = filteredShows.filter(s => s.startDate === ds);
-    const ends   = filteredShows.filter(s => s.endDate === ds && s.startDate !== ds);
-    const spans  = filteredShows.filter(s => ds > s.startDate && ds < (s.endDate || s.startDate));
+    const dayShows = filteredShows.filter(s => {
+      const end = s.endDate || s.startDate;
+      return ds >= s.startDate && ds <= end;
+    });
     const isToday = ds === todayStr;
     const isPast  = ds < todayStr;
 
-    let cls = 'day', attrs = '';
+    let cls = 'day';
+    let style = '';
 
-    if (starts.length) {
-      const isSingle = starts.some(s => s.endDate === s.startDate);
-      cls += isSingle ? ' show-single' : ' show-start';
-      attrs = `onclick="showPopup(event,'${starts.map(s => s.id).join(',')}')" title="${esc(starts.map(s => s.name).join(', '))}"`;
-    } else if (spans.length) {
-      cls += ' show-span';
-    } else if (ends.length) {
-      cls += ' show-end';
-    } else if (isToday) {
-      cls += ' today';
-    } else if (isPast) {
-      cls += ' past';
+    if (isToday) cls += ' today';
+    else if (isPast) cls += ' past';
+
+    if (dayShows.length) {
+      cls += ' has-event';
+      const dotColor = DOT_COLORS[dayShows[0].eventType || 'national'];
+      style = ` style="--dot-color:${dotColor}"`;
     }
 
-    cells.push(`<div class="${cls}" ${attrs}>${d}</div>`);
+    cells.push(`<div class="${cls}" onclick="openDayPane('${ds}')"${style}>${d}</div>`);
   }
 
   return `
@@ -2509,6 +2835,62 @@ ${s.location ? `<p>▸ ${esc(s.location)}</p>` : ''}
 
 function closePopup() {
   document.getElementById('cal-popup').classList.add('hidden');
+}
+
+// ─────────────────────────────────────
+//  DAY PANE (slide-in from right)
+// ─────────────────────────────────────
+function openDayPane(dateStr) {
+  closePopup();
+  const overlay = document.getElementById('day-pane-overlay');
+  const pane    = document.getElementById('day-pane');
+  const title   = document.getElementById('day-pane-title');
+  const body    = document.getElementById('day-pane-body');
+
+  title.textContent = fmt(dateStr);
+
+  const filteredShows = filterType === 'all' ? shows : shows.filter(s => (s.eventType || 'national') === filterType);
+
+  const dayShows = filteredShows.filter(s => {
+    const start = s.startDate;
+    const end   = s.endDate || s.startDate;
+    return dateStr >= start && dateStr <= end;
+  });
+
+  if (dayShows.length === 0) {
+    body.innerHTML = `
+      <div class="day-pane-empty">
+        <span class="empty-icon">◇</span>
+        No shows on this date
+      </div>`;
+  } else {
+    body.innerHTML = dayShows.map(s => {
+      const d   = daysUntil(s.startDate);
+      const pct = progress(s);
+      const lbl = d < 0 ? 'Past' : d === 0 ? 'Live Today' : `In ${d}d`;
+      return `
+      <div class="day-pane-card">
+        <h4>${esc(s.name)}</h4>
+        <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[s.eventType || 'national']}" style="margin-bottom:6px;display:inline-block">${EVENT_TYPE_LABELS[s.eventType || 'national']}</span>
+        <p>◈ ${fmt(s.startDate)}${s.endDate && s.endDate !== s.startDate ? ' – ' + fmt(s.endDate) : ''}</p>
+        ${s.location ? `<p>▸ ${esc(s.location)}</p>` : ''}
+        ${s.booth ? `<p>◫ Booth ${esc(s.booth)}</p>` : ''}
+        <div class="dp-prog">${pct}% planned · ${lbl}</div>
+        <div class="dp-actions">
+          <button class="btn btn-primary btn-sm" onclick="openEdit('${s.id}');closeDayPane()">Edit</button>
+          <button class="btn btn-secondary btn-sm" onclick="switchView('list');closeDayPane();setTimeout(()=>{const c=document.getElementById('card-${s.id}');if(c){c.scrollIntoView({behavior:'smooth'});if(expanded['${s.id}']===false)toggleCard('${s.id}');}},120)">View</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  overlay.classList.add('open');
+  pane.classList.add('open');
+}
+
+function closeDayPane() {
+  document.getElementById('day-pane-overlay').classList.remove('open');
+  document.getElementById('day-pane').classList.remove('open');
 }
 
 // ─────────────────────────────────────
@@ -2834,15 +3216,268 @@ document.addEventListener('click', e => {
   if (!popup.classList.contains('hidden') && !popup.contains(e.target)) closePopup();
 });
 
-['show-overlay','del-overlay','imp-overlay'].forEach(id => {
+['show-overlay','del-overlay','imp-overlay','sheet-overlay'].forEach(id => {
   document.getElementById(id).addEventListener('click', function(e) {
-    if (e.target === this) { closeAdd(); closeDel(); closeImport(); }
+    if (e.target === this) { closeAdd(); closeDel(); closeImport(); closeSheetModal(); }
   });
 });
 
+document.getElementById('day-pane-overlay').addEventListener('click', closeDayPane);
+
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeAdd(); closeDel(); closePopup(); closeImport(); }
+  if (e.key === 'Escape') { closeAdd(); closeDel(); closePopup(); closeImport(); closeSheetModal(); closeDayPane(); }
 });
+
+// ─────────────────────────────────────
+//  GOOGLE SHEET INTEGRATION
+// ─────────────────────────────────────
+let sheetId = localStorage.getItem(SHEET_KEY) || '';
+
+function extractSheetId(url) {
+  const m = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  return m ? m[1] : url.trim();
+}
+
+function sheetCsvUrl(id) {
+  return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`;
+}
+
+function updateSheetUI() {
+  const btn = document.getElementById('sheet-status-btn');
+  const label = document.getElementById('sheet-status-label');
+  const syncBtn = document.getElementById('sheet-sync-btn');
+  if (sheetId) {
+    btn.className = 'sheet-status connected';
+    label.textContent = 'Sheet Linked';
+    syncBtn.classList.remove('hidden');
+  } else {
+    btn.className = 'sheet-status disconnected';
+    label.textContent = 'Connect Sheet';
+    syncBtn.classList.add('hidden');
+  }
+}
+
+function openSheetModal() {
+  const input = document.getElementById('sheet-url-input');
+  const result = document.getElementById('sheet-test-result');
+  const discBtn = document.getElementById('sheet-disconnect-btn');
+  result.className = 'sheet-test-result';
+  result.style.display = 'none';
+  if (sheetId) {
+    input.value = `https://docs.google.com/spreadsheets/d/${sheetId}/edit`;
+    discBtn.style.display = '';
+    document.getElementById('sheet-modal-title').textContent = 'Google Sheet Connected';
+  } else {
+    input.value = '';
+    discBtn.style.display = 'none';
+    document.getElementById('sheet-modal-title').textContent = 'Connect Google Sheet';
+  }
+  document.getElementById('sheet-overlay').classList.remove('hidden');
+}
+
+function closeSheetModal() {
+  document.getElementById('sheet-overlay').classList.add('hidden');
+}
+
+function disconnectSheet() {
+  sheetId = '';
+  localStorage.removeItem(SHEET_KEY);
+  updateSheetUI();
+  closeSheetModal();
+  addFeedEvent('update', 'Sheet disconnected', 'Google Sheet data source removed');
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQuotes) {
+      if (ch === '"' && line[i + 1] === '"') { current += '"'; i++; }
+      else if (ch === '"') { inQuotes = false; }
+      else { current += ch; }
+    } else {
+      if (ch === '"') { inQuotes = true; }
+      else if (ch === ',') { result.push(current.trim()); current = ''; }
+      else { current += ch; }
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+
+function parseSheetCSV(csv) {
+  const lines = csv.split('\n').filter(l => l.trim());
+  if (lines.length < 2) return [];
+
+  const headers = parseCSVLine(lines[0]).map(h => h.replace(/^"|"$/g, '').trim().toLowerCase());
+
+  const colMap = {};
+  const aliases = {
+    name:      ['show name','name','title','show','event name','event'],
+    start:     ['start date','start','date','begin','from'],
+    end:       ['end date','end','to','through'],
+    location:  ['location','city','venue','location / city','place'],
+    booth:     ['booth number','booth','booth #','stand','booth no'],
+    notes:     ['notes','note','comments','description','details'],
+    eventType: ['event type','eventtype','type','category','event category']
+  };
+
+  for (const [field, names] of Object.entries(aliases)) {
+    const idx = headers.findIndex(h => names.some(n => h === n || h.includes(n)));
+    if (idx !== -1) colMap[field] = idx;
+  }
+
+  if (colMap.name === undefined || colMap.start === undefined) return [];
+
+  const results = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = parseCSVLine(lines[i]).map(c => c.replace(/^"|"$/g, '').trim());
+    const name = cols[colMap.name] || '';
+    if (!name) continue;
+
+    const startRaw = cols[colMap.start] || '';
+    const start = parseSheetDate(startRaw);
+    if (!start) continue;
+
+    const endRaw = colMap.end !== undefined ? (cols[colMap.end] || '') : '';
+    const end = endRaw ? (parseSheetDate(endRaw) || start) : start;
+
+    let evType = colMap.eventType !== undefined ? (cols[colMap.eventType] || '').toLowerCase() : 'national';
+    if (!['national','local','rep'].includes(evType)) {
+      if (evType.includes('rep')) evType = 'rep';
+      else if (evType.includes('local')) evType = 'local';
+      else evType = 'national';
+    }
+
+    results.push({
+      name,
+      startDate: start,
+      endDate: end,
+      location: colMap.location !== undefined ? (cols[colMap.location] || '') : '',
+      booth: colMap.booth !== undefined ? (cols[colMap.booth] || '') : '',
+      notes: colMap.notes !== undefined ? (cols[colMap.notes] || '') : '',
+      eventType: evType
+    });
+  }
+  return results;
+}
+
+function parseSheetDate(val) {
+  if (!val) return null;
+  if (/^\d{4}-\d{2}-\d{2}/.test(val)) return val.slice(0, 10);
+  const m = val.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if (m) {
+    const yr = m[3].length === 2 ? '20' + m[3] : m[3];
+    return `${yr}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;
+  }
+  const d = new Date(val);
+  return isNaN(d) ? null : d.toISOString().slice(0, 10);
+}
+
+async function fetchSheetData(id) {
+  const url = sheetCsvUrl(id);
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`Failed to fetch (HTTP ${resp.status})`);
+  const csv = await resp.text();
+  if (csv.includes('<!DOCTYPE html>') || csv.includes('<html')) {
+    throw new Error('Sheet is not published to the web. Go to File → Share → Publish to web.');
+  }
+  return parseSheetCSV(csv);
+}
+
+async function testAndConnectSheet() {
+  const input = document.getElementById('sheet-url-input').value.trim();
+  const result = document.getElementById('sheet-test-result');
+  if (!input) {
+    result.className = 'sheet-test-result error';
+    result.textContent = 'Please paste a Google Sheet URL.';
+    return;
+  }
+
+  const id = extractSheetId(input);
+  result.className = 'sheet-test-result';
+  result.style.display = 'block';
+  result.textContent = 'Connecting...';
+  result.style.background = 'var(--light)';
+  result.style.border = '1px solid var(--border)';
+  result.style.color = 'var(--dark-mid)';
+
+  try {
+    const rows = await fetchSheetData(id);
+    if (!rows.length) {
+      result.className = 'sheet-test-result error';
+      result.textContent = 'Connected but no valid rows found. Check that columns "Show Name" and "Start Date" exist.';
+      return;
+    }
+
+    sheetId = id;
+    localStorage.setItem(SHEET_KEY, id);
+    mergeSheetData(rows);
+    updateSheetUI();
+
+    result.className = 'sheet-test-result success';
+    result.textContent = `Connected! Loaded ${rows.length} show${rows.length !== 1 ? 's' : ''} from sheet.`;
+    addFeedEvent('show', 'Sheet connected', `Google Sheet linked — ${rows.length} show${rows.length !== 1 ? 's' : ''} synced`);
+
+    setTimeout(closeSheetModal, 1500);
+  } catch (err) {
+    result.className = 'sheet-test-result error';
+    result.textContent = 'Error: ' + err.message;
+  }
+}
+
+async function syncFromSheet() {
+  if (!sheetId) return;
+  const syncBtn = document.getElementById('sheet-sync-btn');
+  syncBtn.classList.add('syncing');
+  syncBtn.textContent = '↻ Syncing…';
+
+  try {
+    const rows = await fetchSheetData(sheetId);
+    mergeSheetData(rows);
+    syncBtn.textContent = '✓ Synced';
+    addFeedEvent('update', 'Sheet synced', `${rows.length} show${rows.length !== 1 ? 's' : ''} refreshed from Google Sheet`);
+    setTimeout(() => { syncBtn.textContent = '↻ Sync'; syncBtn.classList.remove('syncing'); }, 2000);
+  } catch (err) {
+    syncBtn.textContent = '✕ Error';
+    setTimeout(() => { syncBtn.textContent = '↻ Sync'; syncBtn.classList.remove('syncing'); }, 3000);
+  }
+}
+
+function mergeSheetData(rows) {
+  const merged = [];
+  const existingMap = {};
+  shows.forEach(s => { existingMap[s.name + '|' + s.startDate] = s; });
+
+  rows.forEach(r => {
+    const key = r.name + '|' + r.startDate;
+    const existing = existingMap[key];
+    if (existing) {
+      existing.endDate   = r.endDate || existing.endDate;
+      existing.location  = r.location || existing.location;
+      existing.booth     = r.booth || existing.booth;
+      existing.notes     = r.notes || existing.notes;
+      existing.eventType = r.eventType || existing.eventType;
+      merged.push(existing);
+      delete existingMap[key];
+    } else {
+      merged.push({
+        id: uid(),
+        ...r,
+        checklist: DEFAULT_TASKS.map(t => ({ id: uid(), text: t, completed: false }))
+      });
+    }
+  });
+
+  shows = merged;
+  persist();
+  renderList();
+  checkBanner();
+  if (document.getElementById('view-cal').classList.contains('active')) renderCalendar();
+  if (document.getElementById('view-feed').classList.contains('active')) renderFeed();
+}
 
 // ─────────────────────────────────────
 //  EXCEL / CSV IMPORT
@@ -3062,6 +3697,12 @@ function downloadTemplate() {
 
 renderList();
 checkBanner();
+updateSheetUI();
+
+// Auto-sync from Google Sheet on load
+if (sheetId) {
+  syncFromSheet();
+}
 </script>
 </body>
 </html>
