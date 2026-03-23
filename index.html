@@ -13,31 +13,31 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --red:        #004A09;
-      --red-dark:   #003006;
-      --red-glow:   rgba(0,74,9,0.15);
+      --red:        #295135;
+      --red-dark:   #1e3d28;
+      --red-glow:   rgba(41,81,53,0.15);
       --white:      #FFFFFF;
       --off-white:  #F5F7F5;
       --light:      #E8EDE8;
-      --mid:        #B8C8B8;
-      --dark-mid:   #5A6B5A;
-      --dark:       #111A11;
-      --black:      #080D08;
-      --accent-blue:#4FC3F7;
-      --accent-gold:#FFD600;
-      --green:      #00C853;
-      --shadow-red: 0 0 20px rgba(0,74,9,0.3);
+      --mid:        #93A893;
+      --dark-mid:   #3D5244;
+      --dark:       #295135;
+      --black:      #1e3d28;
+      --accent-blue:#0288D1;
+      --accent-gold:#F9A825;
+      --green:      #2E7D32;
+      --shadow-red: 0 0 20px rgba(41,81,53,0.3);
       --shadow-sm:  0 1px 4px rgba(0,0,0,.12);
       --shadow:     0 4px 20px rgba(0,0,0,.16);
       --shadow-lg:  0 8px 40px rgba(0,0,0,.22);
-      --border:     #D8E0D8;
+      --border:     #C8D4C8;
       --radius:     2px;
     }
 
     body {
       font-family: 'Roboto', 'Segoe UI', sans-serif;
       background: var(--off-white);
-      color: var(--dark);
+      color: #1A2E1F;
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -48,8 +48,8 @@
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(0,74,9,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,74,9,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(41,81,53,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(41,81,53,0.04) 1px, transparent 1px);
       background-size: 40px 40px;
       pointer-events: none;
       z-index: 0;
@@ -126,7 +126,7 @@
       background: transparent;
       border: none;
       border-bottom: 3px solid transparent;
-      color: rgba(255,255,255,.42);
+      color: rgba(255,255,255,.6);
       padding: 0 26px;
       cursor: pointer;
       font-size: .75rem;
@@ -147,7 +147,7 @@
     .nav-tab.active {
       color: var(--white);
       border-bottom-color: var(--red);
-      background: rgba(0,74,9,.18);
+      background: rgba(41,81,53,.25);
     }
 
     .nav-tab.active .tab-icon { color: var(--red); }
@@ -241,21 +241,22 @@
 
     .page-title {
       font-size: 2.4rem;
-      font-weight: 700;
+      font-weight: 900;
       letter-spacing: 6px;
       text-transform: uppercase;
-      color: var(--dark);
+      color: #1A2E1F;
       line-height: 1;
     }
 
     .page-title span { color: var(--red); }
 
     .page-subtitle {
-      font-size: .65rem;
+      font-size: .68rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: var(--dark-mid);
+      color: #3D5244;
       margin-top: 5px;
+      font-weight: 500;
     }
 
     /* ═══ BANNER ═══ */
@@ -299,7 +300,7 @@
 
     .banner-body li {
       font-size: .85rem;
-      color: rgba(255,255,255,.8);
+      color: rgba(255,255,255,.9);
       padding: 3px 0;
       list-style: none;
       font-weight: 500;
@@ -323,9 +324,9 @@
     }
 
     .list-bar label {
-      font-size: .65rem;
+      font-size: .68rem;
       letter-spacing: 3px;
-      color: var(--dark-mid);
+      color: #2A3F2E;
       font-weight: 700;
       text-transform: uppercase;
     }
@@ -359,18 +360,59 @@
 
     .count-num {
       font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--dark);
+      font-weight: 900;
+      color: #1A2E1F;
       line-height: 1;
     }
 
     .count-label {
-      font-size: .62rem;
+      font-size: .65rem;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--dark-mid);
+      color: #3D5244;
       font-weight: 700;
     }
+
+    /* ═══ VIEW TOGGLE ═══ */
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      margin-left: 12px;
+    }
+
+    .view-toggle-btn {
+      background: var(--off-white);
+      border: 1.5px solid var(--border);
+      color: var(--dark-mid);
+      width: 32px; height: 32px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem;
+      transition: all .15s;
+      border-radius: 2px;
+    }
+
+    .view-toggle-btn:hover { border-color: var(--mid); color: var(--red); }
+    .view-toggle-btn.active { background: var(--red); border-color: var(--red); color: var(--white); }
+
+    /* ═══ SEARCH BAR ═══ */
+    .search-input {
+      padding: 7px 12px 7px 30px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-size: .78rem;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      color: var(--dark);
+      border-radius: var(--radius);
+      width: 200px;
+      transition: border-color .15s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235A6B5A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 8px center;
+    }
+
+    .search-input:focus { outline: none; border-color: var(--red); }
 
     /* ═══ CARDS GRID ═══ */
     .cards-grid {
@@ -378,6 +420,79 @@
       grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
       gap: 24px;
     }
+
+    /* ═══ TILES VIEW ═══ */
+    .cards-grid.view-tiles {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .cards-grid.view-tiles .show-card {
+      display: flex;
+      flex-direction: column;
+      height: 180px;
+    }
+
+    .cards-grid.view-tiles .show-card .card-head {
+      padding: 14px 16px 12px 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cards-grid.view-tiles .show-card .card-head-top {
+      flex: 1;
+    }
+
+    .cards-grid.view-tiles .show-card .card-body,
+    .cards-grid.view-tiles .show-card .card-toggle { display: none !important; }
+
+    .cards-grid.view-tiles .show-card .card-name { font-size: .88rem; }
+    .cards-grid.view-tiles .show-card .card-meta { font-size: .65rem; }
+    .cards-grid.view-tiles .show-card .card-loc { font-size: .65rem; }
+    .cards-grid.view-tiles .show-card .card-btns { display: none; }
+
+    /* ═══ LIST VIEW (rows) ═══ */
+    .cards-grid.view-list {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .cards-grid.view-list .show-card {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .cards-grid.view-list .show-card .card-head {
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .cards-grid.view-list .show-card .card-head-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .cards-grid.view-list .show-card .card-head-top > div:first-child {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    .cards-grid.view-list .show-card .card-name { font-size: .88rem; white-space: nowrap; }
+    .cards-grid.view-list .show-card .card-meta { font-size: .68rem; margin-top: 0; }
+    .cards-grid.view-list .show-card .card-loc { display: none; }
+    .cards-grid.view-list .show-card .status-badge { margin-top: 0; }
+    .cards-grid.view-list .show-card .event-type-pill { margin-top: 0; }
+    .cards-grid.view-list .show-card .card-body,
+    .cards-grid.view-list .show-card .card-toggle { display: none !important; }
+    .cards-grid.view-list .show-card::before { width: 3px; }
 
     /* ═══ SHOW CARD ═══ */
     .show-card {
@@ -407,7 +522,7 @@
       transform: translateY(-2px);
     }
 
-    .show-card.status-soon:hover { box-shadow: 0 0 22px rgba(0,74,9,.22); }
+    .show-card.status-soon:hover { box-shadow: 0 0 22px rgba(41,81,53,.22); }
 
     /* Card header */
     .card-head {
@@ -456,14 +571,14 @@
     .card-meta {
       font-size: .72rem;
       letter-spacing: 1px;
-      color: rgba(255,255,255,.5);
+      color: rgba(255,255,255,.75);
       margin-top: 5px;
       font-family: 'Share Tech Mono', monospace;
     }
 
     .card-loc {
       font-size: .72rem;
-      color: rgba(255,255,255,.4);
+      color: rgba(255,255,255,.65);
       margin-top: 3px;
     }
 
@@ -500,7 +615,7 @@
     }
 
     .status-badge.s-upcoming { background: rgba(79,195,247,.15); color: var(--accent-blue); border: 1px solid rgba(79,195,247,.3); }
-    .status-badge.s-soon     { background: rgba(0,74,9,.18); color: #3a9c47; border: 1px solid rgba(0,74,9,.35); }
+    .status-badge.s-soon     { background: rgba(41,81,53,.18); color: #295135; border: 1px solid rgba(41,81,53,.35); }
     .status-badge.s-today    { background: rgba(0,230,118,.15); color: var(--green); border: 1px solid rgba(0,230,118,.3); }
     .status-badge.s-past     { background: rgba(255,255,255,.05); color: rgba(255,255,255,.3); border: 1px solid rgba(255,255,255,.08); }
 
@@ -529,21 +644,27 @@
     }
 
     .pill-national {
-      background: rgba(0,74,9,.12);
-      color: #2e7d32;
-      border: 1.5px solid rgba(0,74,9,.3);
+      background: rgba(41,81,53,.12);
+      color: #295135;
+      border: 1.5px solid rgba(41,81,53,.3);
     }
 
     .pill-local {
-      background: rgba(79,195,247,.12);
-      color: #0277bd;
-      border: 1.5px solid rgba(79,195,247,.35);
+      background: rgba(21,101,192,.12);
+      color: #1565C0;
+      border: 1.5px solid rgba(21,101,192,.35);
+    }
+
+    .pill-regional {
+      background: rgba(123,31,162,.12);
+      color: #7B1FA2;
+      border: 1.5px solid rgba(123,31,162,.35);
     }
 
     .pill-rep {
-      background: rgba(255,214,0,.12);
-      color: #f57f17;
-      border: 1.5px solid rgba(255,214,0,.4);
+      background: rgba(230,81,0,.12);
+      color: #E65100;
+      border: 1.5px solid rgba(230,81,0,.35);
     }
 
     /* ═══ FILTER PILLS BAR ═══ */
@@ -593,23 +714,28 @@
     }
 
     .filter-pill.active[data-filter="all"] {
-      background: var(--dark);
-      border-color: var(--dark);
+      background: #295135;
+      border-color: #295135;
     }
 
     .filter-pill.active[data-filter="national"] {
-      background: #2e7d32;
-      border-color: #2e7d32;
+      background: #295135;
+      border-color: #295135;
     }
 
     .filter-pill.active[data-filter="local"] {
-      background: #0277bd;
-      border-color: #0277bd;
+      background: #1565C0;
+      border-color: #1565C0;
+    }
+
+    .filter-pill.active[data-filter="regional"] {
+      background: #7B1FA2;
+      border-color: #7B1FA2;
     }
 
     .filter-pill.active[data-filter="rep"] {
-      background: #f57f17;
-      border-color: #f57f17;
+      background: #E65100;
+      border-color: #E65100;
     }
 
     .filter-pill .pill-dot {
@@ -620,9 +746,10 @@
     }
 
     .filter-pill[data-filter="all"] .pill-dot { background: var(--dark-mid); }
-    .filter-pill[data-filter="national"] .pill-dot { background: #2e7d32; }
-    .filter-pill[data-filter="local"] .pill-dot { background: #0277bd; }
-    .filter-pill[data-filter="rep"] .pill-dot { background: #f57f17; }
+    .filter-pill[data-filter="national"] .pill-dot { background: #295135; }
+    .filter-pill[data-filter="local"] .pill-dot { background: #1565C0; }
+    .filter-pill[data-filter="regional"] .pill-dot { background: #7B1FA2; }
+    .filter-pill[data-filter="rep"] .pill-dot { background: #E65100; }
     .filter-pill.active .pill-dot { background: rgba(255,255,255,.7); }
 
     .event-type-selector {
@@ -631,151 +758,6 @@
       flex-wrap: wrap;
       margin-top: 4px;
     }
-
-    /* ═══ GOOGLE SHEET CONNECTION ═══ */
-    .sheet-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 14px;
-      border-radius: 999px;
-      font-size: .65rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      font-family: 'Share Tech Mono', monospace;
-      cursor: pointer;
-      transition: all .15s ease;
-    }
-
-    .sheet-status.disconnected {
-      background: rgba(255,255,255,.08);
-      color: rgba(255,255,255,.5);
-      border: 1.5px solid rgba(255,255,255,.15);
-    }
-
-    .sheet-status.disconnected:hover {
-      color: rgba(255,255,255,.8);
-      border-color: rgba(255,255,255,.3);
-    }
-
-    .sheet-status.connected {
-      background: rgba(0,200,83,.12);
-      color: var(--green);
-      border: 1.5px solid rgba(0,200,83,.3);
-    }
-
-    .sheet-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .sheet-status.disconnected .sheet-dot { background: rgba(255,255,255,.3); }
-    .sheet-status.connected .sheet-dot { background: var(--green); animation: pulse-dot 2s infinite; }
-
-    .sheet-sync-btn {
-      background: transparent;
-      border: 1.5px solid rgba(255,255,255,.2);
-      color: rgba(255,255,255,.6);
-      padding: 5px 10px;
-      border-radius: 2px;
-      cursor: pointer;
-      font-size: .65rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      font-family: 'Share Tech Mono', monospace;
-      transition: all .15s;
-    }
-
-    .sheet-sync-btn:hover { color: var(--white); border-color: rgba(255,255,255,.4); }
-    .sheet-sync-btn.syncing { color: var(--accent-blue); border-color: var(--accent-blue); }
-
-    .sheet-setup-steps {
-      list-style: none;
-      counter-reset: step;
-      padding: 0;
-    }
-
-    .sheet-setup-steps li {
-      counter-increment: step;
-      padding: 12px 0 12px 44px;
-      position: relative;
-      font-size: .85rem;
-      line-height: 1.6;
-      border-bottom: 1px solid var(--light);
-    }
-
-    .sheet-setup-steps li:last-child { border-bottom: none; }
-
-    .sheet-setup-steps li::before {
-      content: counter(step);
-      position: absolute;
-      left: 0;
-      top: 12px;
-      width: 28px;
-      height: 28px;
-      background: var(--red);
-      color: var(--white);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: .75rem;
-      font-weight: 700;
-      font-family: 'Share Tech Mono', monospace;
-    }
-
-    .sheet-url-input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 2px solid var(--border);
-      border-radius: 2px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: .8rem;
-      margin-top: 8px;
-      transition: border-color .15s;
-    }
-
-    .sheet-url-input:focus { outline: none; border-color: var(--red); }
-
-    .sheet-test-result {
-      margin-top: 12px;
-      padding: 10px 14px;
-      border-radius: 2px;
-      font-size: .78rem;
-      font-family: 'Share Tech Mono', monospace;
-      display: none;
-    }
-
-    .sheet-test-result.success {
-      display: block;
-      background: rgba(0,200,83,.08);
-      border: 1px solid rgba(0,200,83,.25);
-      color: #2e7d32;
-    }
-
-    .sheet-test-result.error {
-      display: block;
-      background: rgba(244,67,54,.08);
-      border: 1px solid rgba(244,67,54,.25);
-      color: #c62828;
-    }
-
-    .sheet-info-bar {
-      background: var(--light);
-      padding: 10px 16px;
-      font-size: .72rem;
-      color: var(--dark-mid);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .sheet-info-bar strong { color: var(--dark); }
 
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; }
@@ -796,17 +778,17 @@
     }
 
     .prog-label {
-      font-size: .62rem;
+      font-size: .65rem;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--dark-mid);
+      color: #2A3F2E;
       font-weight: 700;
     }
 
     .prog-num {
       font-size: .85rem;
       font-weight: 700;
-      color: var(--dark);
+      color: #1A2E1F;
       font-family: 'Share Tech Mono', monospace;
     }
 
@@ -863,6 +845,7 @@
       border-bottom: 1px solid var(--light);
       font-size: .82rem;
       font-weight: 500;
+      color: #1A2E1F;
       transition: opacity .2s;
     }
 
@@ -919,7 +902,7 @@
 
     .add-task-row button {
       padding: 6px 14px;
-      background: var(--dark);
+      background: var(--red);
       color: var(--white);
       border: none;
       cursor: pointer;
@@ -1021,8 +1004,8 @@
 
     .cal-year-txt {
       font-size: 3rem;
-      font-weight: 700;
-      color: var(--dark);
+      font-weight: 900;
+      color: #1A2E1F;
       letter-spacing: 4px;
       line-height: 1;
     }
@@ -1320,9 +1303,9 @@
       justify-content: center;
     }
 
-    .feed-dot.dot-show    .feed-dot-inner { background: var(--dark); }
+    .feed-dot.dot-show    .feed-dot-inner { background: var(--red); color: var(--white); }
     .feed-dot.dot-tip     .feed-dot-inner { background: rgba(79,195,247,.15); border: 1px solid rgba(79,195,247,.3); }
-    .feed-dot.dot-alert   .feed-dot-inner { background: rgba(0,74,9,.12); border: 1px solid rgba(0,74,9,.3); }
+    .feed-dot.dot-alert   .feed-dot-inner { background: rgba(41,81,53,.12); border: 1px solid rgba(41,81,53,.3); }
     .feed-dot.dot-update  .feed-dot-inner { background: rgba(0,230,118,.1); border: 1px solid rgba(0,230,118,.25); }
     .feed-dot.dot-stat    .feed-dot-inner { background: var(--light); }
 
@@ -1375,7 +1358,7 @@
       font-size: 1rem;
       font-weight: 700;
       letter-spacing: .5px;
-      color: var(--dark);
+      color: #1A2E1F;
       margin-bottom: 6px;
       line-height: 1.3;
     }
@@ -1509,10 +1492,10 @@
     .widget-head {
       background: var(--dark);
       padding: 10px 16px;
-      font-size: .62rem;
+      font-size: .65rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: rgba(255,255,255,.7);
+      color: rgba(255,255,255,.9);
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -1534,21 +1517,27 @@
       background: var(--off-white);
       padding: 10px 12px;
       border-left: 3px solid var(--red);
+      border-radius: 2px;
     }
+
+    .stat-item.stat-total   { border-left-color: #37474F; background: rgba(55,71,79,.06); }
+    .stat-item.stat-upcoming { border-left-color: #00838F; background: rgba(0,131,143,.06); }
+    .stat-item.stat-past    { border-left-color: #4E342E; background: rgba(78,52,46,.06); }
+    .stat-item.stat-avg     { border-left-color: #558B2F; background: rgba(85,139,47,.06); }
 
     .stat-value {
       font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--dark);
+      font-weight: 900;
+      color: #1A2E1F;
       line-height: 1;
       font-family: 'Share Tech Mono', monospace;
     }
 
     .stat-label {
-      font-size: .6rem;
+      font-size: .62rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--dark-mid);
+      color: #2A3F2E;
       font-weight: 700;
       margin-top: 3px;
     }
@@ -1596,7 +1585,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      color: var(--dark);
+      color: #1A2E1F;
     }
 
     .upcoming-item:hover .ui-name { color: var(--red); }
@@ -1612,29 +1601,6 @@
       font-weight: 700;
       color: var(--dark-mid);
       font-family: 'Share Tech Mono', monospace;
-    }
-
-    /* Tips widget */
-    .tip-item {
-      padding: 8px 0;
-      border-bottom: 1px solid var(--light);
-    }
-
-    .tip-item:last-child { border-bottom: none; }
-
-    .tip-tag {
-      font-size: .58rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--accent-blue);
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .tip-text {
-      font-size: .8rem;
-      color: var(--dark-mid);
-      line-height: 1.5;
     }
 
     /* Phase checklist */
@@ -1662,7 +1628,7 @@
     /* ═══ MODAL ═══ */
     .overlay {
       position: fixed; inset: 0;
-      background: rgba(13,13,13,.7);
+      background: rgba(27,94,32,.45);
       z-index: 800;
       display: flex;
       align-items: center;
@@ -1692,7 +1658,7 @@
       border-bottom: 3px solid var(--red);
     }
 
-    .modal-head.danger { border-bottom-color: var(--red); background: #0a110a; }
+    .modal-head.danger { border-bottom-color: var(--red); background: var(--dark); }
 
     .modal-head h2 {
       font-size: .9rem;
@@ -1772,13 +1738,13 @@
     }
 
     .btn-primary {
-      background: var(--dark);
+      background: var(--red);
       color: var(--white);
       clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
       padding-right: 26px;
     }
 
-    .btn-primary:hover { background: var(--red); }
+    .btn-primary:hover { background: var(--red-dark); }
 
     .btn-secondary {
       background: var(--off-white);
@@ -1836,7 +1802,7 @@
       letter-spacing: 1px;
     }
 
-    .col-chip.req { background: rgba(0,74,9,.08); color: var(--red); border: 1px solid rgba(0,74,9,.2); }
+    .col-chip.req { background: rgba(41,81,53,.08); color: var(--red); border: 1px solid rgba(41,81,53,.2); }
     .col-chip.opt { background: var(--light); color: var(--dark-mid); border: 1px solid var(--border); }
 
     .import-drop {
@@ -1849,7 +1815,7 @@
       margin-bottom: 14px;
     }
 
-    .import-drop.drag-over { border-color: var(--red); background: rgba(0,74,9,.04); }
+    .import-drop.drag-over { border-color: var(--red); background: rgba(41,81,53,.04); }
 
     .import-drop p { color: var(--dark-mid); font-size: .85rem; margin-bottom: 6px; }
     .import-drop .drop-icon { font-size: 2.5rem; margin-bottom: 12px; line-height: 1; }
@@ -1858,7 +1824,7 @@
       display: inline-block;
       margin-top: 8px;
       padding: 8px 20px;
-      background: var(--dark);
+      background: var(--red);
       color: var(--white);
       font-size: .72rem;
       font-weight: 700;
@@ -1869,7 +1835,7 @@
       transition: background .15s;
     }
 
-    .file-label:hover { background: var(--red); }
+    .file-label:hover { background: var(--red-dark); }
 
     .imp-status { font-size: .85rem; margin-bottom: 10px; font-weight: 600; }
 
@@ -1980,10 +1946,6 @@
   </div>
 
   <div class="nav-actions">
-    <button class="sheet-status disconnected" id="sheet-status-btn" onclick="openSheetModal()">
-      <span class="sheet-dot"></span><span id="sheet-status-label">Connect Sheet</span>
-    </button>
-    <button class="sheet-sync-btn hidden" id="sheet-sync-btn" onclick="syncFromSheet()" title="Sync from Google Sheet">↻ Sync</button>
     <button class="nav-btn-import nav-btn" onclick="openImport()">↑ Import</button>
     <button class="nav-btn nav-btn-primary" onclick="openAdd()">+ Add Show</button>
   </div>
@@ -2022,12 +1984,19 @@
         <option value="name">Name A–Z</option>
         <option value="progress">Progress</option>
       </select>
+      <input type="text" class="search-input" id="search-input" placeholder="Search shows..." oninput="renderList()">
+      <div class="view-toggle">
+        <button class="view-toggle-btn active" data-view="cards" onclick="setViewMode('cards')" title="Cards">▣</button>
+        <button class="view-toggle-btn" data-view="tiles" onclick="setViewMode('tiles')" title="Tiles">▦</button>
+        <button class="view-toggle-btn" data-view="list" onclick="setViewMode('list')" title="List">☰</button>
+      </div>
     </div>
     <div class="filter-bar" style="margin-bottom:24px">
       <span class="filter-bar-label">Filter</span>
       <button class="filter-pill active" data-filter="all" onclick="setFilter('all')"><span class="pill-dot"></span>All</button>
       <button class="filter-pill" data-filter="national" onclick="setFilter('national')"><span class="pill-dot"></span>National</button>
       <button class="filter-pill" data-filter="local" onclick="setFilter('local')"><span class="pill-dot"></span>Local</button>
+      <button class="filter-pill" data-filter="regional" onclick="setFilter('regional')"><span class="pill-dot"></span>Regional</button>
       <button class="filter-pill" data-filter="rep" onclick="setFilter('rep')"><span class="pill-dot"></span>Rep Event</button>
     </div>
 
@@ -2067,6 +2036,7 @@
       <button class="filter-pill active" data-filter="all" onclick="setFilter('all')"><span class="pill-dot"></span>All</button>
       <button class="filter-pill" data-filter="national" onclick="setFilter('national')"><span class="pill-dot"></span>National</button>
       <button class="filter-pill" data-filter="local" onclick="setFilter('local')"><span class="pill-dot"></span>Local</button>
+      <button class="filter-pill" data-filter="regional" onclick="setFilter('regional')"><span class="pill-dot"></span>Regional</button>
       <button class="filter-pill" data-filter="rep" onclick="setFilter('rep')"><span class="pill-dot"></span>Rep Event</button>
     </div>
     <div class="months-grid" id="months-grid"></div>
@@ -2125,6 +2095,7 @@
         <div class="event-type-selector" id="f-event-type-group">
           <button type="button" class="filter-pill active" data-value="national" onclick="selectEventType('national')"><span class="pill-dot"></span>National</button>
           <button type="button" class="filter-pill" data-value="local" onclick="selectEventType('local')"><span class="pill-dot"></span>Local</button>
+          <button type="button" class="filter-pill" data-value="regional" onclick="selectEventType('regional')"><span class="pill-dot"></span>Regional</button>
           <button type="button" class="filter-pill" data-value="rep" onclick="selectEventType('rep')"><span class="pill-dot"></span>Rep Event</button>
         </div>
         <input type="hidden" id="f-event-type" value="national">
@@ -2158,44 +2129,6 @@
         <button class="btn btn-secondary" onclick="closeDel()">Cancel</button>
         <button class="btn btn-danger" onclick="confirmDel()">Delete</button>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════ GOOGLE SHEET MODAL ══════════ -->
-<div class="overlay hidden" id="sheet-overlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h2 id="sheet-modal-title">Connect Google Sheet</h2>
-      <button class="modal-x" onclick="closeSheetModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <ol class="sheet-setup-steps">
-        <li>Create a Google Sheet with these columns:
-          <div class="col-chips" style="margin-top:8px">
-            <span class="col-chip req">Show Name ✦</span>
-            <span class="col-chip req">Start Date ✦</span>
-            <span class="col-chip opt">End Date</span>
-            <span class="col-chip opt">Location</span>
-            <span class="col-chip opt">Booth Number</span>
-            <span class="col-chip opt">Notes</span>
-            <span class="col-chip opt">Event Type</span>
-          </div>
-        </li>
-        <li>Go to <strong>File → Share → Publish to web</strong></li>
-        <li>Select <strong>Entire Document</strong> and format <strong>Comma-separated values (.csv)</strong>, then click <strong>Publish</strong></li>
-        <li>Paste your Google Sheet URL below (either the published link or the regular sheet URL):
-          <input type="text" class="sheet-url-input" id="sheet-url-input"
-            placeholder="https://docs.google.com/spreadsheets/d/your-sheet-id/...">
-        </li>
-      </ol>
-      <div class="sheet-test-result" id="sheet-test-result"></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-secondary" id="sheet-disconnect-btn" onclick="disconnectSheet()" style="display:none">Disconnect</button>
-      <div style="flex:1"></div>
-      <button class="btn btn-secondary" onclick="closeSheetModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="testAndConnectSheet()">Connect & Sync</button>
     </div>
   </div>
 </div>
@@ -2270,52 +2203,47 @@
 const STORAGE_KEY  = 'ts_shows_v3';
 const NOTIF_KEY    = 'ts_last_notif';
 const FEED_KEY     = 'ts_feed_v1';
-const SHEET_KEY    = 'ts_sheet_id';
-const MONTHS       = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS       =['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DOW          = ['Su','Mo','Tu','We','Th','Fr','Sa'];
 
 const DEFAULT_TASKS = [
-  'Submit booth application & pay registration fee',
-  'Sign booth contract / confirm space assignment',
-  'Book hotel accommodations for staff',
-  'Book flights / arrange ground transportation',
-  'Design booth graphics & display materials',
-  'Order booth display hardware (banners, walls, shelves)',
-  'Order promotional giveaways / branded swag',
-  'Print product literature, brochures & catalogs',
-  'Confirm electrical, A/V & internet booth needs',
-  'Prepare product demos & sales presentations',
-  'Brief and train booth staff',
-  'Set up lead-capture system (app, scanner, forms)',
-  'Send pre-show email campaign to prospects',
-  'Pack & ship all booth materials to venue',
-  'Confirm shipment delivery & drayage arrangements',
-  'Conduct on-site booth setup & check-in',
-  'Post-show: collect leads and send follow-up emails'
+  'Approved by Sales. Waiting for MKTG to Approve.',
+  'Email Form Submitter to request invoice, shipping address, and extra needs',
+  'Confirm sample needs with Inside Sales, Demos w/ WH, Literature can be ordered',
+  'Send Invoice to Accounting to processing credit',
+  'Send Credit Note/Confirmation to Form Submitter',
+  'Confirm needs are met and Complete'
 ];
 
-const PLANNING_TIPS = [
-  { tag: 'SHIPPING', text: 'Ship booth materials 2–3 weeks early to avoid rush freight charges and ensure on-time delivery to the venue.' },
-  { tag: 'LEAD GEN', text: 'Pre-register your badge scanner or lead app before arriving — setup at the show is time-consuming.' },
-  { tag: 'STAFF', text: 'Schedule staff shifts in advance. Fatigue sets in fast — ensure everyone gets breaks and coverage.' },
-  { tag: 'BUDGET', text: 'Budget 20–30% above your estimate for unexpected costs: drayage, electricity overage, last-minute printing.' },
-  { tag: 'OUTREACH', text: 'Send pre-show emails to your prospect list 2 weeks before — invite them to visit your booth with an incentive.' },
-  { tag: 'DESIGN', text: 'Use high-contrast booth graphics visible from 20 feet. Your key message should be readable in 3 seconds.' },
-  { tag: 'TECH', text: 'Bring backup cables, adapters, extension cords, and a portable battery for emergencies on the show floor.' },
-  { tag: 'FOLLOW-UP', text: 'Send personalized follow-up emails within 48 hours of the show closing while conversations are still fresh.' },
-  { tag: 'NETWORKING', text: 'Schedule dinner or meetings with key prospects before or after show hours — off-floor time is valuable.' },
-  { tag: 'METRICS', text: 'Define your success metrics before the show: # leads, # demos, # partnerships. Review them during teardown.' },
-];
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
 
 // ─────────────────────────────────────
 //  STATE
 // ─────────────────────────────────────
 let shows       = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+// Migrate existing shows to the new checklist
+(function migrateChecklists() {
+  let changed = false;
+  shows.forEach(s => {
+    if (!s.checklist || s.checklist.length !== DEFAULT_TASKS.length ||
+        !s.checklist.some(item => item.text === DEFAULT_TASKS[0])) {
+      s.checklist = DEFAULT_TASKS.map(text => ({ id: uid(), text, completed: false }));
+      changed = true;
+    }
+  });
+  if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(shows));
+})();
+
 let feedEvents  = JSON.parse(localStorage.getItem(FEED_KEY) || '[]');
 let calYear     = new Date().getFullYear();
 let sortBy      = 'date';
 let filterType  = 'all';
+let viewMode    = 'cards';
 let editId      = null;
 let delId       = null;
 let expanded    = {};
@@ -2344,10 +2272,6 @@ function addFeedEvent(type, title, body, showId) {
     ts: Date.now()
   });
   persistFeed();
-}
-
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2);
 }
 
 // ─────────────────────────────────────
@@ -2462,23 +2386,41 @@ function selectEventType(type) {
   });
 }
 
-const EVENT_TYPE_LABELS = { national: 'National', local: 'Local', rep: 'Rep Event' };
-const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', rep: 'pill-rep' };
+const EVENT_TYPE_LABELS = { national: 'National', local: 'Local', regional: 'Regional', rep: 'Rep Event' };
+const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', regional: 'pill-regional', rep: 'pill-rep' };
 
 // ─────────────────────────────────────
 //  LIST VIEW
 // ─────────────────────────────────────
+function setViewMode(mode) {
+  viewMode = mode;
+  document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
+  renderList();
+}
+
 function renderList() {
   const grid  = document.getElementById('cards-grid');
   const empty = document.getElementById('empty-state');
   document.getElementById('count-num').textContent = shows.length;
 
-  const filtered = filterType === 'all'
+  const searchTerm = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+
+  let filtered = filterType === 'all'
     ? shows
     : shows.filter(s => (s.eventType || 'national') === filterType);
 
+  if (searchTerm) {
+    filtered = filtered.filter(s =>
+      s.name.toLowerCase().includes(searchTerm) ||
+      (s.location || '').toLowerCase().includes(searchTerm) ||
+      (s.startDate || '').includes(searchTerm) ||
+      (s.eventType || '').toLowerCase().includes(searchTerm)
+    );
+  }
+
   if (!filtered.length) {
     grid.innerHTML = '';
+    grid.className = 'cards-grid';
     empty.classList.remove('hidden');
     return;
   }
@@ -2492,6 +2434,7 @@ function renderList() {
     return 0;
   });
 
+  grid.className = 'cards-grid' + (viewMode !== 'cards' ? ' view-' + viewMode : '');
   grid.innerHTML = sorted.map(cardHTML).join('');
 }
 
@@ -2766,7 +2709,7 @@ function renderMonth(name, mi) {
 
   const filteredShows = filterType === 'all' ? shows : shows.filter(s => (s.eventType || 'national') === filterType);
 
-  const DOT_COLORS = { national: '#2e7d32', local: '#0277bd', rep: '#f57f17' };
+  const DOT_COLORS = { national: '#295135', local: '#1565C0', regional: '#7B1FA2', rep: '#E65100' };
 
   for (let d = 1; d <= daysInMonth; d++) {
     const ds     = `${calYear}-${String(mi+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -2986,20 +2929,6 @@ function renderFeedTimeline() {
     });
   });
 
-  // Interleave a random tip
-  const tip = PLANNING_TIPS[Math.floor(Date.now() / 86400000) % PLANNING_TIPS.length];
-  items.splice(Math.min(3, items.length), 0, {
-    synthetic: true,
-    urgency: 'tip',
-    icon: '◆',
-    typeTag: 't-tip',
-    typeLabel: 'PRO TIP',
-    title: tip.tag,
-    bodyHtml: tip.text,
-    showId: null,
-    ts: null
-  });
-
   if (!items.length) {
     container.innerHTML = `
       <div class="empty">
@@ -3090,20 +3019,20 @@ function renderFeedSidebar() {
     <div class="widget-head">STATS <span class="wh-accent">◆</span></div>
     <div class="widget-body">
       <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-value">${shows.length}</div>
+        <div class="stat-item stat-total">
+          <div class="stat-value" style="color:#37474F">${shows.length}</div>
           <div class="stat-label">Total Shows</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-value">${upcoming.length}</div>
+        <div class="stat-item stat-upcoming">
+          <div class="stat-value" style="color:#00838F">${upcoming.length}</div>
           <div class="stat-label">Upcoming</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-value">${past.length}</div>
+        <div class="stat-item stat-past">
+          <div class="stat-value" style="color:#4E342E">${past.length}</div>
           <div class="stat-label">Completed</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-value">${avgPct}%</div>
+        <div class="stat-item stat-avg">
+          <div class="stat-value" style="color:#558B2F">${avgPct}%</div>
           <div class="stat-label">Avg Plan</div>
         </div>
       </div>
@@ -3113,22 +3042,27 @@ function renderFeedSidebar() {
   // ── Event Type Breakdown ──
   const natCount = shows.filter(s => (s.eventType || 'national') === 'national').length;
   const locCount = shows.filter(s => (s.eventType || 'national') === 'local').length;
+  const regCount = shows.filter(s => (s.eventType || 'national') === 'regional').length;
   const repCount = shows.filter(s => (s.eventType || 'national') === 'rep').length;
   const typeBreakdownHtml = shows.length ? `
   <div class="sidebar-widget">
     <div class="widget-head">EVENT TYPES <span class="wh-accent">◆</span></div>
     <div class="widget-body">
       <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-value" style="color:#2e7d32">${natCount}</div>
+        <div class="stat-item" style="border-left-color:#295135;background:rgba(41,81,53,.06)">
+          <div class="stat-value" style="color:#295135">${natCount}</div>
           <div class="stat-label">National</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-value" style="color:#0277bd">${locCount}</div>
+        <div class="stat-item" style="border-left-color:#1565C0;background:rgba(21,101,192,.06)">
+          <div class="stat-value" style="color:#1565C0">${locCount}</div>
           <div class="stat-label">Local</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-value" style="color:#f57f17">${repCount}</div>
+        <div class="stat-item" style="border-left-color:#7B1FA2;background:rgba(123,31,162,.06)">
+          <div class="stat-value" style="color:#7B1FA2">${regCount}</div>
+          <div class="stat-label">Regional</div>
+        </div>
+        <div class="stat-item" style="border-left-color:#E65100;background:rgba(230,81,0,.06)">
+          <div class="stat-value" style="color:#E65100">${repCount}</div>
           <div class="stat-label">Rep Events</div>
         </div>
       </div>
@@ -3162,12 +3096,10 @@ function renderFeedSidebar() {
 
   // ── Phase progress ──
   const phaseData = [
-    { label: 'Pre-booking',   tasks: [0,1] },
-    { label: 'Travel & Hotel',tasks: [2,3] },
-    { label: 'Design & Print',tasks: [4,5,6,7] },
-    { label: 'Logistics',     tasks: [8,9,10,11] },
-    { label: 'Marketing',     tasks: [12] },
-    { label: 'Execution',     tasks: [13,14,15,16] },
+    { label: 'Approval',     tasks: [0] },
+    { label: 'Coordination', tasks: [1,2] },
+    { label: 'Accounting',   tasks: [3,4] },
+    { label: 'Completion',   tasks: [5] },
   ];
 
   let phaseHtml = '';
@@ -3201,20 +3133,7 @@ function renderFeedSidebar() {
     </div>`;
   }
 
-  // ── Tips ──
-  const tipHtml = `
-  <div class="sidebar-widget">
-    <div class="widget-head">INTEL FEED <span class="wh-accent">◆</span></div>
-    <div class="widget-body">
-      ${PLANNING_TIPS.slice(0,4).map(t => `
-      <div class="tip-item">
-        <div class="tip-tag">${t.tag}</div>
-        <div class="tip-text">${t.text}</div>
-      </div>`).join('')}
-    </div>
-  </div>`;
-
-  sidebar.innerHTML = countdownHtml + statsHtml + typeBreakdownHtml + upHtml + phaseHtml + tipHtml;
+  sidebar.innerHTML = countdownHtml + statsHtml + typeBreakdownHtml + upHtml + phaseHtml;
 }
 
 // ─────────────────────────────────────
@@ -3225,268 +3144,17 @@ document.addEventListener('click', e => {
   if (!popup.classList.contains('hidden') && !popup.contains(e.target)) closePopup();
 });
 
-['show-overlay','del-overlay','imp-overlay','sheet-overlay'].forEach(id => {
+['show-overlay','del-overlay','imp-overlay'].forEach(id => {
   document.getElementById(id).addEventListener('click', function(e) {
-    if (e.target === this) { closeAdd(); closeDel(); closeImport(); closeSheetModal(); }
+    if (e.target === this) { closeAdd(); closeDel(); closeImport(); }
   });
 });
 
 document.getElementById('day-pane-overlay').addEventListener('click', closeDayPane);
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeAdd(); closeDel(); closePopup(); closeImport(); closeSheetModal(); closeDayPane(); }
+  if (e.key === 'Escape') { closeAdd(); closeDel(); closePopup(); closeImport(); closeDayPane(); }
 });
-
-// ─────────────────────────────────────
-//  GOOGLE SHEET INTEGRATION
-// ─────────────────────────────────────
-let sheetId = localStorage.getItem(SHEET_KEY) || '';
-
-function extractSheetId(url) {
-  const m = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
-  return m ? m[1] : url.trim();
-}
-
-function sheetCsvUrl(id) {
-  return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`;
-}
-
-function updateSheetUI() {
-  const btn = document.getElementById('sheet-status-btn');
-  const label = document.getElementById('sheet-status-label');
-  const syncBtn = document.getElementById('sheet-sync-btn');
-  if (sheetId) {
-    btn.className = 'sheet-status connected';
-    label.textContent = 'Sheet Linked';
-    syncBtn.classList.remove('hidden');
-  } else {
-    btn.className = 'sheet-status disconnected';
-    label.textContent = 'Connect Sheet';
-    syncBtn.classList.add('hidden');
-  }
-}
-
-function openSheetModal() {
-  const input = document.getElementById('sheet-url-input');
-  const result = document.getElementById('sheet-test-result');
-  const discBtn = document.getElementById('sheet-disconnect-btn');
-  result.className = 'sheet-test-result';
-  result.style.display = 'none';
-  if (sheetId) {
-    input.value = `https://docs.google.com/spreadsheets/d/${sheetId}/edit`;
-    discBtn.style.display = '';
-    document.getElementById('sheet-modal-title').textContent = 'Google Sheet Connected';
-  } else {
-    input.value = '';
-    discBtn.style.display = 'none';
-    document.getElementById('sheet-modal-title').textContent = 'Connect Google Sheet';
-  }
-  document.getElementById('sheet-overlay').classList.remove('hidden');
-}
-
-function closeSheetModal() {
-  document.getElementById('sheet-overlay').classList.add('hidden');
-}
-
-function disconnectSheet() {
-  sheetId = '';
-  localStorage.removeItem(SHEET_KEY);
-  updateSheetUI();
-  closeSheetModal();
-  addFeedEvent('update', 'Sheet disconnected', 'Google Sheet data source removed');
-}
-
-function parseCSVLine(line) {
-  const result = [];
-  let current = '';
-  let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (inQuotes) {
-      if (ch === '"' && line[i + 1] === '"') { current += '"'; i++; }
-      else if (ch === '"') { inQuotes = false; }
-      else { current += ch; }
-    } else {
-      if (ch === '"') { inQuotes = true; }
-      else if (ch === ',') { result.push(current.trim()); current = ''; }
-      else { current += ch; }
-    }
-  }
-  result.push(current.trim());
-  return result;
-}
-
-function parseSheetCSV(csv) {
-  const lines = csv.split('\n').filter(l => l.trim());
-  if (lines.length < 2) return [];
-
-  const headers = parseCSVLine(lines[0]).map(h => h.replace(/^"|"$/g, '').trim().toLowerCase());
-
-  const colMap = {};
-  const aliases = {
-    name:      ['show name','name','title','show','event name','event'],
-    start:     ['start date','start','date','begin','from'],
-    end:       ['end date','end','to','through'],
-    location:  ['location','city','venue','location / city','place'],
-    booth:     ['booth number','booth','booth #','stand','booth no'],
-    notes:     ['notes','note','comments','description','details'],
-    eventType: ['event type','eventtype','type','category','event category']
-  };
-
-  for (const [field, names] of Object.entries(aliases)) {
-    const idx = headers.findIndex(h => names.some(n => h === n || h.includes(n)));
-    if (idx !== -1) colMap[field] = idx;
-  }
-
-  if (colMap.name === undefined || colMap.start === undefined) return [];
-
-  const results = [];
-  for (let i = 1; i < lines.length; i++) {
-    const cols = parseCSVLine(lines[i]).map(c => c.replace(/^"|"$/g, '').trim());
-    const name = cols[colMap.name] || '';
-    if (!name) continue;
-
-    const startRaw = cols[colMap.start] || '';
-    const start = parseSheetDate(startRaw);
-    if (!start) continue;
-
-    const endRaw = colMap.end !== undefined ? (cols[colMap.end] || '') : '';
-    const end = endRaw ? (parseSheetDate(endRaw) || start) : start;
-
-    let evType = colMap.eventType !== undefined ? (cols[colMap.eventType] || '').toLowerCase() : 'national';
-    if (!['national','local','rep'].includes(evType)) {
-      if (evType.includes('rep')) evType = 'rep';
-      else if (evType.includes('local')) evType = 'local';
-      else evType = 'national';
-    }
-
-    results.push({
-      name,
-      startDate: start,
-      endDate: end,
-      location: colMap.location !== undefined ? (cols[colMap.location] || '') : '',
-      booth: colMap.booth !== undefined ? (cols[colMap.booth] || '') : '',
-      notes: colMap.notes !== undefined ? (cols[colMap.notes] || '') : '',
-      eventType: evType
-    });
-  }
-  return results;
-}
-
-function parseSheetDate(val) {
-  if (!val) return null;
-  if (/^\d{4}-\d{2}-\d{2}/.test(val)) return val.slice(0, 10);
-  const m = val.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
-  if (m) {
-    const yr = m[3].length === 2 ? '20' + m[3] : m[3];
-    return `${yr}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;
-  }
-  const d = new Date(val);
-  return isNaN(d) ? null : d.toISOString().slice(0, 10);
-}
-
-async function fetchSheetData(id) {
-  const url = sheetCsvUrl(id);
-  const resp = await fetch(url);
-  if (!resp.ok) throw new Error(`Failed to fetch (HTTP ${resp.status})`);
-  const csv = await resp.text();
-  if (csv.includes('<!DOCTYPE html>') || csv.includes('<html')) {
-    throw new Error('Sheet is not published to the web. Go to File → Share → Publish to web.');
-  }
-  return parseSheetCSV(csv);
-}
-
-async function testAndConnectSheet() {
-  const input = document.getElementById('sheet-url-input').value.trim();
-  const result = document.getElementById('sheet-test-result');
-  if (!input) {
-    result.className = 'sheet-test-result error';
-    result.textContent = 'Please paste a Google Sheet URL.';
-    return;
-  }
-
-  const id = extractSheetId(input);
-  result.className = 'sheet-test-result';
-  result.style.display = 'block';
-  result.textContent = 'Connecting...';
-  result.style.background = 'var(--light)';
-  result.style.border = '1px solid var(--border)';
-  result.style.color = 'var(--dark-mid)';
-
-  try {
-    const rows = await fetchSheetData(id);
-    if (!rows.length) {
-      result.className = 'sheet-test-result error';
-      result.textContent = 'Connected but no valid rows found. Check that columns "Show Name" and "Start Date" exist.';
-      return;
-    }
-
-    sheetId = id;
-    localStorage.setItem(SHEET_KEY, id);
-    mergeSheetData(rows);
-    updateSheetUI();
-
-    result.className = 'sheet-test-result success';
-    result.textContent = `Connected! Loaded ${rows.length} show${rows.length !== 1 ? 's' : ''} from sheet.`;
-    addFeedEvent('show', 'Sheet connected', `Google Sheet linked — ${rows.length} show${rows.length !== 1 ? 's' : ''} synced`);
-
-    setTimeout(closeSheetModal, 1500);
-  } catch (err) {
-    result.className = 'sheet-test-result error';
-    result.textContent = 'Error: ' + err.message;
-  }
-}
-
-async function syncFromSheet() {
-  if (!sheetId) return;
-  const syncBtn = document.getElementById('sheet-sync-btn');
-  syncBtn.classList.add('syncing');
-  syncBtn.textContent = '↻ Syncing…';
-
-  try {
-    const rows = await fetchSheetData(sheetId);
-    mergeSheetData(rows);
-    syncBtn.textContent = '✓ Synced';
-    addFeedEvent('update', 'Sheet synced', `${rows.length} show${rows.length !== 1 ? 's' : ''} refreshed from Google Sheet`);
-    setTimeout(() => { syncBtn.textContent = '↻ Sync'; syncBtn.classList.remove('syncing'); }, 2000);
-  } catch (err) {
-    syncBtn.textContent = '✕ Error';
-    setTimeout(() => { syncBtn.textContent = '↻ Sync'; syncBtn.classList.remove('syncing'); }, 3000);
-  }
-}
-
-function mergeSheetData(rows) {
-  const merged = [];
-  const existingMap = {};
-  shows.forEach(s => { existingMap[s.name + '|' + s.startDate] = s; });
-
-  rows.forEach(r => {
-    const key = r.name + '|' + r.startDate;
-    const existing = existingMap[key];
-    if (existing) {
-      existing.endDate   = r.endDate || existing.endDate;
-      existing.location  = r.location || existing.location;
-      existing.booth     = r.booth || existing.booth;
-      existing.notes     = r.notes || existing.notes;
-      existing.eventType = r.eventType || existing.eventType;
-      merged.push(existing);
-      delete existingMap[key];
-    } else {
-      merged.push({
-        id: uid(),
-        ...r,
-        checklist: DEFAULT_TASKS.map(t => ({ id: uid(), text: t, completed: false }))
-      });
-    }
-  });
-
-  shows = merged;
-  persist();
-  renderList();
-  checkBanner();
-  if (document.getElementById('view-cal').classList.contains('active')) renderCalendar();
-  if (document.getElementById('view-feed').classList.contains('active')) renderFeed();
-}
 
 // ─────────────────────────────────────
 //  EXCEL / CSV IMPORT
@@ -3587,8 +3255,9 @@ function parseImportRows(rows) {
     const endRaw = endCol ? row[endCol] : '';
     const end    = endRaw ? (parseExcelDate(endRaw) || start) : start;
     let evType = etCol ? String(row[etCol] ?? '').trim().toLowerCase() : 'national';
-    if (!['national','local','rep'].includes(evType)) {
+    if (!['national','local','regional','rep'].includes(evType)) {
       if (evType.includes('rep')) evType = 'rep';
+      else if (evType.includes('regional')) evType = 'regional';
       else if (evType.includes('local')) evType = 'local';
       else evType = 'national';
     }
@@ -3706,12 +3375,6 @@ function downloadTemplate() {
 
 renderList();
 checkBanner();
-updateSheetUI();
-
-// Auto-sync from Google Sheet on load
-if (sheetId) {
-  syncFromSheet();
-}
 </script>
 </body>
 </html>
