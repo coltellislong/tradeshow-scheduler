@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TRADESHOW SCHEDULER</title>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -33,7 +35,7 @@
     }
 
     body {
-      font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
       background: var(--off-white);
       color: var(--dark);
       min-height: 100vh;
@@ -108,7 +110,7 @@
 
     .nav-logo-main {
       font-size: 1.15rem;
-      font-weight: 700;
+      font-weight: 900;
       letter-spacing: 5px;
       color: var(--white);
       text-transform: uppercase;
@@ -131,7 +133,7 @@
       font-weight: 700;
       letter-spacing: 4px;
       text-transform: uppercase;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Roboto', sans-serif;
       transition: all .18s;
       display: flex;
       align-items: center;
@@ -169,7 +171,7 @@
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Roboto', sans-serif;
       transition: all .18s;
       clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%);
       padding-right: 22px;
@@ -333,7 +335,7 @@
       border: 1.5px solid var(--border);
       background: var(--white);
       font-size: .78rem;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-weight: 600;
       letter-spacing: 1px;
       color: var(--dark);
@@ -903,7 +905,7 @@
       padding: 6px 10px;
       border: 1.5px solid var(--border);
       font-size: .78rem;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-weight: 500;
       background: var(--off-white);
       color: var(--dark);
@@ -925,7 +927,7 @@
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Roboto', sans-serif;
       transition: background .15s;
     }
 
@@ -994,7 +996,7 @@
 
     .empty h3 {
       font-size: 1.2rem;
-      font-weight: 700;
+      font-weight: 300;
       letter-spacing: 4px;
       text-transform: uppercase;
       color: var(--dark-mid);
@@ -1112,17 +1114,21 @@
     .day.has-event { font-weight: 700; }
     .day.has-event:hover { background: rgba(0, 200, 83, 0.3); }
 
-    /* Day event dot — color set per event type via inline style */
-    .day.has-event::after {
-      content: '';
+    /* Day event dots container */
+    .day-dots {
       position: absolute;
       bottom: 1px;
       left: 50%;
       transform: translateX(-50%);
-      width: 5px;
-      height: 5px;
+      display: flex;
+      gap: 2px;
+      justify-content: center;
+    }
+    .day-dot {
+      width: 4px;
+      height: 4px;
       border-radius: 50%;
-      background: var(--dot-color, var(--green));
+      flex-shrink: 0;
     }
 
     /* ═══ DAY PANE (slide-in from right) ═══ */
@@ -1402,7 +1408,7 @@
       border: none;
       background: none;
       padding: 0;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Roboto', sans-serif;
       transition: color .15s;
     }
 
@@ -1692,7 +1698,7 @@
       font-size: .9rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      font-weight: 700;
+      font-weight: 500;
     }
 
     .modal-x {
@@ -1736,7 +1742,7 @@
       padding: 9px 12px;
       border: 1.5px solid var(--border);
       font-size: .88rem;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Roboto', sans-serif;
       color: var(--dark);
       background: var(--off-white);
       transition: border-color .15s, background .15s;
@@ -1761,7 +1767,7 @@
       text-transform: uppercase;
       cursor: pointer;
       transition: all .15s;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Roboto', sans-serif;
       border-radius: 0;
     }
 
@@ -1801,7 +1807,7 @@
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Roboto', sans-serif;
       transition: all .18s;
       clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 50%);
       padding-left: 22px;
@@ -1859,7 +1865,7 @@
       letter-spacing: 3px;
       text-transform: uppercase;
       cursor: pointer;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Roboto', sans-serif;
       transition: background .15s;
     }
 
@@ -2777,13 +2783,16 @@ function renderMonth(name, mi) {
     if (isToday) cls += ' today';
     else if (isPast) cls += ' past';
 
+    let dotsHtml = '';
     if (dayShows.length) {
       cls += ' has-event';
-      const dotColor = DOT_COLORS[dayShows[0].eventType || 'national'];
-      style = ` style="--dot-color:${dotColor}"`;
+      // Deduplicate by event type to avoid redundant dots
+      const uniqueTypes = [...new Set(dayShows.map(s => s.eventType || 'national'))];
+      const dots = uniqueTypes.map(t => `<span class="day-dot" style="background:${DOT_COLORS[t]}"></span>`).join('');
+      dotsHtml = `<span class="day-dots">${dots}</span>`;
     }
 
-    cells.push(`<div class="${cls}" onclick="openDayPane('${ds}')"${style}>${d}</div>`);
+    cells.push(`<div class="${cls}" onclick="openDayPane('${ds}')">${d}${dotsHtml}</div>`);
   }
 
   return `
