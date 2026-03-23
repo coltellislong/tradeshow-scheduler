@@ -91,16 +91,13 @@
     }
 
     .nav-logo-icon {
-      width: 38px;
-      height: 38px;
-      background: var(--red);
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%);
     }
 
-    .nav-logo-icon svg { width: 20px; height: 20px; color: #fff; }
+    .nav-logo-icon img { height: 100%; width: auto; display: block; }
 
     .nav-logo-text {
       display: flex;
@@ -259,60 +256,124 @@
       font-weight: 500;
     }
 
-    /* ═══ BANNER ═══ */
-    .banner {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
+    /* ═══ UPCOMING SHOWS TICKER ═══ */
+    .upcoming-ticker {
       background: var(--dark);
-      border-left: 4px solid var(--red);
-      padding: 16px 20px;
       margin-bottom: 28px;
-      position: relative;
       overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08);
     }
 
-    .banner::before {
-      content: '';
-      position: absolute;
-      right: -20px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 80px;
-      height: 140%;
-      background: var(--red);
-      opacity: .04;
-      transform: translateY(-50%) skewX(-15deg);
+    .ticker-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: rgba(0,0,0,.15);
+      border-bottom: 2px solid var(--red);
     }
 
-    .banner-icon { color: var(--red); font-size: 1.4rem; flex-shrink: 0; }
+    .ticker-live-dot {
+      width: 8px; height: 8px;
+      background: #E53935;
+      border-radius: 50%;
+      animation: pulse-dot 1.5s infinite;
+      flex-shrink: 0;
+    }
 
-    .banner-body { flex: 1; }
-
-    .banner-body h4 {
-      font-size: .72rem;
-      letter-spacing: 3px;
-      color: var(--red);
-      text-transform: uppercase;
-      margin-bottom: 8px;
+    .ticker-label {
+      font-size: .65rem;
       font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.9);
     }
 
-    .banner-body li {
-      font-size: .85rem;
-      color: rgba(255,255,255,.9);
-      padding: 3px 0;
-      list-style: none;
+    .ticker-label span { color: var(--green); }
+
+    .ticker-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .ticker-table th {
+      padding: 8px 16px;
+      font-size: .6rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+      font-weight: 700;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.1);
+    }
+
+    .ticker-table td {
+      padding: 10px 16px;
+      font-size: .82rem;
+      color: rgba(255,255,255,.85);
+      border-bottom: 1px solid rgba(255,255,255,.05);
       font-weight: 500;
     }
 
-    .banner-close {
-      background: none; border: none;
-      color: rgba(255,255,255,.4); cursor: pointer;
-      font-size: 1.1rem; padding: 0; line-height: 1;
+    .ticker-table tr:last-child td { border-bottom: none; }
+
+    .ticker-table tr:hover td { background: rgba(255,255,255,.03); }
+
+    .ticker-name {
+      font-weight: 700;
+      letter-spacing: .5px;
+      color: var(--white);
     }
 
-    .banner-close:hover { color: var(--red); }
+    .ticker-countdown {
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: 700;
+      font-size: .85rem;
+    }
+
+    .ticker-countdown.urgent { color: #E53935; }
+    .ticker-countdown.soon { color: #F9A825; }
+    .ticker-countdown.normal { color: var(--green); }
+    .ticker-countdown.live { color: #E53935; animation: pulse-dot 1s infinite; }
+
+    .ticker-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ticker-prog-bar {
+      width: 60px;
+      height: 4px;
+      background: rgba(255,255,255,.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .ticker-prog-fill {
+      height: 100%;
+      background: var(--green);
+      border-radius: 2px;
+      transition: width .3s;
+    }
+
+    .ticker-prog-fill.low { background: #E53935; }
+    .ticker-prog-fill.med { background: #F9A825; }
+
+    .ticker-pct {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .75rem;
+      color: rgba(255,255,255,.6);
+      min-width: 32px;
+    }
+
+    .ticker-type-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
 
     /* ═══ LIST CONTROLS ═══ */
     .list-bar {
@@ -494,6 +555,75 @@
     .cards-grid.view-list .show-card .card-toggle { display: none !important; }
     .cards-grid.view-list .show-card::before { width: 3px; }
 
+    /* ═══ TILE CHECKLIST DROPDOWN ═══ */
+    .cards-grid.view-tiles .show-card {
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .tile-checklist {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s cubic-bezier(.4,0,.2,1);
+      background: var(--white);
+      border-top: 1px solid var(--border);
+    }
+
+    .tile-checklist.open {
+      max-height: 400px;
+    }
+
+    .cards-grid.view-tiles .show-card.tile-expanded {
+      height: auto;
+    }
+
+    .tile-checklist-inner {
+      padding: 12px 16px;
+    }
+
+    .tile-checklist-inner .tile-cl-head {
+      font-size: .62rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #2A3F2E;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tile-checklist-inner .tile-cl-head span {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--green);
+    }
+
+    .tile-cl-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--light);
+      font-size: .78rem;
+      color: #1A2E1F;
+    }
+
+    .tile-cl-item:last-child { border-bottom: none; }
+
+    .tile-cl-item input[type="checkbox"] {
+      width: 13px; height: 13px;
+      cursor: pointer;
+      accent-color: var(--red);
+      flex-shrink: 0;
+    }
+
+    .tile-cl-item.done label {
+      text-decoration: line-through;
+      color: var(--mid);
+    }
+
+    .tile-cl-item label { cursor: pointer; flex: 1; }
+
     /* ═══ SHOW CARD ═══ */
     .show-card {
       background: var(--white);
@@ -644,9 +774,9 @@
     }
 
     .pill-national {
-      background: rgba(41,81,53,.12);
-      color: #295135;
-      border: 1.5px solid rgba(41,81,53,.3);
+      background: rgba(46,125,50,.12);
+      color: #2E7D32;
+      border: 1.5px solid rgba(46,125,50,.3);
     }
 
     .pill-local {
@@ -714,13 +844,13 @@
     }
 
     .filter-pill.active[data-filter="all"] {
-      background: #295135;
-      border-color: #295135;
+      background: #2E7D32;
+      border-color: #2E7D32;
     }
 
     .filter-pill.active[data-filter="national"] {
-      background: #295135;
-      border-color: #295135;
+      background: #2E7D32;
+      border-color: #2E7D32;
     }
 
     .filter-pill.active[data-filter="local"] {
@@ -746,7 +876,7 @@
     }
 
     .filter-pill[data-filter="all"] .pill-dot { background: var(--dark-mid); }
-    .filter-pill[data-filter="national"] .pill-dot { background: #295135; }
+    .filter-pill[data-filter="national"] .pill-dot { background: #2E7D32; }
     .filter-pill[data-filter="local"] .pill-dot { background: #1565C0; }
     .filter-pill[data-filter="regional"] .pill-dot { background: #7B1FA2; }
     .filter-pill[data-filter="rep"] .pill-dot { background: #E65100; }
@@ -1922,11 +2052,7 @@
 <nav>
   <div class="nav-logo">
     <div class="nav-logo-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M8 6h8M8 10h8M8 14h4"/>
-        <rect x="2" y="2" width="20" height="20" rx="0"/>
-        <path d="M16 18l3 3 3-3"/>
-      </svg>
+      <img src="logo.png" alt="Logo">
     </div>
     <div class="nav-logo-text">
       <span class="nav-logo-main">Tradeshow</span>
@@ -1954,15 +2080,8 @@
 <!-- ══════════ MAIN ══════════ -->
 <main>
 
-  <!-- Notification Banner -->
-  <div class="banner hidden" id="banner">
-    <div class="banner-icon">⚑</div>
-    <div class="banner-body">
-      <h4>▲ Approaching Deadlines — Action Required</h4>
-      <ul id="banner-list"></ul>
-    </div>
-    <button class="banner-close" onclick="closeBanner()">✕</button>
-  </div>
+  <!-- Upcoming Shows Ticker -->
+  <div class="upcoming-ticker hidden" id="upcoming-ticker"></div>
 
   <!-- ══ LIST VIEW ══ -->
   <div class="view active" id="view-list">
@@ -2334,37 +2453,68 @@ function formatTs(ts) {
 // ─────────────────────────────────────
 //  BANNER
 // ─────────────────────────────────────
-function checkBanner() {
-  const due = shows.filter(s => { const d = daysUntil(s.startDate); return d >= 0 && d <= 30; });
-  if (!due.length) return;
+const TYPE_DOT_COLORS = { national: '#2E7D32', local: '#1565C0', regional: '#7B1FA2', rep: '#E65100' };
 
-  const list = document.getElementById('banner-list');
-  list.innerHTML = due.map(s => {
+function checkBanner() {
+  const upcoming = shows
+    .filter(s => { const d = daysUntil(s.startDate); return d >= 0 && d <= 90; })
+    .sort((a, b) => a.startDate.localeCompare(b.startDate))
+    .slice(0, 8);
+
+  const ticker = document.getElementById('upcoming-ticker');
+  if (!upcoming.length) {
+    ticker.classList.add('hidden');
+    return;
+  }
+
+  const rows = upcoming.map(s => {
     const d = daysUntil(s.startDate);
-    const label = d === 0 ? 'Today!' : `${d} day${d !== 1 ? 's' : ''} away`;
-    return `<li>▸ <strong>${esc(s.name)}</strong> — ${label} · ${progress(s)}% planned</li>`;
+    const pct = progress(s);
+    let countdownClass, countdownText;
+    if (d === 0) { countdownClass = 'live'; countdownText = 'LIVE'; }
+    else if (d <= 7) { countdownClass = 'urgent'; countdownText = `${d}d`; }
+    else if (d <= 30) { countdownClass = 'soon'; countdownText = `${d}d`; }
+    else { countdownClass = 'normal'; countdownText = `${d}d`; }
+
+    const fillClass = pct < 40 ? 'low' : pct < 75 ? 'med' : '';
+    const evType = s.eventType || 'national';
+    const dotColor = TYPE_DOT_COLORS[evType] || '#2E7D32';
+
+    return `<tr onclick="switchView('list');setTimeout(()=>{const c=document.getElementById('card-${s.id}');if(c)c.scrollIntoView({behavior:'smooth'})},150)" style="cursor:pointer">
+      <td><span class="ticker-type-dot" style="background:${dotColor}"></span><span class="ticker-name">${esc(s.name)}</span></td>
+      <td>${fmt(s.startDate)}</td>
+      <td>${esc(s.location || '—')}</td>
+      <td><span class="ticker-countdown ${countdownClass}">${countdownText}</span></td>
+      <td>
+        <div class="ticker-progress">
+          <div class="ticker-prog-bar"><div class="ticker-prog-fill ${fillClass}" style="width:${pct}%"></div></div>
+          <span class="ticker-pct">${pct}%</span>
+        </div>
+      </td>
+      <td><span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[evType]}" style="margin:0;font-size:.55rem">${EVENT_TYPE_LABELS[evType]}</span></td>
+    </tr>`;
   }).join('');
 
-  document.getElementById('banner').classList.remove('hidden');
+  ticker.innerHTML = `
+    <div class="ticker-header">
+      <span class="ticker-live-dot"></span>
+      <span class="ticker-label">Upcoming Shows <span>— ${upcoming.length} on deck</span></span>
+    </div>
+    <table class="ticker-table">
+      <thead>
+        <tr>
+          <th>Show</th>
+          <th>Date</th>
+          <th>Location</th>
+          <th>Countdown</th>
+          <th>Progress</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
 
-  const todayStr = new Date().toISOString().slice(0,10);
-  if (localStorage.getItem(NOTIF_KEY) !== todayStr && 'Notification' in window) {
-    Notification.requestPermission().then(perm => {
-      if (perm !== 'granted') return;
-      due.forEach(s => {
-        const d = daysUntil(s.startDate);
-        new Notification(`📅 ${s.name}`, {
-          body: `${d === 0 ? 'Starting today!' : `${d} days away`} — ${progress(s)}% planned`,
-          tag: `ts-${s.id}`
-        });
-      });
-      localStorage.setItem(NOTIF_KEY, todayStr);
-    });
-  }
-}
-
-function closeBanner() {
-  document.getElementById('banner').classList.add('hidden');
+  ticker.classList.remove('hidden');
 }
 
 // ─────────────────────────────────────
@@ -2472,7 +2622,7 @@ function cardHTML(show) {
     </li>`).join('');
 
   return `
-<div class="show-card ${statusClass}" id="card-${show.id}">
+<div class="show-card ${statusClass}" id="card-${show.id}" onclick="toggleTileChecklist('${show.id}', event)">
   <div class="card-head">
     <div class="card-head-top">
       <div>
@@ -2513,6 +2663,17 @@ function cardHTML(show) {
     <span id="tgl-txt-${show.id}">${open ? 'Collapse' : 'Show Checklist'}</span>
     <span class="toggle-chevron ${open ? 'up' : ''}" id="tgl-chv-${show.id}"></span>
   </div>
+  <div class="tile-checklist" id="tile-cl-${show.id}" onclick="event.stopPropagation()">
+    <div class="tile-checklist-inner">
+      <div class="tile-cl-head">Checklist <span>${pct}%</span></div>
+      ${(show.checklist || []).map(item => `
+        <div class="tile-cl-item ${item.completed ? 'done' : ''}">
+          <input type="checkbox" id="tcb-${item.id}" ${item.completed ? 'checked' : ''}
+            onchange="toggleItem('${show.id}','${item.id}',this.checked); updateTileChecklist('${show.id}')">
+          <label for="tcb-${item.id}">${esc(item.text)}</label>
+        </div>`).join('')}
+    </div>
+  </div>
 </div>`;
 }
 
@@ -2525,6 +2686,38 @@ function toggleCard(id) {
   txt.textContent = isHidden ? 'Collapse' : 'Show Checklist';
   chv.classList.toggle('up', isHidden);
   expanded[id] = isHidden;
+}
+
+function toggleTileChecklist(id, event) {
+  // Only trigger in tile view
+  if (viewMode !== 'tiles') return;
+  event.stopPropagation();
+  const card = document.getElementById(`card-${id}`);
+  const cl = document.getElementById(`tile-cl-${id}`);
+  if (!cl) return;
+  const isOpen = cl.classList.contains('open');
+  // Close all other open tile checklists
+  document.querySelectorAll('.tile-checklist.open').forEach(el => {
+    el.classList.remove('open');
+    el.closest('.show-card')?.classList.remove('tile-expanded');
+  });
+  if (!isOpen) {
+    cl.classList.add('open');
+    card.classList.add('tile-expanded');
+  }
+}
+
+function updateTileChecklist(showId) {
+  const show = shows.find(s => s.id === showId);
+  if (!show) return;
+  const pct = progress(show);
+  const tileCl = document.getElementById(`tile-cl-${showId}`);
+  if (!tileCl) return;
+  const head = tileCl.querySelector('.tile-cl-head span');
+  if (head) head.textContent = pct + '%';
+  tileCl.querySelectorAll('.tile-cl-item').forEach((el, i) => {
+    if (show.checklist[i]) el.classList.toggle('done', show.checklist[i].completed);
+  });
 }
 
 function toggleItem(showId, itemId, checked) {
@@ -2709,7 +2902,7 @@ function renderMonth(name, mi) {
 
   const filteredShows = filterType === 'all' ? shows : shows.filter(s => (s.eventType || 'national') === filterType);
 
-  const DOT_COLORS = { national: '#295135', local: '#1565C0', regional: '#7B1FA2', rep: '#E65100' };
+  const DOT_COLORS = { national: '#2E7D32', local: '#1565C0', regional: '#7B1FA2', rep: '#E65100' };
 
   for (let d = 1; d <= daysInMonth; d++) {
     const ds     = `${calYear}-${String(mi+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -3049,8 +3242,8 @@ function renderFeedSidebar() {
     <div class="widget-head">EVENT TYPES <span class="wh-accent">◆</span></div>
     <div class="widget-body">
       <div class="stats-grid">
-        <div class="stat-item" style="border-left-color:#295135;background:rgba(41,81,53,.06)">
-          <div class="stat-value" style="color:#295135">${natCount}</div>
+        <div class="stat-item" style="border-left-color:#2E7D32;background:rgba(46,125,50,.06)">
+          <div class="stat-value" style="color:#2E7D32">${natCount}</div>
           <div class="stat-label">National</div>
         </div>
         <div class="stat-item" style="border-left-color:#1565C0;background:rgba(21,101,192,.06)">
