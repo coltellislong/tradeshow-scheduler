@@ -511,6 +511,125 @@
 
     .status-badge.s-soon .status-dot { animation: pulse-dot 1s infinite; }
 
+    /* ═══ EVENT TYPE PILLS ═══ */
+    .event-type-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-family: 'Share Tech Mono', monospace;
+      margin-top: 6px;
+    }
+
+    .pill-national {
+      background: rgba(0,74,9,.12);
+      color: #2e7d32;
+      border: 1.5px solid rgba(0,74,9,.3);
+    }
+
+    .pill-local {
+      background: rgba(79,195,247,.12);
+      color: #0277bd;
+      border: 1.5px solid rgba(79,195,247,.35);
+    }
+
+    .pill-rep {
+      background: rgba(255,214,0,.12);
+      color: #f57f17;
+      border: 1.5px solid rgba(255,214,0,.4);
+    }
+
+    /* ═══ FILTER PILLS BAR ═══ */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-bar-label {
+      font-size: .65rem;
+      letter-spacing: 3px;
+      color: var(--dark-mid);
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-right: 4px;
+    }
+
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Share Tech Mono', monospace;
+      cursor: pointer;
+      transition: all .15s ease;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--dark-mid);
+      user-select: none;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--mid);
+      background: var(--light);
+    }
+
+    .filter-pill.active {
+      color: var(--white);
+      border-color: transparent;
+    }
+
+    .filter-pill.active[data-filter="all"] {
+      background: var(--dark);
+      border-color: var(--dark);
+    }
+
+    .filter-pill.active[data-filter="national"] {
+      background: #2e7d32;
+      border-color: #2e7d32;
+    }
+
+    .filter-pill.active[data-filter="local"] {
+      background: #0277bd;
+      border-color: #0277bd;
+    }
+
+    .filter-pill.active[data-filter="rep"] {
+      background: #f57f17;
+      border-color: #f57f17;
+    }
+
+    .filter-pill .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .filter-pill[data-filter="all"] .pill-dot { background: var(--dark-mid); }
+    .filter-pill[data-filter="national"] .pill-dot { background: #2e7d32; }
+    .filter-pill[data-filter="local"] .pill-dot { background: #0277bd; }
+    .filter-pill[data-filter="rep"] .pill-dot { background: #f57f17; }
+    .filter-pill.active .pill-dot { background: rgba(255,255,255,.7); }
+
+    .event-type-selector {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; }
       50% { opacity: .3; }
@@ -1612,13 +1731,20 @@
       </div>
     </div>
 
-    <div class="list-bar">
+    <div class="list-bar" style="margin-bottom:8px">
       <label for="sort-sel">Sort by</label>
       <select id="sort-sel" onchange="sortBy=this.value; renderList()">
         <option value="date">Date</option>
         <option value="name">Name A–Z</option>
         <option value="progress">Progress</option>
       </select>
+    </div>
+    <div class="filter-bar" style="margin-bottom:24px">
+      <span class="filter-bar-label">Filter</span>
+      <button class="filter-pill active" data-filter="all" onclick="setFilter('all')"><span class="pill-dot"></span>All</button>
+      <button class="filter-pill" data-filter="national" onclick="setFilter('national')"><span class="pill-dot"></span>National</button>
+      <button class="filter-pill" data-filter="local" onclick="setFilter('local')"><span class="pill-dot"></span>Local</button>
+      <button class="filter-pill" data-filter="rep" onclick="setFilter('rep')"><span class="pill-dot"></span>Rep Event</button>
     </div>
 
     <div class="cards-grid" id="cards-grid"></div>
@@ -1651,6 +1777,13 @@
         <div class="cal-year-txt" id="cal-year-txt">20<span>26</span></div>
         <button class="cal-nav" onclick="changeYear(1)">›</button>
       </div>
+    </div>
+    <div class="filter-bar" style="margin-bottom:20px">
+      <span class="filter-bar-label">Filter</span>
+      <button class="filter-pill active" data-filter="all" onclick="setFilter('all')"><span class="pill-dot"></span>All</button>
+      <button class="filter-pill" data-filter="national" onclick="setFilter('national')"><span class="pill-dot"></span>National</button>
+      <button class="filter-pill" data-filter="local" onclick="setFilter('local')"><span class="pill-dot"></span>Local</button>
+      <button class="filter-pill" data-filter="rep" onclick="setFilter('rep')"><span class="pill-dot"></span>Rep Event</button>
     </div>
     <div class="months-grid" id="months-grid"></div>
   </div>
@@ -1704,6 +1837,15 @@
         </div>
       </div>
       <div class="fg">
+        <label>Event Type</label>
+        <div class="event-type-selector" id="f-event-type-group">
+          <button type="button" class="filter-pill active" data-value="national" onclick="selectEventType('national')"><span class="pill-dot"></span>National</button>
+          <button type="button" class="filter-pill" data-value="local" onclick="selectEventType('local')"><span class="pill-dot"></span>Local</button>
+          <button type="button" class="filter-pill" data-value="rep" onclick="selectEventType('rep')"><span class="pill-dot"></span>Rep Event</button>
+        </div>
+        <input type="hidden" id="f-event-type" value="national">
+      </div>
+      <div class="fg">
         <label>Notes</label>
         <textarea id="f-notes" placeholder="Any additional details..."></textarea>
       </div>
@@ -1753,6 +1895,7 @@
           <span class="col-chip opt">Location</span>
           <span class="col-chip opt">Booth Number</span>
           <span class="col-chip opt">Notes</span>
+          <span class="col-chip opt">Event Type</span>
         </div>
         <p>✦ Required &nbsp;|&nbsp; Dates: YYYY-MM-DD, M/D/YYYY, or native Excel cells &nbsp;|&nbsp; .xlsx .xls .csv</p>
         <button class="btn btn-secondary btn-sm" onclick="downloadTemplate()">↓ Download Template</button>
@@ -1839,6 +1982,7 @@ let shows       = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 let feedEvents  = JSON.parse(localStorage.getItem(FEED_KEY) || '[]');
 let calYear     = new Date().getFullYear();
 let sortBy      = 'date';
+let filterType  = 'all';
 let editId      = null;
 let delId       = null;
 let expanded    = {};
@@ -1967,6 +2111,28 @@ function closeBanner() {
 }
 
 // ─────────────────────────────────────
+//  FILTER / EVENT TYPE HELPERS
+// ─────────────────────────────────────
+function setFilter(type) {
+  filterType = type;
+  document.querySelectorAll('.filter-bar .filter-pill').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === type);
+  });
+  renderList();
+  renderCalendar();
+}
+
+function selectEventType(type) {
+  document.getElementById('f-event-type').value = type;
+  document.querySelectorAll('#f-event-type-group .filter-pill').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.value === type);
+  });
+}
+
+const EVENT_TYPE_LABELS = { national: 'National', local: 'Local', rep: 'Rep Event' };
+const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', rep: 'pill-rep' };
+
+// ─────────────────────────────────────
 //  LIST VIEW
 // ─────────────────────────────────────
 function renderList() {
@@ -1974,7 +2140,11 @@ function renderList() {
   const empty = document.getElementById('empty-state');
   document.getElementById('count-num').textContent = shows.length;
 
-  if (!shows.length) {
+  const filtered = filterType === 'all'
+    ? shows
+    : shows.filter(s => (s.eventType || 'national') === filterType);
+
+  if (!filtered.length) {
     grid.innerHTML = '';
     empty.classList.remove('hidden');
     return;
@@ -1982,7 +2152,7 @@ function renderList() {
 
   empty.classList.add('hidden');
 
-  const sorted = [...shows].sort((a, b) => {
+  const sorted = [...filtered].sort((a, b) => {
     if (sortBy === 'date')     return a.startDate.localeCompare(b.startDate);
     if (sortBy === 'name')     return a.name.localeCompare(b.name);
     if (sortBy === 'progress') return progress(b) - progress(a);
@@ -2034,6 +2204,7 @@ function cardHTML(show) {
         <div class="card-meta">◈ ${fmt(show.startDate)}${endStr}</div>
         ${locStr}
         <span class="status-badge ${badgeClass}"><span class="status-dot"></span>${badgeTxt}</span>
+        <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[show.eventType || 'national']}">${EVENT_TYPE_LABELS[show.eventType || 'national']}</span>
       </div>
       <div class="card-btns">
         <button class="icon-btn" onclick="openEdit('${show.id}')" title="Edit">✎</button>
@@ -2140,6 +2311,7 @@ function openAdd() {
   ['f-name','f-start','f-end','f-loc','f-booth','f-notes'].forEach(id => {
     document.getElementById(id).value = '';
   });
+  selectEventType('national');
   document.getElementById('show-overlay').classList.remove('hidden');
   setTimeout(() => document.getElementById('f-name').focus(), 50);
 }
@@ -2155,6 +2327,7 @@ function openEdit(id) {
   document.getElementById('f-loc').value   = s.location || '';
   document.getElementById('f-booth').value = s.booth || '';
   document.getElementById('f-notes').value = s.notes || '';
+  selectEventType(s.eventType || 'national');
   document.getElementById('show-overlay').classList.remove('hidden');
 }
 
@@ -2171,6 +2344,8 @@ function saveShow() {
   if (!start) { alert('Please select a start date.'); return; }
   if (end && end < start) { alert('End date cannot be before start date.'); return; }
 
+  const eventType = document.getElementById('f-event-type').value || 'national';
+
   if (editId) {
     const s = shows.find(x => x.id === editId);
     if (s) {
@@ -2180,6 +2355,7 @@ function saveShow() {
       s.location  = document.getElementById('f-loc').value.trim();
       s.booth     = document.getElementById('f-booth').value.trim();
       s.notes     = document.getElementById('f-notes').value.trim();
+      s.eventType = eventType;
       addFeedEvent('update', `Show updated`, `${name} details were modified`, s.id);
     }
   } else {
@@ -2190,6 +2366,7 @@ function saveShow() {
       location: document.getElementById('f-loc').value.trim(),
       booth:    document.getElementById('f-booth').value.trim(),
       notes:    document.getElementById('f-notes').value.trim(),
+      eventType: eventType,
       checklist: DEFAULT_TASKS.map(t => ({ id: uid(), text: t, completed: false }))
     };
     shows.push(newShow);
@@ -2254,11 +2431,13 @@ function renderMonth(name, mi) {
   const cells = [];
   for (let i = 0; i < firstDow; i++) cells.push('<div class="day"></div>');
 
+  const filteredShows = filterType === 'all' ? shows : shows.filter(s => (s.eventType || 'national') === filterType);
+
   for (let d = 1; d <= daysInMonth; d++) {
     const ds     = `${calYear}-${String(mi+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const starts = shows.filter(s => s.startDate === ds);
-    const ends   = shows.filter(s => s.endDate === ds && s.startDate !== ds);
-    const spans  = shows.filter(s => ds > s.startDate && ds < (s.endDate || s.startDate));
+    const starts = filteredShows.filter(s => s.startDate === ds);
+    const ends   = filteredShows.filter(s => s.endDate === ds && s.startDate !== ds);
+    const spans  = filteredShows.filter(s => ds > s.startDate && ds < (s.endDate || s.startDate));
     const isToday = ds === todayStr;
     const isPast  = ds < todayStr;
 
@@ -2306,6 +2485,7 @@ function showPopup(e, idsStr) {
     return `
 ${i > 0 ? '<hr>' : ''}
 <h4>${esc(s.name)}</h4>
+<span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[s.eventType || 'national']}" style="margin-bottom:6px">${EVENT_TYPE_LABELS[s.eventType || 'national']}</span>
 <p>◈ ${fmt(s.startDate)}${s.endDate !== s.startDate ? ' – '+fmt(s.endDate) : ''}</p>
 ${s.location ? `<p>▸ ${esc(s.location)}</p>` : ''}
 <p class="cp-prog">${pct}% planned · ${lbl}</p>
@@ -2539,6 +2719,31 @@ function renderFeedSidebar() {
     </div>
   </div>`;
 
+  // ── Event Type Breakdown ──
+  const natCount = shows.filter(s => (s.eventType || 'national') === 'national').length;
+  const locCount = shows.filter(s => (s.eventType || 'national') === 'local').length;
+  const repCount = shows.filter(s => (s.eventType || 'national') === 'rep').length;
+  const typeBreakdownHtml = shows.length ? `
+  <div class="sidebar-widget">
+    <div class="widget-head">EVENT TYPES <span class="wh-accent">◆</span></div>
+    <div class="widget-body">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" style="color:#2e7d32">${natCount}</div>
+          <div class="stat-label">National</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#0277bd">${locCount}</div>
+          <div class="stat-label">Local</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#f57f17">${repCount}</div>
+          <div class="stat-label">Rep Events</div>
+        </div>
+      </div>
+    </div>
+  </div>` : '';
+
   // ── Upcoming list ──
   const upList = upcoming.slice(0, 6);
   const upHtml = upList.length ? `
@@ -2618,7 +2823,7 @@ function renderFeedSidebar() {
     </div>
   </div>`;
 
-  sidebar.innerHTML = countdownHtml + statsHtml + upHtml + phaseHtml + tipHtml;
+  sidebar.innerHTML = countdownHtml + statsHtml + typeBreakdownHtml + upHtml + phaseHtml + tipHtml;
 }
 
 // ─────────────────────────────────────
@@ -2689,7 +2894,8 @@ const COL_ALIASES = {
   end:      ['end date','end','close date','close','show end'],
   location: ['location','city','venue','place','city/state'],
   booth:    ['booth','booth number','booth #','booth no','booth num'],
-  notes:    ['notes','note','comments','description','details']
+  notes:    ['notes','note','comments','description','details'],
+  eventType:['event type','eventtype','type','category','event category']
 };
 
 function findCol(headers, field) {
@@ -2724,6 +2930,7 @@ function parseImportRows(rows) {
   const locCol = findCol(sample, 'location');
   const bthCol = findCol(sample, 'booth');
   const ntsCol = findCol(sample, 'notes');
+  const etCol  = findCol(sample, 'eventType');
 
   importedRows = [];
   const errors = [];
@@ -2735,11 +2942,18 @@ function parseImportRows(rows) {
     if (!start) { errors.push(`Row ${i+2}: invalid start date`); return; }
     const endRaw = endCol ? row[endCol] : '';
     const end    = endRaw ? (parseExcelDate(endRaw) || start) : start;
+    let evType = etCol ? String(row[etCol] ?? '').trim().toLowerCase() : 'national';
+    if (!['national','local','rep'].includes(evType)) {
+      if (evType.includes('rep')) evType = 'rep';
+      else if (evType.includes('local')) evType = 'local';
+      else evType = 'national';
+    }
     importedRows.push({
       name, startDate: start, endDate: end,
       location: locCol ? String(row[locCol] ?? '').trim() : '',
       booth:    bthCol ? String(row[bthCol] ?? '').trim() : '',
-      notes:    ntsCol ? String(row[ntsCol] ?? '').trim() : ''
+      notes:    ntsCol ? String(row[ntsCol] ?? '').trim() : '',
+      eventType: evType
     });
   });
 
@@ -2827,11 +3041,11 @@ function confirmImport() {
 function downloadTemplate() {
   if (typeof XLSX === 'undefined') { alert('Library still loading.'); return; }
   const ws = XLSX.utils.aoa_to_sheet([
-    ['Show Name','Start Date','End Date','Location','Booth Number','Notes'],
-    ['Example Trade Show','2026-06-15','2026-06-17','Las Vegas, NV','#1234','Sample notes'],
-    ['Another Show','2026-09-10','2026-09-12','Chicago, IL','#500','']
+    ['Show Name','Start Date','End Date','Location','Booth Number','Notes','Event Type'],
+    ['Example Trade Show','2026-06-15','2026-06-17','Las Vegas, NV','#1234','Sample notes','National'],
+    ['Another Show','2026-09-10','2026-09-12','Chicago, IL','#500','','Local']
   ]);
-  ws['!cols'] = [22,14,14,20,14,30].map(w => ({ wch: w }));
+  ws['!cols'] = [22,14,14,20,14,30,14].map(w => ({ wch: w }));
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Shows');
   XLSX.writeFile(wb, 'tradeshow-template.xlsx');
