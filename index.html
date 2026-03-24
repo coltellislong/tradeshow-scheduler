@@ -625,43 +625,6 @@
 
     .tile-cl-item label { cursor: pointer; flex: 1; }
 
-    /* ═══ TILE/LIST MINI PROGRESS BAR ═══ */
-    .tile-progress { display: none; }
-
-    .cards-grid.view-tiles .tile-progress,
-    .cards-grid.view-list .tile-progress {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 6px;
-      width: 100%;
-    }
-
-    .tile-prog-track {
-      flex: 1;
-      height: 4px;
-      background: var(--light);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .tile-prog-fill {
-      height: 100%;
-      background: var(--red);
-      border-radius: 2px;
-      transition: width .3s ease;
-    }
-
-    .tile-prog-fill.full { background: var(--green); }
-
-    .tile-prog-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: .65rem;
-      color: var(--mid);
-      min-width: 28px;
-      text-align: right;
-    }
-
     /* ═══ SHOW CARD ═══ */
     .show-card {
       background: var(--white);
@@ -936,6 +899,8 @@
 
     /* Card body */
     .card-body { padding: 16px 20px 4px 24px; }
+    .card-body.prog-always { padding: 10px 20px 6px 24px; border-top: 1px solid var(--border); }
+    .card-body.prog-always .prog-section { margin-bottom: 0; }
 
     /* Progress */
     .prog-section { margin-bottom: 14px; }
@@ -970,7 +935,7 @@
 
     .prog-fill {
       height: 100%;
-      background: var(--red);
+      background: #F9A825;
       transition: width .4s cubic-bezier(.4,0,.2,1);
       position: relative;
     }
@@ -980,7 +945,7 @@
       position: absolute;
       right: 0; top: -3px;
       width: 10px; height: 10px;
-      background: var(--red);
+      background: #F9A825;
       transform: rotate(45deg);
       transition: opacity .2s;
     }
@@ -1001,7 +966,7 @@
       background: var(--light);
     }
 
-    .prog-seg.done { background: var(--red); }
+    .prog-seg.done { background: #F9A825; }
     .prog-seg.done.full-done { background: var(--green); }
 
     /* Checklist */
@@ -2636,7 +2601,7 @@ function cardHTML(show) {
   const badgeTxt    = isPast ? 'Concluded' : isToday ? 'Live Today' : isSoon ? `${d}d away` : `${d} days`;
 
   const pct  = progress(show);
-  const open = expanded[show.id] !== false;
+  const open = expanded[show.id] === true;
   const endStr = (show.endDate && show.endDate !== show.startDate) ? ` – ${fmt(show.endDate)}` : '';
   const locStr = show.location
     ? `<div class="card-loc">▸ ${esc(show.location)}${show.booth ? ' · Booth ' + esc(show.booth) : ''}</div>`
@@ -2668,12 +2633,6 @@ function cardHTML(show) {
         ${locStr}
         <span class="status-badge ${badgeClass}"><span class="status-dot"></span>${badgeTxt}</span>
         <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[show.eventType || 'national']}">${EVENT_TYPE_LABELS[show.eventType || 'national']}</span>
-        <div class="tile-progress" id="tp-${show.id}">
-          <div class="tile-prog-track">
-            <div class="tile-prog-fill ${pct === 100 ? 'full' : ''}" style="width:${pct}%"></div>
-          </div>
-          <span class="tile-prog-label">${pct}%</span>
-        </div>
       </div>
       <div class="card-btns">
         <button class="icon-btn" onclick="openEdit('${show.id}')" title="Edit">✎</button>
@@ -2681,19 +2640,21 @@ function cardHTML(show) {
       </div>
     </div>
   </div>
+  <div class="card-body prog-always">
+    <div class="prog-section">
+      <div class="prog-header">
+        <span class="prog-label">Planning Progress</span>
+        <span class="prog-num" id="pt-${show.id}">${pct}%</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill ${pct === 100 ? 'full' : ''}" id="pf-${show.id}" style="width:${pct}%"></div>
+      </div>
+      <div class="prog-segments" id="ps-${show.id}">${segsHtml}</div>
+    </div>
+  </div>
   <div id="body-${show.id}" ${open ? '' : 'style="display:none"'}>
     <div class="card-body">
       ${show.notes ? `<div class="card-notes-txt">${esc(show.notes)}</div>` : ''}
-      <div class="prog-section">
-        <div class="prog-header">
-          <span class="prog-label">Planning Progress</span>
-          <span class="prog-num" id="pt-${show.id}">${pct}%</span>
-        </div>
-        <div class="prog-track">
-          <div class="prog-fill ${pct === 100 ? 'full' : ''}" id="pf-${show.id}" style="width:${pct}%"></div>
-        </div>
-        <div class="prog-segments" id="ps-${show.id}">${segsHtml}</div>
-      </div>
       <ul class="checklist" id="cl-${show.id}">${items}</ul>
       <div class="add-task-row">
         <input type="text" id="nt-${show.id}" placeholder="Add custom task..."
@@ -2761,14 +2722,6 @@ function updateTileChecklist(showId) {
   tileCl.querySelectorAll('.tile-cl-item').forEach((el, i) => {
     if (show.checklist[i]) el.classList.toggle('done', show.checklist[i].completed);
   });
-  // Update mini progress bar
-  const tp = document.getElementById(`tp-${showId}`);
-  if (tp) {
-    const fill = tp.querySelector('.tile-prog-fill');
-    const label = tp.querySelector('.tile-prog-label');
-    if (fill) { fill.style.width = pct + '%'; fill.classList.toggle('full', pct === 100); }
-    if (label) label.textContent = pct + '%';
-  }
 }
 
 function toggleItem(showId, itemId, checked) {
