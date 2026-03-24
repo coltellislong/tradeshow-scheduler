@@ -140,29 +140,29 @@
 
     /* ═══ DARK MODE ═══ */
     [data-theme="dark"] {
-      --white:      #1A1F1A;
-      --off-white:  #141814;
-      --light:      #2A332A;
+      --white:      #1A261E;
+      --off-white:  #142018;
+      --light:      #243A2A;
       --mid:        #B0C4B0;
       --dark-mid:   #E0E8E0;
       --dark:       #FFFFFF;
       --black:      #FFFFFF;
-      --border:     #3A4A3A;
+      --border:     #2E5038;
     }
 
     [data-theme="dark"] body {
-      background: #141814;
+      background: #142018;
       color: #FFFFFF;
     }
 
     [data-theme="dark"] body::before {
       background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        linear-gradient(rgba(41,81,53,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(41,81,53,0.08) 1px, transparent 1px);
     }
 
     [data-theme="dark"] nav {
-      background: #0D120D;
+      background: #0D1A12;
       border-bottom-color: #295135;
     }
 
@@ -179,8 +179,8 @@
     [data-theme="dark"] .cal-grid,
     [data-theme="dark"] .day-pane,
     [data-theme="dark"] .import-drop {
-      background: #1A1F1A;
-      border-color: #3A4A3A;
+      background: #1A261E;
+      border-color: #2E5038;
       color: #FFFFFF;
     }
 
@@ -189,40 +189,40 @@
     }
 
     [data-theme="dark"] .tile-checklist {
-      border-top-color: #3A4A3A;
+      border-top-color: #2E5038;
     }
 
     [data-theme="dark"] .tile-cl-item {
-      border-bottom-color: #2A332A;
+      border-bottom-color: #243A2A;
     }
 
     [data-theme="dark"] .filter-pill {
-      background: #1A1F1A;
-      border-color: #3A4A3A;
+      background: #1A261E;
+      border-color: #2E5038;
       color: #FFFFFF;
     }
 
     [data-theme="dark"] .filter-pill:hover {
-      background: #2A332A;
-      border-color: #4A5A4A;
+      background: #243A2A;
+      border-color: #3A6048;
     }
 
     [data-theme="dark"] .card-toggle {
-      background: #141814;
-      border-top-color: #3A4A3A;
+      background: #142018;
+      border-top-color: #2E5038;
       color: #FFFFFF;
     }
 
     [data-theme="dark"] input,
     [data-theme="dark"] select,
     [data-theme="dark"] textarea {
-      background: #141814;
+      background: #142018;
       color: #FFFFFF;
-      border-color: #3A4A3A;
+      border-color: #2E5038;
     }
 
     [data-theme="dark"] .prog-track {
-      background: #2A332A;
+      background: #243A2A;
     }
 
     [data-theme="dark"] .nav-tab {
@@ -238,8 +238,8 @@
     }
 
     [data-theme="dark"] .upcoming-ticker {
-      background: #0D120D;
-      border-color: #3A4A3A;
+      background: #0D1A12;
+      border-color: #2E5038;
     }
 
     /* Preserve accent colors in dark mode */
@@ -250,7 +250,6 @@
     [data-theme="dark"] .pill-regional,
     [data-theme="dark"] .pill-rep,
     [data-theme="dark"] .prog-fill,
-    [data-theme="dark"] .prog-seg.done,
     [data-theme="dark"] .nav-logo-main,
     [data-theme="dark"] .theme-icon {
       color: revert;
@@ -1117,22 +1116,6 @@
 
     .prog-fill.full { background: var(--green); }
     .prog-fill.full::after { background: var(--green); }
-
-    /* Segments */
-    .prog-segments {
-      display: flex;
-      gap: 2px;
-      margin-top: 4px;
-    }
-
-    .prog-seg {
-      flex: 1;
-      height: 2px;
-      background: var(--light);
-    }
-
-    .prog-seg.done { background: #F9A825; }
-    .prog-seg.done.full-done { background: var(--green); }
 
     /* Checklist */
     .checklist { list-style: none; }
@@ -2776,14 +2759,6 @@ function cardHTML(show) {
     ? `<div class="card-loc">▸ ${esc(show.location)}${show.booth ? ' · Booth ' + esc(show.booth) : ''}</div>`
     : '';
 
-  // Progress segments
-  const total = (show.checklist || []).length;
-  const done  = (show.checklist || []).filter(i => i.completed).length;
-  const segsHtml = Array.from({length: Math.min(total, 17)}, (_, i) => {
-    const filled = i < done;
-    return `<div class="prog-seg${filled ? ' done' + (pct === 100 ? ' full-done' : '') : ''}"></div>`;
-  }).join('');
-
   const items = (show.checklist || []).map(item => `
     <li class="${item.completed ? 'done' : ''}" id="li-${item.id}">
       <input type="checkbox" id="cb-${item.id}" ${item.completed ? 'checked' : ''}
@@ -2818,7 +2793,6 @@ function cardHTML(show) {
       <div class="prog-track">
         <div class="prog-fill ${pct === 100 ? 'full' : ''}" id="pf-${show.id}" style="width:${pct}%"></div>
       </div>
-      <div class="prog-segments" id="ps-${show.id}">${segsHtml}</div>
     </div>
   </div>
   <div id="body-${show.id}" ${open ? '' : 'style="display:none"'}>
@@ -2906,17 +2880,8 @@ function toggleItem(showId, itemId, checked) {
   const pct = progress(show);
   const pf  = document.getElementById(`pf-${showId}`);
   const pt  = document.getElementById(`pt-${showId}`);
-  const ps  = document.getElementById(`ps-${showId}`);
   if (pf) { pf.style.width = pct + '%'; pf.classList.toggle('full', pct === 100); }
   if (pt) pt.textContent = pct + '%';
-  if (ps) {
-    const total = (show.checklist || []).length;
-    const done  = (show.checklist || []).filter(i => i.completed).length;
-    ps.innerHTML = Array.from({length: Math.min(total, 17)}, (_, i) => {
-      const filled = i < done;
-      return `<div class="prog-seg${filled ? ' done' + (pct === 100 ? ' full-done' : '') : ''}"></div>`;
-    }).join('');
-  }
 
   if (checked) {
     addFeedEvent('update', `Task completed`, `Checked off "${item.text}" for ${show.name}`, showId);
