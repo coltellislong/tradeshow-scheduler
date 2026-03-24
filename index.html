@@ -140,13 +140,15 @@
 
     /* ═══ DARK MODE ═══ */
     /* ═══ DARK MODE ═══ */
-    [data-theme="dark"] body::before {
-      background-image:
-        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    [data-theme="dark"] body {
+      background: #121A14;
     }
 
-
+    [data-theme="dark"] body::before {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    }
 
     .nav-tabs {
       display: flex;
