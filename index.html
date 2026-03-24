@@ -113,6 +113,159 @@
       text-transform: uppercase;
     }
 
+    .theme-toggle {
+      background: rgba(255,255,255,.1);
+      border: 1.5px solid rgba(255,255,255,.2);
+      border-radius: 999px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .2s ease;
+      margin-left: 12px;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255,255,255,.2);
+      border-color: rgba(255,255,255,.35);
+    }
+
+    .theme-icon {
+      font-size: 1rem;
+      line-height: 1;
+      color: var(--white);
+    }
+
+    /* ═══ DARK MODE ═══ */
+    [data-theme="dark"] {
+      --white:      #1A1F1A;
+      --off-white:  #141814;
+      --light:      #2A332A;
+      --mid:        #6B7E6B;
+      --dark-mid:   #B0C4B0;
+      --border:     #3A4A3A;
+    }
+
+    [data-theme="dark"] body {
+      background: #141814;
+      color: #D4E0D4;
+    }
+
+    [data-theme="dark"] body::before {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    }
+
+    [data-theme="dark"] nav {
+      background: #0D120D;
+      border-bottom-color: #295135;
+    }
+
+    [data-theme="dark"] .show-card {
+      background: #1A1F1A;
+      border-color: #3A4A3A;
+    }
+
+    [data-theme="dark"] .show-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    }
+
+    [data-theme="dark"] .page-title,
+    [data-theme="dark"] .page-subtitle,
+    [data-theme="dark"] .card-name,
+    [data-theme="dark"] .card-meta,
+    [data-theme="dark"] .card-loc {
+      color: #D4E0D4;
+    }
+
+    [data-theme="dark"] .card-body {
+      color: #B0C4B0;
+    }
+
+    [data-theme="dark"] .tile-checklist {
+      background: #1A1F1A;
+      border-top-color: #3A4A3A;
+    }
+
+    [data-theme="dark"] .tile-cl-head {
+      color: #D4E0D4;
+    }
+
+    [data-theme="dark"] .tile-cl-item {
+      color: #B0C4B0;
+      border-bottom-color: #2A332A;
+    }
+
+    [data-theme="dark"] .count-badge {
+      background: #1A1F1A;
+      border-color: #3A4A3A;
+      color: #D4E0D4;
+    }
+
+    [data-theme="dark"] .filter-pill {
+      background: #1A1F1A;
+      border-color: #3A4A3A;
+      color: #B0C4B0;
+    }
+
+    [data-theme="dark"] .filter-pill:hover {
+      background: #2A332A;
+      border-color: #4A5A4A;
+    }
+
+    [data-theme="dark"] .card-toggle {
+      background: #141814;
+      color: #6B7E6B;
+      border-top-color: #3A4A3A;
+    }
+
+    [data-theme="dark"] .popup-overlay .popup,
+    [data-theme="dark"] .modal-content {
+      background: #1A1F1A;
+      color: #D4E0D4;
+    }
+
+    [data-theme="dark"] input,
+    [data-theme="dark"] select,
+    [data-theme="dark"] textarea {
+      background: #141814;
+      color: #D4E0D4;
+      border-color: #3A4A3A;
+    }
+
+    [data-theme="dark"] .prog-track {
+      background: #2A332A;
+    }
+
+    [data-theme="dark"] .nav-tab {
+      color: rgba(255,255,255,.5);
+    }
+
+    [data-theme="dark"] .nav-tab:hover {
+      color: rgba(255,255,255,.75);
+    }
+
+    [data-theme="dark"] .nav-tab.active {
+      color: #fff;
+    }
+
+    [data-theme="dark"] .upcoming-ticker {
+      background: #0D120D;
+      border-color: #3A4A3A;
+    }
+
+    [data-theme="dark"] .list-bar {
+      color: #B0C4B0;
+    }
+
+    [data-theme="dark"] .day-pane {
+      background: #1A1F1A;
+      color: #D4E0D4;
+    }
+
     .nav-tabs {
       display: flex;
       height: 100%;
@@ -866,6 +1019,28 @@
     }
 
     .filter-pill.active[data-filter="rep"] {
+      background: #E65100;
+      border-color: #E65100;
+    }
+
+    /* Event type selector in edit modal (uses data-value) */
+    .filter-pill.active[data-value="national"] {
+      background: #F9A825;
+      border-color: #F9A825;
+      color: #1A2E1F;
+    }
+
+    .filter-pill.active[data-value="local"] {
+      background: #1565C0;
+      border-color: #1565C0;
+    }
+
+    .filter-pill.active[data-value="regional"] {
+      background: #7B1FA2;
+      border-color: #7B1FA2;
+    }
+
+    .filter-pill.active[data-value="rep"] {
       background: #E65100;
       border-color: #E65100;
     }
@@ -2059,6 +2234,9 @@
     <div class="nav-logo-text">
       <span class="nav-logo-main">DAB Tradeshow Scheduler</span>
     </div>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+      <span class="theme-icon" id="theme-icon">☽</span>
+    </button>
   </div>
 
   <div class="nav-tabs">
@@ -2365,6 +2543,7 @@ let calYear     = new Date().getFullYear();
 let sortBy      = 'date';
 let filterType  = 'all';
 let viewMode    = 'cards';
+let currentTheme = localStorage.getItem('dab-theme') || 'light';
 let editId      = null;
 let delId       = null;
 let expanded    = {};
@@ -3570,6 +3749,19 @@ function downloadTemplate() {
   document.getElementById('cal-year-txt').innerHTML = y.slice(0,2) + '<span>' + y.slice(2) + '</span>';
 })();
 
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const icon = document.getElementById('theme-icon');
+  if (icon) icon.textContent = theme === 'dark' ? '☀' : '☽';
+  localStorage.setItem('dab-theme', theme);
+  currentTheme = theme;
+}
+
+function toggleTheme() {
+  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+}
+
+applyTheme(currentTheme);
 renderList();
 checkBanner();
 </script>
