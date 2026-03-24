@@ -554,6 +554,7 @@
     .cards-grid.view-list .show-card .card-body,
     .cards-grid.view-list .show-card .card-toggle { display: none !important; }
     .cards-grid.view-list .show-card::before { width: 3px; }
+    .cards-grid.view-list .show-card { cursor: pointer; overflow: hidden; }
 
     /* ═══ TILE CHECKLIST DROPDOWN ═══ */
     .cards-grid.view-tiles .show-card {
@@ -2688,8 +2689,8 @@ function toggleCard(id) {
 }
 
 function toggleTileChecklist(id, event) {
-  // Only trigger in tile view
-  if (viewMode !== 'tiles') return;
+  // Only trigger in tile and list views
+  if (viewMode !== 'tiles' && viewMode !== 'list') return;
   event.stopPropagation();
   const card = document.getElementById(`card-${id}`);
   const cl = document.getElementById(`tile-cl-${id}`);
