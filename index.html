@@ -147,7 +147,7 @@
       background: rgba(41,81,53,.25);
     }
 
-    .nav-tab.active .tab-icon { color: var(--red); }
+    .nav-tab.active .tab-icon { color: rgba(255,255,255,.65); }
 
     .nav-tab .tab-icon { font-size: 1rem; }
 
@@ -701,14 +701,14 @@
     .card-meta {
       font-size: .72rem;
       letter-spacing: 1px;
-      color: rgba(255,255,255,.75);
+      color: rgba(255,255,255,.9);
       margin-top: 5px;
       font-family: 'Share Tech Mono', monospace;
     }
 
     .card-loc {
       font-size: .72rem;
-      color: rgba(255,255,255,.65);
+      color: rgba(255,255,255,.85);
       margin-top: 3px;
     }
 
@@ -744,10 +744,10 @@
       text-transform: uppercase;
     }
 
-    .status-badge.s-upcoming { background: rgba(79,195,247,.15); color: var(--accent-blue); border: 1px solid rgba(79,195,247,.3); }
-    .status-badge.s-soon     { background: rgba(41,81,53,.18); color: #295135; border: 1px solid rgba(41,81,53,.35); }
-    .status-badge.s-today    { background: rgba(0,230,118,.15); color: var(--green); border: 1px solid rgba(0,230,118,.3); }
-    .status-badge.s-past     { background: rgba(255,255,255,.05); color: rgba(255,255,255,.3); border: 1px solid rgba(255,255,255,.08); }
+    .status-badge.s-upcoming { background: rgba(79,195,247,.2); color: #fff; border: 1px solid rgba(79,195,247,.4); }
+    .status-badge.s-soon     { background: rgba(249,168,37,.2); color: #fff; border: 1px solid rgba(249,168,37,.4); }
+    .status-badge.s-today    { background: rgba(0,230,118,.2); color: #fff; border: 1px solid rgba(0,230,118,.4); }
+    .status-badge.s-past     { background: rgba(255,255,255,.08); color: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.12); }
 
     .status-dot {
       width: 5px; height: 5px;
@@ -774,27 +774,27 @@
     }
 
     .pill-national {
-      background: rgba(46,125,50,.12);
-      color: #2E7D32;
-      border: 1.5px solid rgba(46,125,50,.3);
+      background: rgba(249,168,37,.25);
+      color: #fff;
+      border: 1.5px solid rgba(249,168,37,.5);
     }
 
     .pill-local {
-      background: rgba(21,101,192,.12);
-      color: #1565C0;
-      border: 1.5px solid rgba(21,101,192,.35);
+      background: rgba(21,101,192,.25);
+      color: #fff;
+      border: 1.5px solid rgba(21,101,192,.5);
     }
 
     .pill-regional {
-      background: rgba(123,31,162,.12);
-      color: #7B1FA2;
-      border: 1.5px solid rgba(123,31,162,.35);
+      background: rgba(123,31,162,.25);
+      color: #fff;
+      border: 1.5px solid rgba(123,31,162,.5);
     }
 
     .pill-rep {
-      background: rgba(230,81,0,.12);
-      color: #E65100;
-      border: 1.5px solid rgba(230,81,0,.35);
+      background: rgba(230,81,0,.25);
+      color: #fff;
+      border: 1.5px solid rgba(230,81,0,.5);
     }
 
     /* ═══ FILTER PILLS BAR ═══ */
@@ -849,8 +849,9 @@
     }
 
     .filter-pill.active[data-filter="national"] {
-      background: #2E7D32;
-      border-color: #2E7D32;
+      background: #F9A825;
+      border-color: #F9A825;
+      color: #1A2E1F;
     }
 
     .filter-pill.active[data-filter="local"] {
@@ -876,11 +877,12 @@
     }
 
     .filter-pill[data-filter="all"] .pill-dot { background: var(--dark-mid); }
-    .filter-pill[data-filter="national"] .pill-dot { background: #2E7D32; }
+    .filter-pill[data-filter="national"] .pill-dot { background: #F9A825; }
     .filter-pill[data-filter="local"] .pill-dot { background: #1565C0; }
     .filter-pill[data-filter="regional"] .pill-dot { background: #7B1FA2; }
     .filter-pill[data-filter="rep"] .pill-dot { background: #E65100; }
     .filter-pill.active .pill-dot { background: rgba(255,255,255,.7); }
+    .filter-pill.active[data-filter="national"] .pill-dot { background: rgba(0,0,0,.4); }
 
     .event-type-selector {
       display: flex;
@@ -2051,11 +2053,8 @@
 <!-- ══════════ NAV ══════════ -->
 <nav>
   <div class="nav-logo">
-    <div class="nav-logo-icon">
-      <img src="logo.png" alt="Logo">
-    </div>
     <div class="nav-logo-text">
-      <span class="nav-logo-main">Tradeshow</span>
+      <span class="nav-logo-main">DAB Tradeshow Scheduler</span>
     </div>
   </div>
 
@@ -2453,11 +2452,11 @@ function formatTs(ts) {
 // ─────────────────────────────────────
 //  BANNER
 // ─────────────────────────────────────
-const TYPE_DOT_COLORS = { national: '#2E7D32', local: '#1565C0', regional: '#7B1FA2', rep: '#E65100' };
+const TYPE_DOT_COLORS = { national: '#F9A825', local: '#1565C0', regional: '#7B1FA2', rep: '#E65100' };
 
 function checkBanner() {
   const upcoming = shows
-    .filter(s => { const d = daysUntil(s.startDate); return d >= 0 && d <= 90; })
+    .filter(s => { const d = daysUntil(s.startDate); return d >= 0 && d <= 21; })
     .sort((a, b) => a.startDate.localeCompare(b.startDate))
     .slice(0, 8);
 
@@ -2902,7 +2901,7 @@ function renderMonth(name, mi) {
 
   const filteredShows = filterType === 'all' ? shows : shows.filter(s => (s.eventType || 'national') === filterType);
 
-  const DOT_COLORS = { national: '#2E7D32', local: '#1565C0', regional: '#7B1FA2', rep: '#E65100' };
+  const DOT_COLORS = { national: '#F9A825', local: '#1565C0', regional: '#7B1FA2', rep: '#E65100' };
 
   for (let d = 1; d <= daysInMonth; d++) {
     const ds     = `${calYear}-${String(mi+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -3242,8 +3241,8 @@ function renderFeedSidebar() {
     <div class="widget-head">EVENT TYPES <span class="wh-accent">◆</span></div>
     <div class="widget-body">
       <div class="stats-grid">
-        <div class="stat-item" style="border-left-color:#2E7D32;background:rgba(46,125,50,.06)">
-          <div class="stat-value" style="color:#2E7D32">${natCount}</div>
+        <div class="stat-item" style="border-left-color:#F9A825;background:rgba(249,168,37,.06)">
+          <div class="stat-value" style="color:#F9A825">${natCount}</div>
           <div class="stat-label">National</div>
         </div>
         <div class="stat-item" style="border-left-color:#1565C0;background:rgba(21,101,192,.06)">
