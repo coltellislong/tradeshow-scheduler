@@ -3700,7 +3700,7 @@ function downloadTemplate() {
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   const icon = document.getElementById('theme-icon');
-  if (icon) icon.textContent = theme === 'dark' ? '☀' : '☽';
+  if (icon) icon.textContent = theme === 'dark' ? '☽' : '☀';
   localStorage.setItem('dab-theme', theme);
   currentTheme = theme;
 }
