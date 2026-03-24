@@ -625,6 +625,43 @@
 
     .tile-cl-item label { cursor: pointer; flex: 1; }
 
+    /* ═══ TILE/LIST MINI PROGRESS BAR ═══ */
+    .tile-progress { display: none; }
+
+    .cards-grid.view-tiles .tile-progress,
+    .cards-grid.view-list .tile-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      width: 100%;
+    }
+
+    .tile-prog-track {
+      flex: 1;
+      height: 4px;
+      background: var(--light);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .tile-prog-fill {
+      height: 100%;
+      background: var(--red);
+      border-radius: 2px;
+      transition: width .3s ease;
+    }
+
+    .tile-prog-fill.full { background: var(--green); }
+
+    .tile-prog-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .65rem;
+      color: var(--mid);
+      min-width: 28px;
+      text-align: right;
+    }
+
     /* ═══ SHOW CARD ═══ */
     .show-card {
       background: var(--white);
@@ -2631,6 +2668,12 @@ function cardHTML(show) {
         ${locStr}
         <span class="status-badge ${badgeClass}"><span class="status-dot"></span>${badgeTxt}</span>
         <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[show.eventType || 'national']}">${EVENT_TYPE_LABELS[show.eventType || 'national']}</span>
+        <div class="tile-progress" id="tp-${show.id}">
+          <div class="tile-prog-track">
+            <div class="tile-prog-fill ${pct === 100 ? 'full' : ''}" style="width:${pct}%"></div>
+          </div>
+          <span class="tile-prog-label">${pct}%</span>
+        </div>
       </div>
       <div class="card-btns">
         <button class="icon-btn" onclick="openEdit('${show.id}')" title="Edit">✎</button>
@@ -2718,6 +2761,14 @@ function updateTileChecklist(showId) {
   tileCl.querySelectorAll('.tile-cl-item').forEach((el, i) => {
     if (show.checklist[i]) el.classList.toggle('done', show.checklist[i].completed);
   });
+  // Update mini progress bar
+  const tp = document.getElementById(`tp-${showId}`);
+  if (tp) {
+    const fill = tp.querySelector('.tile-prog-fill');
+    const label = tp.querySelector('.tile-prog-label');
+    if (fill) { fill.style.width = pct + '%'; fill.classList.toggle('full', pct === 100); }
+    if (label) label.textContent = pct + '%';
+  }
 }
 
 function toggleItem(showId, itemId, checked) {
