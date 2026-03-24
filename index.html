@@ -139,140 +139,14 @@
     }
 
     /* ═══ DARK MODE ═══ */
-    [data-theme="dark"] {
-      --white:      #1A261E;
-      --off-white:  #142018;
-      --light:      #243A2A;
-      --mid:        #B0C4B0;
-      --dark-mid:   #E0E8E0;
-      --dark:       #FFFFFF;
-      --black:      #FFFFFF;
-      --border:     #2E5038;
-    }
-
-    [data-theme="dark"] body {
-      background: #142018;
-      color: #FFFFFF;
-    }
-
+    /* ═══ DARK MODE ═══ */
     [data-theme="dark"] body::before {
       background-image:
-        linear-gradient(rgba(41,81,53,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(41,81,53,0.08) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
     }
 
-    [data-theme="dark"] nav {
-      background: #0D1A12;
-      border-bottom-color: #295135;
-    }
 
-    [data-theme="dark"] * {
-      color: inherit;
-    }
-
-    [data-theme="dark"] .show-card,
-    [data-theme="dark"] .popup-overlay .popup,
-    [data-theme="dark"] .modal-content,
-    [data-theme="dark"] .feed-card,
-    [data-theme="dark"] .tile-checklist,
-    [data-theme="dark"] .count-badge,
-    [data-theme="dark"] .cal-grid,
-    [data-theme="dark"] .day-pane,
-    [data-theme="dark"] .import-drop {
-      background: #1A261E;
-      border-color: #2E5038;
-      color: #FFFFFF;
-    }
-
-    [data-theme="dark"] .show-card:hover {
-      box-shadow: 0 4px 20px rgba(0,0,0,.4);
-    }
-
-    [data-theme="dark"] .tile-checklist {
-      border-top-color: #2E5038;
-    }
-
-    [data-theme="dark"] .tile-cl-item {
-      border-bottom-color: #243A2A;
-    }
-
-    [data-theme="dark"] .filter-pill {
-      background: #1A261E;
-      border-color: #2E5038;
-      color: #FFFFFF;
-    }
-
-    [data-theme="dark"] .filter-pill:hover {
-      background: #243A2A;
-      border-color: #3A6048;
-    }
-
-    [data-theme="dark"] .card-toggle {
-      background: #142018;
-      border-top-color: #2E5038;
-      color: #FFFFFF;
-    }
-
-    [data-theme="dark"] input,
-    [data-theme="dark"] select,
-    [data-theme="dark"] textarea {
-      background: #142018;
-      color: #FFFFFF;
-      border-color: #2E5038;
-    }
-
-    [data-theme="dark"] .prog-track {
-      background: #243A2A;
-    }
-
-    [data-theme="dark"] .nav-tab {
-      color: rgba(255,255,255,.5);
-    }
-
-    [data-theme="dark"] .nav-tab:hover {
-      color: rgba(255,255,255,.75);
-    }
-
-    [data-theme="dark"] .nav-tab.active {
-      color: #fff;
-    }
-
-    [data-theme="dark"] .upcoming-ticker {
-      background: #0D1A12;
-      border-color: #2E5038;
-    }
-
-    [data-theme="dark"] .ui-name,
-    [data-theme="dark"] .ui-date,
-    [data-theme="dark"] .ui-prog,
-    [data-theme="dark"] .ticker-header {
-      color: #FFFFFF;
-    }
-
-    [data-theme="dark"] .ui-days {
-      color: #FFFFFF;
-    }
-
-    [data-theme="dark"] .upcoming-item.ui-today .ui-days {
-      color: #FFFFFF;
-    }
-
-    [data-theme="dark"] .nav-btn-primary {
-      color: #FFFFFF;
-    }
-
-    /* Preserve accent colors in dark mode */
-    [data-theme="dark"] .status-badge,
-    [data-theme="dark"] .event-type-pill,
-    [data-theme="dark"] .pill-national,
-    [data-theme="dark"] .pill-local,
-    [data-theme="dark"] .pill-regional,
-    [data-theme="dark"] .pill-rep,
-    [data-theme="dark"] .prog-fill,
-    [data-theme="dark"] .nav-logo-main,
-    [data-theme="dark"] .theme-icon {
-      color: revert;
-    }
 
     .nav-tabs {
       display: flex;
