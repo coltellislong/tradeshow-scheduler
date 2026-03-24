@@ -2708,6 +2708,7 @@ function cardHTML(show) {
   </div>
   <div class="tile-checklist" id="tile-cl-${show.id}" onclick="event.stopPropagation()">
     <div class="tile-checklist-inner">
+      ${show.notes ? `<div class="card-notes-txt">${esc(show.notes)}</div>` : ''}
       <div class="tile-cl-head">Checklist <span>${pct}%</span></div>
       ${(show.checklist || []).map(item => `
         <div class="tile-cl-item ${item.completed ? 'done' : ''}">
