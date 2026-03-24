@@ -222,9 +222,6 @@
       border-radius: 14px 14px 0 0;
     }
 
-    [data-view-style="modern"] .show-card::before {
-      border-radius: 14px 0 0 14px;
-    }
 
     [data-view-style="modern"] .modal {
       border-radius: 16px;
@@ -309,15 +306,8 @@
     }
 
     [data-view-style="modern"] .nav-tab {
-      border-radius: 8px;
-      margin: 4px 2px;
       border-bottom: none;
       top: 0;
-    }
-
-    [data-view-style="modern"] .nav-tab.active {
-      border-bottom: none;
-      background: rgba(255,255,255,.12);
     }
 
     [data-view-style="modern"] .nav-btn-import {
@@ -409,11 +399,10 @@
       height: 100%;
     }
 
-    .nav-tab:hover { color: rgba(255,255,255,.75); background: rgba(255,255,255,.04); }
+    .nav-tab:hover { color: rgba(255,255,255,.75); }
     .nav-tab.active {
       color: var(--white);
       border-bottom-color: var(--red);
-      background: rgba(41,81,53,.25);
     }
 
     .nav-tab.active .tab-icon { color: rgba(255,255,255,.65); }
@@ -904,18 +893,8 @@
     }
 
     .show-card::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: var(--mid);
-      transition: background .2s;
+      content: none;
     }
-
-    .show-card.status-upcoming::before { background: var(--accent-blue); }
-    .show-card.status-soon::before     { background: var(--red); }
-    .show-card.status-today::before    { background: var(--green); }
-    .show-card.status-past::before     { background: var(--border); }
 
     .show-card:hover {
       box-shadow: var(--shadow);
