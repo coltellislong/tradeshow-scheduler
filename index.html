@@ -143,16 +143,16 @@
       --white:      #1A1F1A;
       --off-white:  #141814;
       --light:      #2A332A;
-      --mid:        #6B7E6B;
-      --dark-mid:   #B0C4B0;
-      --dark:       #D4E0D4;
-      --black:      #E8EDE8;
+      --mid:        #B0C4B0;
+      --dark-mid:   #E0E8E0;
+      --dark:       #FFFFFF;
+      --black:      #FFFFFF;
       --border:     #3A4A3A;
     }
 
     [data-theme="dark"] body {
       background: #141814;
-      color: #E8EDE8;
+      color: #FFFFFF;
     }
 
     [data-theme="dark"] body::before {
@@ -166,57 +166,40 @@
       border-bottom-color: #295135;
     }
 
-    [data-theme="dark"] .show-card {
+    [data-theme="dark"] * {
+      color: inherit;
+    }
+
+    [data-theme="dark"] .show-card,
+    [data-theme="dark"] .popup-overlay .popup,
+    [data-theme="dark"] .modal-content,
+    [data-theme="dark"] .feed-card,
+    [data-theme="dark"] .tile-checklist,
+    [data-theme="dark"] .count-badge,
+    [data-theme="dark"] .cal-grid,
+    [data-theme="dark"] .day-pane,
+    [data-theme="dark"] .import-drop {
       background: #1A1F1A;
       border-color: #3A4A3A;
-      color: #E8EDE8;
+      color: #FFFFFF;
     }
 
     [data-theme="dark"] .show-card:hover {
       box-shadow: 0 4px 20px rgba(0,0,0,.4);
     }
 
-    [data-theme="dark"] .page-title,
-    [data-theme="dark"] .page-subtitle,
-    [data-theme="dark"] .card-name,
-    [data-theme="dark"] .card-meta,
-    [data-theme="dark"] .card-loc,
-    [data-theme="dark"] .card-notes-txt,
-    [data-theme="dark"] .prog-label,
-    [data-theme="dark"] .prog-num,
-    [data-theme="dark"] .checklist label,
-    [data-theme="dark"] .add-task-row input {
-      color: #E8EDE8;
-    }
-
-    [data-theme="dark"] .card-body {
-      color: #E8EDE8;
-    }
-
     [data-theme="dark"] .tile-checklist {
-      background: #1A1F1A;
       border-top-color: #3A4A3A;
     }
 
-    [data-theme="dark"] .tile-cl-head {
-      color: #E8EDE8;
-    }
-
     [data-theme="dark"] .tile-cl-item {
-      color: #E8EDE8;
       border-bottom-color: #2A332A;
-    }
-
-    [data-theme="dark"] .count-badge {
-      background: #1A1F1A;
-      border-color: #3A4A3A;
-      color: #E8EDE8;
     }
 
     [data-theme="dark"] .filter-pill {
       background: #1A1F1A;
       border-color: #3A4A3A;
-      color: #D4E0D4;
+      color: #FFFFFF;
     }
 
     [data-theme="dark"] .filter-pill:hover {
@@ -226,26 +209,16 @@
 
     [data-theme="dark"] .card-toggle {
       background: #141814;
-      color: #B0C4B0;
       border-top-color: #3A4A3A;
-    }
-
-    [data-theme="dark"] .popup-overlay .popup,
-    [data-theme="dark"] .modal-content {
-      background: #1A1F1A;
-      color: #E8EDE8;
+      color: #FFFFFF;
     }
 
     [data-theme="dark"] input,
     [data-theme="dark"] select,
     [data-theme="dark"] textarea {
       background: #141814;
-      color: #E8EDE8;
+      color: #FFFFFF;
       border-color: #3A4A3A;
-    }
-
-    [data-theme="dark"] label {
-      color: #D4E0D4;
     }
 
     [data-theme="dark"] .prog-track {
@@ -269,76 +242,18 @@
       border-color: #3A4A3A;
     }
 
-    [data-theme="dark"] .list-bar {
-      color: #E8EDE8;
-    }
-
-    [data-theme="dark"] .day-pane {
-      background: #1A1F1A;
-      color: #E8EDE8;
-    }
-
-    /* Catch-all for hard-coded dark text colors in dark mode */
-    [data-theme="dark"] .ticker-header,
-    [data-theme="dark"] .ticker-show-name,
-    [data-theme="dark"] .ticker-date,
-    [data-theme="dark"] .ticker-table th,
-    [data-theme="dark"] .ticker-table td,
-    [data-theme="dark"] .phase-label,
-    [data-theme="dark"] .phase-pct,
-    [data-theme="dark"] .cal-header,
-    [data-theme="dark"] .cal-nav button,
-    [data-theme="dark"] .day,
-    [data-theme="dark"] .feed-card,
-    [data-theme="dark"] .feed-title,
-    [data-theme="dark"] .feed-body,
-    [data-theme="dark"] .feed-type-tag,
-    [data-theme="dark"] .upcoming-item,
-    [data-theme="dark"] .ui-name,
-    [data-theme="dark"] .ui-loc,
-    [data-theme="dark"] .ui-days,
-    [data-theme="dark"] .day-pane-title,
-    [data-theme="dark"] .day-show-name,
-    [data-theme="dark"] .day-show-loc,
-    [data-theme="dark"] .popup h3,
-    [data-theme="dark"] .popup p,
-    [data-theme="dark"] .popup label,
-    [data-theme="dark"] .fg label,
-    [data-theme="dark"] .import-guide,
-    [data-theme="dark"] .import-guide p,
-    [data-theme="dark"] .import-guide strong,
-    [data-theme="dark"] .import-drop p,
-    [data-theme="dark"] .col-chip,
-    [data-theme="dark"] .btn-secondary,
-    [data-theme="dark"] .search-input,
-    [data-theme="dark"] h2,
-    [data-theme="dark"] h3,
-    [data-theme="dark"] h4 {
-      color: #E8EDE8;
-    }
-
-    [data-theme="dark"] .feed-card {
-      background: #1A1F1A;
-      border-color: #3A4A3A;
-    }
-
-    [data-theme="dark"] .day:hover,
-    [data-theme="dark"] .day.today {
-      color: #E8EDE8;
-    }
-
-    [data-theme="dark"] .cal-grid {
-      background: #1A1F1A;
-      border-color: #3A4A3A;
-    }
-
-    [data-theme="dark"] .day-name {
-      color: #B0C4B0;
-    }
-
-    [data-theme="dark"] .import-drop {
-      background: #1A1F1A;
-      border-color: #3A4A3A;
+    /* Preserve accent colors in dark mode */
+    [data-theme="dark"] .status-badge,
+    [data-theme="dark"] .event-type-pill,
+    [data-theme="dark"] .pill-national,
+    [data-theme="dark"] .pill-local,
+    [data-theme="dark"] .pill-regional,
+    [data-theme="dark"] .pill-rep,
+    [data-theme="dark"] .prog-fill,
+    [data-theme="dark"] .prog-seg.done,
+    [data-theme="dark"] .nav-logo-main,
+    [data-theme="dark"] .theme-icon {
+      color: revert;
     }
 
     .nav-tabs {
