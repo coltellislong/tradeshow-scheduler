@@ -1055,6 +1055,30 @@
     .checklist li:hover .del-item { opacity: 1; }
     .del-item:hover { color: var(--red); }
 
+    /* Drag handle */
+    .drag-handle {
+      cursor: grab;
+      color: var(--border);
+      font-size: .72rem;
+      padding: 0 2px;
+      opacity: 0;
+      transition: opacity .15s, color .15s;
+      user-select: none;
+      flex-shrink: 0;
+      line-height: 1;
+      letter-spacing: 1px;
+    }
+    .drag-handle:active { cursor: grabbing; }
+    .checklist li:hover .drag-handle,
+    .tile-cl-item:hover .drag-handle { opacity: .6; }
+    .checklist li:hover .drag-handle:hover,
+    .tile-cl-item:hover .drag-handle:hover { opacity: 1; color: var(--dark-mid); }
+
+    .checklist li.dragging,
+    .tile-cl-item.dragging { opacity: .4; }
+    .checklist li.drag-over,
+    .tile-cl-item.drag-over { border-top: 2px solid var(--red); }
+
     .add-task-row {
       display: flex;
       gap: 6px;
@@ -2656,7 +2680,12 @@ function cardHTML(show) {
     : '';
 
   const items = (show.checklist || []).map(item => `
-    <li class="${item.completed ? 'done' : ''}" id="li-${item.id}">
+    <li class="${item.completed ? 'done' : ''}" id="li-${item.id}" draggable="true"
+        ondragstart="clDragStart(event,'${show.id}','${item.id}')"
+        ondragover="clDragOver(event)" ondragenter="clDragEnter(event)"
+        ondragleave="clDragLeave(event)" ondrop="clDrop(event,'${show.id}','${item.id}')"
+        ondragend="clDragEnd(event)">
+      <span class="drag-handle" title="Drag to reorder">⠿</span>
       <input type="checkbox" id="cb-${item.id}" ${item.completed ? 'checked' : ''}
         onchange="toggleItem('${show.id}','${item.id}',this.checked)">
       <label for="cb-${item.id}">${esc(item.text)}</label>
@@ -2711,7 +2740,12 @@ function cardHTML(show) {
       ${show.notes ? `<div class="card-notes-txt">${esc(show.notes)}</div>` : ''}
       <div class="tile-cl-head">Checklist <span>${pct}%</span></div>
       ${(show.checklist || []).map(item => `
-        <div class="tile-cl-item ${item.completed ? 'done' : ''}">
+        <div class="tile-cl-item ${item.completed ? 'done' : ''}" draggable="true"
+            ondragstart="clDragStart(event,'${show.id}','${item.id}')"
+            ondragover="clDragOver(event)" ondragenter="clDragEnter(event)"
+            ondragleave="clDragLeave(event)" ondrop="clDrop(event,'${show.id}','${item.id}')"
+            ondragend="clDragEnd(event)">
+          <span class="drag-handle" title="Drag to reorder">⠿</span>
           <input type="checkbox" id="tcb-${item.id}" ${item.completed ? 'checked' : ''}
             onchange="toggleItem('${show.id}','${item.id}',this.checked); updateTileChecklist('${show.id}')">
           <label for="tcb-${item.id}">${esc(item.text)}</label>
@@ -2804,6 +2838,50 @@ function removeItem(showId, itemId) {
   show.checklist = show.checklist.filter(i => i.id !== itemId);
   persist();
   renderList();
+}
+
+// ─────────────────────────────────────
+//  CHECKLIST DRAG-AND-DROP REORDER
+// ─────────────────────────────────────
+let clDragShowId = null, clDragItemId = null;
+
+function clDragStart(e, showId, itemId) {
+  clDragShowId = showId;
+  clDragItemId = itemId;
+  e.dataTransfer.effectAllowed = 'move';
+  e.currentTarget.classList.add('dragging');
+}
+
+function clDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+
+function clDragEnter(e) {
+  e.preventDefault();
+  const el = e.currentTarget;
+  el.classList.add('drag-over');
+}
+
+function clDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+
+function clDrop(e, showId, targetItemId) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (clDragShowId !== showId || clDragItemId === targetItemId) return;
+  const show = shows.find(s => s.id === showId);
+  if (!show) return;
+  const cl = show.checklist;
+  const fromIdx = cl.findIndex(i => i.id === clDragItemId);
+  const toIdx   = cl.findIndex(i => i.id === targetItemId);
+  if (fromIdx < 0 || toIdx < 0) return;
+  const [moved] = cl.splice(fromIdx, 1);
+  cl.splice(toIdx, 0, moved);
+  persist();
+  renderList();
+}
+
+function clDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+  clDragShowId = clDragItemId = null;
 }
 
 // ─────────────────────────────────────
