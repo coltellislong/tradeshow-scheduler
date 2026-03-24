@@ -518,6 +518,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
       gap: 24px;
+      align-items: start;
     }
 
     /* ═══ TILES VIEW ═══ */
@@ -1058,7 +1059,7 @@
     /* Drag handle */
     .drag-handle {
       cursor: grab;
-      color: var(--border);
+      color: var(--dark-mid);
       font-size: .72rem;
       padding: 0 2px;
       opacity: 0;
@@ -1070,9 +1071,9 @@
     }
     .drag-handle:active { cursor: grabbing; }
     .checklist li:hover .drag-handle,
-    .tile-cl-item:hover .drag-handle { opacity: .6; }
+    .tile-cl-item:hover .drag-handle { opacity: .7; }
     .checklist li:hover .drag-handle:hover,
-    .tile-cl-item:hover .drag-handle:hover { opacity: 1; color: var(--dark-mid); }
+    .tile-cl-item:hover .drag-handle:hover { opacity: 1; color: var(--dark); }
 
     .checklist li.dragging,
     .tile-cl-item.dragging { opacity: .4; }
@@ -1966,9 +1967,9 @@
 
     /* ═══ IMPORT ═══ */
     .nav-btn-import {
-      background: transparent;
-      border: 1.5px solid rgba(255,255,255,.2);
-      color: rgba(255,255,255,.6);
+      background: var(--white);
+      border: 1.5px solid var(--white);
+      color: #1B3A24;
       padding: 7px 16px;
       border-radius: 0;
       cursor: pointer;
@@ -1982,7 +1983,7 @@
       padding-left: 22px;
     }
 
-    .nav-btn-import:hover { border-color: rgba(255,255,255,.5); color: var(--white); }
+    .nav-btn-import:hover { background: rgba(255,255,255,.85); border-color: rgba(255,255,255,.85); color: #1B3A24; }
 
     .import-guide {
       background: var(--off-white);
@@ -2127,9 +2128,6 @@
     <div class="nav-logo-text">
       <span class="nav-logo-main">DAB Tradeshow Scheduler</span>
     </div>
-    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
-      <span class="theme-icon" id="theme-icon">☽</span>
-    </button>
   </div>
 
   <div class="nav-tabs">
@@ -2141,6 +2139,9 @@
     </button>
     <button class="nav-tab" id="tab-feed" onclick="switchView('feed')">
       <span class="tab-icon">◈</span> Feed
+    </button>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+      <span class="theme-icon" id="theme-icon">☽</span>
     </button>
   </div>
 
