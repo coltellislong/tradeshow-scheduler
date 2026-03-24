@@ -159,6 +159,168 @@
       left: 25px;
     }
 
+    /* ═══ VIEW STYLE TOGGLE ═══ */
+    .view-style-toggle {
+      background: rgba(255,255,255,.2);
+      border: none;
+      border-radius: 999px;
+      width: 46px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: background .3s ease;
+      margin-left: 8px;
+      position: relative;
+      padding: 0;
+    }
+
+    .view-style-toggle:hover {
+      background: rgba(255,255,255,.3);
+    }
+
+    [data-view-style="modern"] .view-style-toggle {
+      background: rgba(0,230,118,.3);
+    }
+    [data-view-style="modern"] .view-style-toggle:hover {
+      background: rgba(0,230,118,.4);
+    }
+
+    .view-style-knob {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--white);
+      position: absolute;
+      left: 3px;
+      transition: left .3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .55rem;
+      font-weight: 800;
+      line-height: 1;
+      box-shadow: 0 1px 3px rgba(0,0,0,.25);
+      color: var(--dark);
+      font-family: 'Roboto', sans-serif;
+    }
+
+    [data-view-style="modern"] .view-style-knob {
+      left: 25px;
+    }
+
+    /* ═══ MODERN VIEW STYLE ═══ */
+    [data-view-style="modern"] {
+      --radius: 12px;
+    }
+
+    [data-view-style="modern"] .show-card {
+      border-radius: 14px;
+    }
+
+    [data-view-style="modern"] .show-card .card-head {
+      border-radius: 14px 14px 0 0;
+    }
+
+    [data-view-style="modern"] .show-card::before {
+      border-radius: 14px 0 0 14px;
+    }
+
+    [data-view-style="modern"] .modal {
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    [data-view-style="modern"] .modal-head {
+      border-radius: 0;
+    }
+
+    [data-view-style="modern"] .btn {
+      border-radius: 10px;
+    }
+
+    [data-view-style="modern"] .btn-primary {
+      clip-path: none;
+      padding-right: 20px;
+      border-radius: 10px;
+    }
+
+    [data-view-style="modern"] input,
+    [data-view-style="modern"] textarea {
+      border-radius: 10px;
+    }
+
+    [data-view-style="modern"] .list-bar select {
+      border-radius: 10px;
+    }
+
+    [data-view-style="modern"] .search-input {
+      border-radius: 20px;
+      padding-left: 34px;
+    }
+
+    [data-view-style="modern"] .view-toggle-btn {
+      border-radius: 8px;
+    }
+
+    [data-view-style="modern"] .upcoming-ticker {
+      border-radius: 14px;
+    }
+
+    [data-view-style="modern"] .ticker-header {
+      border-radius: 14px 14px 0 0;
+    }
+
+    [data-view-style="modern"] .month-card {
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    [data-view-style="modern"] .month-name {
+      border-radius: 0;
+    }
+
+    [data-view-style="modern"] .day {
+      border-radius: 8px;
+    }
+
+    [data-view-style="modern"] .feed-content {
+      border-radius: 12px;
+    }
+
+    [data-view-style="modern"] .feed-dot-inner {
+      border-radius: 14px;
+    }
+
+    [data-view-style="modern"] .day-pane {
+      border-radius: 16px 0 0 16px;
+    }
+
+    [data-view-style="modern"] .day-pane-card {
+      border-radius: 12px;
+    }
+
+    [data-view-style="modern"] .card-toggle {
+      border-radius: 0 0 14px 14px;
+    }
+
+    [data-view-style="modern"] .card-body {
+      border-radius: 0;
+    }
+
+    [data-view-style="modern"] .nav-tab {
+      border-radius: 8px;
+      margin: 4px 2px;
+    }
+
+    [data-view-style="modern"] .nav-btn-import {
+      border-radius: 10px;
+    }
+
+    [data-view-style="modern"] .ticker-prog-bar {
+      border-radius: 4px;
+    }
+
     /* ═══ DARK MODE ═══ */
     /* ═══ DARK MODE ═══ */
     [data-theme="dark"] body {
@@ -2149,6 +2311,9 @@
     <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
       <span class="theme-toggle-knob" id="theme-icon">☽</span>
     </button>
+    <button class="view-style-toggle" id="view-style-toggle" onclick="toggleViewStyle()" title="Toggle classic/modern style">
+      <span class="view-style-knob" id="view-style-icon">C</span>
+    </button>
   </div>
 
   <div class="nav-tabs">
@@ -2456,6 +2621,7 @@ let sortBy      = 'date';
 let filterType  = 'all';
 let viewMode    = 'cards';
 let currentTheme = localStorage.getItem('dab-theme') || 'light';
+let currentViewStyle = localStorage.getItem('dab-view-style') || 'classic';
 let editId      = null;
 let delId       = null;
 let expanded    = {};
@@ -3710,7 +3876,20 @@ function toggleTheme() {
   applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
 }
 
+function applyViewStyle(style) {
+  document.documentElement.setAttribute('data-view-style', style);
+  const icon = document.getElementById('view-style-icon');
+  if (icon) icon.textContent = style === 'modern' ? 'M' : 'C';
+  localStorage.setItem('dab-view-style', style);
+  currentViewStyle = style;
+}
+
+function toggleViewStyle() {
+  applyViewStyle(currentViewStyle === 'modern' ? 'classic' : 'modern');
+}
+
 applyTheme(currentTheme);
+applyViewStyle(currentViewStyle);
 renderList();
 checkBanner();
 </script>
