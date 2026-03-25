@@ -2621,13 +2621,11 @@ const DEFAULT_TASKS = [
 // ─────────────────────────────────────
 //  API CONFIG
 // ─────────────────────────────────────
-// Set this to your deployed API URL, e.g. 'https://your-app.onrender.com'
-// Leave empty string to use localStorage only (offline mode)
+// API is same-origin (served by Express), so use relative paths
 const API_URL = '';
 let apiOnline = false;
 
 async function apiFetch(path, opts = {}) {
-  if (!API_URL) return null;
   opts.headers = { 'Content-Type': 'application/json', ...opts.headers };
   try {
     const res = await fetch(API_URL + path, opts);
@@ -2721,11 +2719,10 @@ function apiBulkImport(items) {
 
 // Load data from API on startup (falls back to localStorage)
 async function initFromAPI() {
-  if (!API_URL) return;
   const health = await apiFetch('/api/health');
   if (!health) return;
   apiOnline = true;
-  console.log('API connected:', API_URL);
+  console.log('API connected');
 
   const apiShows = await apiFetch('/api/shows');
   if (apiShows && apiShows.length > 0) {

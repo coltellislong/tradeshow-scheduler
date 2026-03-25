@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
@@ -9,7 +10,9 @@ const PORT = process.env.PORT || 3000;
 // ─── Middleware ───────────────────────────────────────────
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname));
+
+// ─── Serve frontend from /public ─────────────────────────
+app.use(express.static(path.join(__dirname, 'public')));
 
 // ─── MongoDB Connection ──────────────────────────────────
 const MONGO_URI = process.env.MONGO_URI;
@@ -142,6 +145,11 @@ app.post('/api/feed', async (req, res) => {
 // ─── HEALTH CHECK ────────────────────────────────────────
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', db: db ? 'connected' : 'disconnected' });
+});
+
+// ─── Catch-all: serve index.html for any non-API route ──
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // ─── START ───────────────────────────────────────────────
