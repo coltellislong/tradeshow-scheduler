@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: tradeshow-scheduler-api
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: DB_NAME
+        value: tradeshow_db
