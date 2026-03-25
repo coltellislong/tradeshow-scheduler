@@ -2618,6 +2618,27 @@ const DEFAULT_TASKS = [
   'Confirm needs are met and Complete'
 ];
 
+// ─────────────────────────────────────
+//  API CONFIG
+// ─────────────────────────────────────
+// Set this to your deployed API URL, e.g. 'https://your-app.onrender.com'
+// Leave empty string to use localStorage only (offline mode)
+const API_URL = '';
+let apiOnline = false;
+
+async function apiFetch(path, opts = {}) {
+  if (!API_URL) return null;
+  opts.headers = { 'Content-Type': 'application/json', ...opts.headers };
+  try {
+    const res = await fetch(API_URL + path, opts);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn('API request failed:', path, err.message);
+    return null;
+  }
+}
+
 
 function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2);
@@ -2654,28 +2675,74 @@ let expanded    = {};
 let popTimer    = null;
 
 // ─────────────────────────────────────
-//  PERSISTENCE
+//  PERSISTENCE (localStorage + API sync)
 // ─────────────────────────────────────
 function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(shows));
+  // Fire-and-forget sync to API (individual ops handle their own API calls)
 }
 
 function persistFeed() {
-  // Keep last 50 events
   feedEvents = feedEvents.slice(-50);
   localStorage.setItem(FEED_KEY, JSON.stringify(feedEvents));
 }
 
 function addFeedEvent(type, title, body, showId) {
-  feedEvents.push({
+  const event = {
     id: uid(),
     type,
     title,
     body,
     showId: showId || null,
     ts: Date.now()
-  });
+  };
+  feedEvents.push(event);
   persistFeed();
+  // Sync feed event to API
+  apiFetch('/api/feed', { method: 'POST', body: JSON.stringify(event) });
+}
+
+// API-aware CRUD helpers (called from saveShow, confirmDel, etc.)
+function apiCreateShow(show) {
+  apiFetch('/api/shows', { method: 'POST', body: JSON.stringify(show) });
+}
+
+function apiUpdateShow(show) {
+  apiFetch('/api/shows/' + show.id, { method: 'PUT', body: JSON.stringify(show) });
+}
+
+function apiDeleteShow(id) {
+  apiFetch('/api/shows/' + id, { method: 'DELETE' });
+}
+
+function apiBulkImport(items) {
+  apiFetch('/api/shows/bulk', { method: 'POST', body: JSON.stringify(items) });
+}
+
+// Load data from API on startup (falls back to localStorage)
+async function initFromAPI() {
+  if (!API_URL) return;
+  const health = await apiFetch('/api/health');
+  if (!health) return;
+  apiOnline = true;
+  console.log('API connected:', API_URL);
+
+  const apiShows = await apiFetch('/api/shows');
+  if (apiShows && apiShows.length > 0) {
+    shows = apiShows;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(shows));
+    renderList();
+    checkBanner();
+  } else if (shows.length > 0) {
+    // First time connecting: push localStorage data to API
+    await apiFetch('/api/shows/bulk', { method: 'POST', body: JSON.stringify(shows) });
+  }
+
+  const apiFeed = await apiFetch('/api/feed');
+  if (apiFeed && apiFeed.length > 0) {
+    feedEvents = apiFeed;
+    localStorage.setItem(FEED_KEY, JSON.stringify(feedEvents));
+  }
 }
 
 // ─────────────────────────────────────
@@ -3016,6 +3083,7 @@ function toggleItem(showId, itemId, checked) {
   if (!item) return;
   item.completed = checked;
   persist();
+  apiUpdateShow(show);
 
   const li = document.getElementById(`li-${itemId}`);
   if (li) li.classList.toggle('done', checked);
@@ -3038,6 +3106,7 @@ function addItem(showId) {
   if (!show) return;
   show.checklist.push({ id: uid(), text, completed: false });
   persist();
+  apiUpdateShow(show);
   addFeedEvent('update', 'Task added', `Added task "${text}" to ${show.name}`, showId);
   inp.value = '';
   renderList();
@@ -3048,6 +3117,7 @@ function removeItem(showId, itemId) {
   if (!show) return;
   show.checklist = show.checklist.filter(i => i.id !== itemId);
   persist();
+  apiUpdateShow(show);
   renderList();
 }
 
@@ -3086,6 +3156,7 @@ function clDrop(e, showId, targetItemId) {
   const [moved] = cl.splice(fromIdx, 1);
   cl.splice(toIdx, 0, moved);
   persist();
+  apiUpdateShow(show);
   renderList();
 }
 
@@ -3150,6 +3221,7 @@ function saveShow() {
       s.notes     = document.getElementById('f-notes').value.trim();
       s.eventType = eventType;
       addFeedEvent('update', `Show updated`, `${name} details were modified`, s.id);
+      apiUpdateShow(s);
     }
   } else {
     const newShow = {
@@ -3164,6 +3236,7 @@ function saveShow() {
     };
     shows.push(newShow);
     expanded[newShow.id] = true;
+    apiCreateShow(newShow);
     const d = daysUntil(start);
     addFeedEvent('show', `New show added`, `${name} — ${fmt(start)}${d >= 0 ? ` · ${d} days away` : ' (past)'}`, newShow.id);
   }
@@ -3193,6 +3266,7 @@ function closeDel() {
 function confirmDel() {
   const s = shows.find(x => x.id === delId);
   if (s) addFeedEvent('alert', `Show removed`, `${s.name} was deleted from the schedule`);
+  apiDeleteShow(delId);
   shows = shows.filter(s => s.id !== delId);
   persist();
   closeDel();
@@ -3847,6 +3921,7 @@ function parseExcelDate(val) {
 function confirmImport() {
   if (!importedRows.length) return;
   let added = 0, dupes = 0;
+  const newShows = [];
   importedRows.forEach(r => {
     if (shows.some(s => s.name === r.name && s.startDate === r.startDate)) { dupes++; return; }
     const newShow = {
@@ -3854,10 +3929,12 @@ function confirmImport() {
       checklist: DEFAULT_TASKS.map(t => ({ id: uid(), text: t, completed: false }))
     };
     shows.push(newShow);
+    newShows.push(newShow);
     expanded[newShow.id] = true;
     added++;
   });
   if (added) addFeedEvent('show', `Bulk import`, `${added} show${added!==1?'s':''} imported from file`);
+  if (newShows.length) apiBulkImport(newShows);
   persist();
   closeImport();
   renderList();
@@ -3918,6 +3995,9 @@ applyTheme(currentTheme);
 applyViewStyle(currentViewStyle);
 renderList();
 checkBanner();
+
+// Try to connect to API and sync data (non-blocking)
+initFromAPI();
 </script>
 </body>
 </html>
