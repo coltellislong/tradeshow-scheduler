@@ -592,7 +592,7 @@
 
     .ticker-countdown {
       font-family: 'Datatype', sans-serif;
-      font-weight: 400;
+      font-weight: 700;
       font-size: .85rem;
       display: inline-block;
       text-align: center;
@@ -705,7 +705,7 @@
 
     /* ═══ VIEW TOGGLE ═══ */
     .view-label {
-      margin-left: 16px;
+      margin-left: 0;
     }
     .view-toggle {
       display: flex;
@@ -2735,18 +2735,18 @@
     </div>
 
     <div class="list-bar" style="margin-bottom:16px">
-      <label for="sort-sel">Sort by</label>
-      <select id="sort-sel" onchange="sortBy=this.value; renderList()">
-        <option value="date">Date</option>
-        <option value="name">Name A–Z</option>
-        <option value="progress">Progress</option>
-      </select>
       <label class="view-label">View:</label>
       <div class="view-toggle">
         <button class="view-toggle-btn active" data-view="cards" onclick="setViewMode('cards')" title="Cards">▣</button>
         <button class="view-toggle-btn" data-view="tiles" onclick="setViewMode('tiles')" title="Tiles">▦</button>
         <button class="view-toggle-btn" data-view="list" onclick="setViewMode('list')" title="List">☰</button>
       </div>
+      <label for="sort-sel">Sort by</label>
+      <select id="sort-sel" onchange="sortBy=this.value; renderList()">
+        <option value="date">Date</option>
+        <option value="name">Name A–Z</option>
+        <option value="progress">Progress</option>
+      </select>
       <input type="text" class="search-input" id="search-input" placeholder="Search shows..." oninput="renderList()">
     </div>
     <div class="filter-bar" style="margin-bottom:32px">
