@@ -2395,6 +2395,42 @@
       .nav-actions { display: none; }
       .desktop-only { display: none; }
       .hamburger { display: flex; }
+
+      /* Upcoming ticker: hide Progress and Type columns */
+      .ticker-table th:nth-child(5),
+      .ticker-table td:nth-child(5),
+      .ticker-table th:nth-child(6),
+      .ticker-table td:nth-child(6) { display: none; }
+      .ticker-table th, .ticker-table td { padding: 8px 10px; font-size: .72rem; }
+      .ticker-table { table-layout: fixed; }
+
+      /* Feed sidebar widgets: prevent horizontal overflow */
+      .feed-layout { grid-template-columns: 1fr !important; }
+      .sidebar-widget { overflow-x: auto; max-width: 100%; box-sizing: border-box; }
+      .widget-body { overflow-x: auto; max-width: 100%; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .stat-item { padding: 10px 8px; }
+      .stat-num { font-size: 1.2rem; }
+
+      /* Phase progress bars fit on screen */
+      .phase-item { gap: 6px; font-size: .72rem; }
+      .phase-item > span:first-child { min-width: 70px !important; font-size: .68rem !important; }
+
+      /* Schedule upcoming list */
+      .upcoming-list { padding: 0; }
+      .upcoming-item { gap: 8px; }
+
+      /* Show cards: prevent horizontal overflow */
+      .show-card { max-width: 100%; overflow: hidden; box-sizing: border-box; }
+      .card-head { overflow: hidden; }
+      .card-name { white-space: normal !important; word-break: break-word; }
+      .cards-grid.view-list .show-card .card-head { flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
+      .cards-grid.view-list .show-card .card-head-top { flex-wrap: wrap; gap: 8px; }
+      .cards-grid.view-list .show-card .card-head-top > div:first-child { flex-wrap: wrap; gap: 8px; }
+      .cards-grid.view-list .show-card .card-name { font-size: .8rem; white-space: normal !important; }
+
+      /* Tiles view on mobile */
+      .cards-grid.view-tiles { grid-template-columns: 1fr 1fr; }
     }
 
     /* ═══ SCROLLBAR ═══ */
@@ -2504,7 +2540,7 @@
       </button>
     </div>
     <div class="mobile-toggle-row">
-      <span class="mobile-toggle-label">Modern Style</span>
+      <span class="mobile-toggle-label">Style</span>
       <button class="view-style-toggle" id="view-style-toggle-mob" onclick="toggleViewStyle()" title="Toggle classic/modern style">
         <span class="view-style-knob" id="view-style-icon-mob">C</span>
       </button>
