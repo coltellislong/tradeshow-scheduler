@@ -718,7 +718,8 @@
       color: var(--dark-mid);
       width: 32px; height: 32px;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      display: inline-grid;
+      place-items: center;
       font-size: .85rem;
       line-height: 1;
       padding: 0;
@@ -2458,6 +2459,19 @@
       .nav-actions { display: none; }
       .desktop-only { display: none; }
       .hamburger { display: flex; }
+
+      /* List bar: keep sort + view inline, search wraps below */
+      .list-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+      .list-bar .search-input {
+        width: 100%;
+        order: 10;
+      }
+      .view-label { margin-left: auto; }
 
       /* Upcoming ticker: hide Progress and Type columns */
       .ticker-table th:nth-child(5),
