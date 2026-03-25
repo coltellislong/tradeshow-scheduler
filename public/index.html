@@ -1498,10 +1498,12 @@
     .concluded-chevron {
       display: inline-block;
       transition: transform .2s;
-      font-size: .55rem;
-      color: var(--red);
+      width: 0;
+      height: 0;
+      border-left: 5px solid var(--red);
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
     }
-    .concluded-chevron::before { content: '▶'; }
     .concluded-months-section.open .concluded-chevron { transform: rotate(90deg); }
 
     .concluded-months-count {
@@ -2460,18 +2462,24 @@
       .desktop-only { display: none; }
       .hamburger { display: flex; }
 
-      /* List bar: keep sort + view inline, search wraps below */
+      /* List bar: sort left, view right, search full width below */
       .list-bar {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 6px;
         align-items: center;
+      }
+      .list-bar label { font-size: .6rem; letter-spacing: 2px; }
+      .list-bar select {
+        padding: 5px 22px 5px 8px;
+        font-size: .7rem;
+        background-position: right 6px center;
       }
       .list-bar .search-input {
         width: 100%;
         order: 10;
       }
-      .view-label { margin-left: auto; }
+      .view-label { margin-left: auto; font-size: .6rem !important; }
 
       /* Upcoming ticker: hide Progress and Type columns */
       .ticker-table th:nth-child(5),
