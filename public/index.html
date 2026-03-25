@@ -594,7 +594,12 @@
       font-family: 'Share Tech Mono', monospace;
       font-weight: 700;
       font-size: .85rem;
+      display: inline-block;
+      text-align: center;
     }
+
+    .ticker-table th:nth-child(4),
+    .ticker-table td:nth-child(4) { text-align: center; }
 
     .ticker-countdown.urgent { color: #E53935; }
     .ticker-countdown.soon { color: #F9A825; }
@@ -838,7 +843,7 @@
     }
 
     .tile-checklist.open {
-      max-height: 400px;
+      max-height: 600px;
     }
 
     .cards-grid.view-tiles .show-card.tile-expanded {
@@ -847,6 +852,15 @@
 
     .tile-checklist-inner {
       padding: 12px 16px;
+    }
+
+    .tile-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 4px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
     }
 
     .tile-checklist-inner .tile-cl-head {
@@ -3230,6 +3244,15 @@ function cardHTML(show) {
             onchange="toggleItem('${show.id}','${item.id}',this.checked); updateTileChecklist('${show.id}')">
           <label for="tcb-${item.id}">${esc(item.text)}</label>
         </div>`).join('')}
+      <div class="add-task-row" style="margin-top:8px">
+        <input type="text" id="tnt-${show.id}" placeholder="Add custom task..."
+          onkeydown="if(event.key==='Enter')addTileItem('${show.id}')">
+        <button onclick="addTileItem('${show.id}')">+ Add</button>
+      </div>
+      <div class="tile-actions">
+        <button class="icon-btn" onclick="openEdit('${show.id}')" title="Edit">✎</button>
+        <button class="icon-btn" onclick="openDel('${show.id}')" title="Delete">⌫</button>
+      </div>
     </div>
   </div>
 </div>`;
@@ -3328,6 +3351,21 @@ function addItem(showId) {
   apiUpdateShow(show);
   addFeedEvent('update', 'Task added', `Added task "${text}" to ${show.name}`, showId);
   inp.value = '';
+  renderList();
+}
+
+function addTileItem(showId) {
+  const inp  = document.getElementById(`tnt-${showId}`);
+  const text = inp.value.trim();
+  if (!text) return;
+  const show = shows.find(s => s.id === showId);
+  if (!show) return;
+  show.checklist.push({ id: uid(), text, completed: false });
+  persist();
+  apiUpdateShow(show);
+  addFeedEvent('update', 'Task added', `Added task "${text}" to ${show.name}`, showId);
+  inp.value = '';
+  updateTileChecklist(showId);
   renderList();
 }
 
