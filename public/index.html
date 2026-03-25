@@ -7,7 +7,7 @@
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Datatype&family=Roboto:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -591,8 +591,8 @@
     }
 
     .ticker-countdown {
-      font-family: 'Roboto', sans-serif;
-      font-weight: 700;
+      font-family: 'Datatype', sans-serif;
+      font-weight: 400;
       font-size: .85rem;
       display: inline-block;
       text-align: center;
@@ -1469,8 +1469,7 @@
     }
 
     @media (max-width: 1100px) { .months-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 780px)  { .months-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px)  { .months-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 780px)  { .months-grid { grid-template-columns: 1fr; } }
 
     .concluded-months-section { margin-top: 8px; }
 
@@ -2462,26 +2461,11 @@
       .desktop-only { display: none; }
       .hamburger { display: flex; }
 
-      /* List bar: sort left, view right, search full width below */
-      .list-bar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        align-items: center;
-      }
-      .list-bar label { font-size: .6rem; letter-spacing: 2px; }
-      .list-bar select {
-        padding: 5px 22px 5px 8px;
-        font-size: .7rem;
-        width: auto;
-        flex: none;
-        background-position: right 6px center;
-      }
+      /* List bar: match desktop layout, search wraps below */
       .list-bar .search-input {
         width: 100%;
         order: 10;
       }
-      .view-label { margin-left: auto; font-size: .6rem !important; }
 
       /* Upcoming ticker: hide Progress and Type columns */
       .ticker-table th:nth-child(5),
