@@ -596,13 +596,15 @@
       font-size: .85rem;
       display: inline-block;
       text-align: center;
-      color: var(--red);
     }
 
     .ticker-table th:nth-child(4),
     .ticker-table td:nth-child(4) { text-align: center; }
 
-    .ticker-countdown.live { animation: pulse-dot 1s infinite; }
+    .ticker-countdown.urgent { color: #E53935; }
+    .ticker-countdown.soon { color: #F9A825; }
+    .ticker-countdown.normal { color: var(--green); }
+    .ticker-countdown.live { color: #E53935; animation: pulse-dot 1s infinite; }
 
     .ticker-progress {
       display: flex;
@@ -718,6 +720,8 @@
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       font-size: .85rem;
+      line-height: 1;
+      padding: 0;
       transition: all .15s;
       border-radius: 2px;
     }
@@ -2559,18 +2563,24 @@
 
       /* Modal: compact for mobile */
       .overlay { padding: 10px; }
-      .modal { max-height: 95vh; }
+      .modal { max-height: 95vh; max-width: 100%; box-sizing: border-box; }
       .modal-head { padding: 14px 16px; }
       .modal-head h2 { font-size: .75rem; letter-spacing: 3px; }
-      .modal-body { padding: 14px 16px; }
+      .modal-body { padding: 14px 16px; overflow: hidden; }
       .fg { margin-bottom: 10px; }
       .fg label { margin-bottom: 4px; font-size: .6rem; letter-spacing: 2px; }
-      .fr { gap: 10px; }
-      input[type="text"], input[type="date"], textarea {
+      .fr {
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+      }
+      .fr .fg { width: 100%; min-width: 0; overflow: hidden; }
+      input[type="text"], input[type="date"], textarea, select {
         padding: 7px 8px;
         font-size: .8rem;
-        box-sizing: border-box;
-        max-width: 100%;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
       }
       textarea { min-height: 50px; }
       .modal-foot { padding: 12px 16px; }
