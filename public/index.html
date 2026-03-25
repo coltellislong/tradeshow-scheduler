@@ -2319,7 +2319,7 @@
       z-index: 300;
       display: flex;
       flex-direction: column;
-      padding: 80px 0 24px;
+      padding: 20px 0 24px;
       transition: right .3s ease;
       overflow-y: auto;
     }
@@ -2401,8 +2401,10 @@
       .ticker-table td:nth-child(5),
       .ticker-table th:nth-child(6),
       .ticker-table td:nth-child(6) { display: none; }
-      .ticker-table th, .ticker-table td { padding: 8px 10px; font-size: .72rem; }
-      .ticker-table { table-layout: fixed; }
+      .ticker-table th, .ticker-table td { padding: 6px 6px; font-size: .68rem; }
+      .ticker-table { table-layout: auto; width: 100%; }
+      .ticker-name { font-size: .72rem; }
+      .ticker-countdown { font-size: .72rem; }
 
       /* Feed sidebar widgets: prevent horizontal overflow */
       .feed-layout { grid-template-columns: 1fr !important; }
@@ -2429,8 +2431,18 @@
       .cards-grid.view-list .show-card .card-head-top > div:first-child { flex-wrap: wrap; gap: 8px; }
       .cards-grid.view-list .show-card .card-name { font-size: .8rem; white-space: normal !important; }
 
-      /* Tiles view on mobile */
-      .cards-grid.view-tiles { grid-template-columns: 1fr 1fr; }
+      /* Tiles view: single column on mobile */
+      .cards-grid.view-tiles { grid-template-columns: 1fr; }
+      .cards-grid.view-tiles .show-card { height: auto; min-height: 0; }
+      .cards-grid.view-tiles .show-card .card-body,
+      .cards-grid.view-tiles .show-card .card-toggle { display: none !important; }
+
+      /* Import button hidden on mobile */
+      .nav-btn-import { display: none !important; }
+      .mobile-menu .nav-btn-import { display: none !important; }
+
+      /* Drag handles always visible on mobile (no hover) */
+      .drag-handle { color: var(--dark-mid); font-size: .85rem; padding: 0 6px; }
     }
 
     /* ═══ SCROLLBAR ═══ */
@@ -2530,7 +2542,6 @@
   </div>
   <div class="mobile-menu-actions">
     <button class="nav-btn nav-btn-primary" onclick="openAdd();closeMobileMenu()" style="width:100%">+ Add Show</button>
-    <button class="nav-btn-import nav-btn" onclick="openImport();closeMobileMenu()" style="width:100%">+ Import</button>
   </div>
   <div class="mobile-menu-toggles">
     <div class="mobile-toggle-row">
@@ -3373,6 +3384,90 @@ function clDragEnd(e) {
   document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
   clDragShowId = clDragItemId = null;
 }
+
+// ─────────────────────────────────────
+//  TOUCH DRAG SUPPORT (mobile checklist reorder)
+// ─────────────────────────────────────
+let touchDragEl = null, touchDragShowId = null, touchDragItemId = null, touchClone = null, touchStartY = 0;
+
+function initTouchDrag() {
+  document.addEventListener('touchstart', function(e) {
+    const handle = e.target.closest('.drag-handle');
+    if (!handle) return;
+    const li = handle.closest('[draggable="true"]');
+    if (!li) return;
+    e.preventDefault();
+    touchDragEl = li;
+    // Extract showId and itemId from the ondragstart attribute
+    const attr = li.getAttribute('ondragstart') || '';
+    const m = attr.match(/clDragStart\(event,'([^']+)','([^']+)'\)/);
+    if (!m) return;
+    touchDragShowId = m[1];
+    touchDragItemId = m[2];
+    touchStartY = e.touches[0].clientY;
+
+    // Visual feedback
+    li.classList.add('dragging');
+
+    // Create floating clone
+    touchClone = li.cloneNode(true);
+    touchClone.style.cssText = 'position:fixed;left:0;right:0;z-index:9999;opacity:.85;pointer-events:none;background:var(--white);box-shadow:0 4px 16px rgba(0,0,0,.2);padding:8px 12px;';
+    const rect = li.getBoundingClientRect();
+    touchClone.style.top = rect.top + 'px';
+    touchClone.style.width = rect.width + 'px';
+    document.body.appendChild(touchClone);
+  }, { passive: false });
+
+  document.addEventListener('touchmove', function(e) {
+    if (!touchDragEl) return;
+    e.preventDefault();
+    const y = e.touches[0].clientY;
+    if (touchClone) touchClone.style.top = y - 20 + 'px';
+
+    // Find element under finger
+    if (touchClone) touchClone.style.display = 'none';
+    const el = document.elementFromPoint(e.touches[0].clientX, y);
+    if (touchClone) touchClone.style.display = '';
+
+    // Clear previous drag-over
+    document.querySelectorAll('.drag-over').forEach(d => d.classList.remove('drag-over'));
+    if (el) {
+      const target = el.closest('[draggable="true"]');
+      if (target && target !== touchDragEl) target.classList.add('drag-over');
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchend', function(e) {
+    if (!touchDragEl) return;
+    // Find drop target
+    document.querySelectorAll('.drag-over').forEach(d => {
+      const attr = d.getAttribute('ondrop') || '';
+      const m = attr.match(/clDrop\(event,'([^']+)','([^']+)'\)/);
+      if (m && m[1] === touchDragShowId) {
+        // Perform the reorder
+        const show = shows.find(s => s.id === touchDragShowId);
+        if (show) {
+          const cl = show.checklist;
+          const fromIdx = cl.findIndex(i => i.id === touchDragItemId);
+          const toIdx = cl.findIndex(i => i.id === m[2]);
+          if (fromIdx >= 0 && toIdx >= 0) {
+            const [moved] = cl.splice(fromIdx, 1);
+            cl.splice(toIdx, 0, moved);
+            persist();
+            apiUpdateShow(show);
+            renderList();
+          }
+        }
+      }
+      d.classList.remove('drag-over');
+    });
+    touchDragEl.classList.remove('dragging');
+    if (touchClone) { touchClone.remove(); touchClone = null; }
+    touchDragEl = null; touchDragShowId = null; touchDragItemId = null;
+  });
+}
+
+initTouchDrag();
 
 // ─────────────────────────────────────
 //  ADD / EDIT MODAL
