@@ -2276,6 +2276,114 @@
     .preview-tbl tr:last-child td { border-bottom: none; }
     .preview-tbl tr:nth-child(even) td { background: var(--off-white); }
 
+    /* ═══ HAMBURGER & MOBILE MENU ═══ */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      margin-left: auto;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all .25s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 299;
+    }
+    .mobile-menu-overlay.open { display: block; }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 280px;
+      height: 100%;
+      background: var(--dark);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      padding: 80px 0 24px;
+      transition: right .3s ease;
+      overflow-y: auto;
+    }
+    .mobile-menu.open { right: 0; }
+
+    .mobile-menu-nav {
+      display: flex;
+      flex-direction: column;
+    }
+    .mobile-menu-item {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,.7);
+      padding: 16px 24px;
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: 'Roboto', sans-serif;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all .15s;
+      border-left: 3px solid transparent;
+    }
+    .mobile-menu-item:hover { background: rgba(255,255,255,.06); color: var(--white); }
+    .mobile-menu-item.active {
+      color: var(--white);
+      border-left-color: var(--red);
+      background: rgba(255,255,255,.05);
+    }
+
+    .mobile-menu-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 24px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      margin-top: 8px;
+    }
+
+    .mobile-menu-toggles {
+      margin-top: auto;
+      padding: 24px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .mobile-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mobile-toggle-label {
+      color: rgba(255,255,255,.7);
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 768px) {
       .cards-grid { grid-template-columns: 1fr; }
@@ -2283,6 +2391,10 @@
       nav { padding: 0 16px; gap: 6px; }
       .nav-logo-main { font-size: .9rem; }
       main { padding: 20px 16px; }
+      .nav-tabs { display: none; }
+      .nav-actions { display: none; }
+      .desktop-only { display: none; }
+      .hamburger { display: flex; }
     }
 
     /* ═══ SCROLLBAR ═══ */
@@ -2336,10 +2448,10 @@
     <div class="nav-logo-text">
       <span class="nav-logo-main">DAB Tradeshow Scheduler</span>
     </div>
-    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+    <button class="theme-toggle desktop-only" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
       <span class="theme-toggle-knob" id="theme-icon">☽</span>
     </button>
-    <button class="view-style-toggle" id="view-style-toggle" onclick="toggleViewStyle()" title="Toggle classic/modern style">
+    <button class="view-style-toggle desktop-only" id="view-style-toggle" onclick="toggleViewStyle()" title="Toggle classic/modern style">
       <span class="view-style-knob" id="view-style-icon">C</span>
     </button>
   </div>
@@ -2360,7 +2472,45 @@
     <button class="nav-btn-import nav-btn" onclick="openImport()">+ Import</button>
     <button class="nav-btn nav-btn-primary" onclick="openAdd()">+ Add Show</button>
   </div>
+
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- Mobile slide-out menu -->
+<div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-nav">
+    <button class="mobile-menu-item active" id="mob-tab-list" onclick="switchView('list');closeMobileMenu()">
+      <span class="tab-icon">▣</span> All Shows
+    </button>
+    <button class="mobile-menu-item" id="mob-tab-cal" onclick="switchView('calendar');closeMobileMenu()">
+      <span class="tab-icon">◫</span> Calendar
+    </button>
+    <button class="mobile-menu-item" id="mob-tab-feed" onclick="switchView('feed');closeMobileMenu()">
+      <span class="tab-icon">◈</span> Feed
+    </button>
+  </div>
+  <div class="mobile-menu-actions">
+    <button class="nav-btn nav-btn-primary" onclick="openAdd();closeMobileMenu()" style="width:100%">+ Add Show</button>
+    <button class="nav-btn-import nav-btn" onclick="openImport();closeMobileMenu()" style="width:100%">+ Import</button>
+  </div>
+  <div class="mobile-menu-toggles">
+    <div class="mobile-toggle-row">
+      <span class="mobile-toggle-label">Dark Mode</span>
+      <button class="theme-toggle" id="theme-toggle-mob" onclick="toggleTheme()" title="Toggle dark mode">
+        <span class="theme-toggle-knob" id="theme-icon-mob">☽</span>
+      </button>
+    </div>
+    <div class="mobile-toggle-row">
+      <span class="mobile-toggle-label">Modern Style</span>
+      <button class="view-style-toggle" id="view-style-toggle-mob" onclick="toggleViewStyle()" title="Toggle classic/modern style">
+        <span class="view-style-knob" id="view-style-icon-mob">C</span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════ MAIN ══════════ -->
 <main>
@@ -2752,9 +2902,14 @@ function switchView(v) {
   ['list','cal','feed'].forEach(n => {
     document.getElementById(`view-${n === 'cal' ? 'cal' : n === 'feed' ? 'feed' : 'list'}`).classList.toggle('active', false);
     document.getElementById(`tab-${n === 'cal' ? 'cal' : n === 'feed' ? 'feed' : 'list'}`).classList.toggle('active', false);
+    const mob = document.getElementById(`mob-tab-${n === 'cal' ? 'cal' : n === 'feed' ? 'feed' : 'list'}`);
+    if (mob) mob.classList.toggle('active', false);
   });
-  document.getElementById(`view-${v === 'calendar' ? 'cal' : v}`).classList.add('active');
-  document.getElementById(`tab-${v === 'calendar' ? 'cal' : v}`).classList.add('active');
+  const key = v === 'calendar' ? 'cal' : v;
+  document.getElementById(`view-${key}`).classList.add('active');
+  document.getElementById(`tab-${key}`).classList.add('active');
+  const mobActive = document.getElementById(`mob-tab-${key}`);
+  if (mobActive) mobActive.classList.add('active');
   if (v === 'calendar') renderCalendar();
   if (v === 'feed') renderFeed();
 }
@@ -3986,8 +4141,11 @@ function downloadTemplate() {
 
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
+  const sym = theme === 'dark' ? '☽' : '☀';
   const icon = document.getElementById('theme-icon');
-  if (icon) icon.textContent = theme === 'dark' ? '☽' : '☀';
+  if (icon) icon.textContent = sym;
+  const iconMob = document.getElementById('theme-icon-mob');
+  if (iconMob) iconMob.textContent = sym;
   localStorage.setItem('dab-theme', theme);
   currentTheme = theme;
 }
@@ -3998,14 +4156,29 @@ function toggleTheme() {
 
 function applyViewStyle(style) {
   document.documentElement.setAttribute('data-view-style', style);
+  const sym = style === 'modern' ? 'M' : 'C';
   const icon = document.getElementById('view-style-icon');
-  if (icon) icon.textContent = style === 'modern' ? 'M' : 'C';
+  if (icon) icon.textContent = sym;
+  const iconMob = document.getElementById('view-style-icon-mob');
+  if (iconMob) iconMob.textContent = sym;
   localStorage.setItem('dab-view-style', style);
   currentViewStyle = style;
 }
 
 function toggleViewStyle() {
   applyViewStyle(currentViewStyle === 'modern' ? 'classic' : 'modern');
+}
+
+function toggleMobileMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+  document.getElementById('mobile-overlay').classList.toggle('open');
+  document.getElementById('hamburger-btn').classList.toggle('open');
+}
+
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.getElementById('mobile-overlay').classList.remove('open');
+  document.getElementById('hamburger-btn').classList.remove('open');
 }
 
 applyTheme(currentTheme);
