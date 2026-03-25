@@ -783,7 +783,12 @@
     .cards-grid.view-tiles .show-card .card-name { font-size: .88rem; }
     .cards-grid.view-tiles .show-card .card-meta { font-size: .65rem; }
     .cards-grid.view-tiles .show-card .card-loc { font-size: .65rem; }
-    .cards-grid.view-tiles .show-card .card-btns { display: none; }
+    .cards-grid.view-tiles .show-card .card-head { position: relative; }
+    .cards-grid.view-tiles .show-card .card-btns {
+      position: absolute;
+      bottom: 12px;
+      right: 16px;
+    }
 
     /* ═══ LIST VIEW (rows) ═══ */
     .cards-grid.view-list {
@@ -854,14 +859,6 @@
       padding: 12px 16px;
     }
 
-    .tile-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 4px;
-      margin-top: 10px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-    }
 
     .tile-checklist-inner .tile-cl-head {
       font-size: .62rem;
@@ -3198,8 +3195,8 @@ function cardHTML(show) {
         <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[show.eventType || 'national']}">${EVENT_TYPE_LABELS[show.eventType || 'national']}</span>
       </div>
       <div class="card-btns">
-        <button class="icon-btn" onclick="openEdit('${show.id}')" title="Edit">✎</button>
-        <button class="icon-btn" onclick="openDel('${show.id}')" title="Delete">⌫</button>
+        <button class="icon-btn" onclick="event.stopPropagation();openEdit('${show.id}')" title="Edit">✎</button>
+        <button class="icon-btn" onclick="event.stopPropagation();openDel('${show.id}')" title="Delete">⌫</button>
       </div>
     </div>
   </div>
@@ -3248,10 +3245,6 @@ function cardHTML(show) {
         <input type="text" id="tnt-${show.id}" placeholder="Add custom task..."
           onkeydown="if(event.key==='Enter')addTileItem('${show.id}')">
         <button onclick="addTileItem('${show.id}')">+ Add</button>
-      </div>
-      <div class="tile-actions">
-        <button class="icon-btn" onclick="openEdit('${show.id}')" title="Edit">✎</button>
-        <button class="icon-btn" onclick="openDel('${show.id}')" title="Delete">⌫</button>
       </div>
     </div>
   </div>
