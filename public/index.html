@@ -699,10 +699,12 @@
     }
 
     /* ═══ VIEW TOGGLE ═══ */
+    .view-label {
+      margin-left: 16px;
+    }
     .view-toggle {
       display: flex;
       gap: 4px;
-      margin-left: 12px;
     }
 
     .view-toggle-btn {
@@ -2386,12 +2388,13 @@
         <option value="name">Name A–Z</option>
         <option value="progress">Progress</option>
       </select>
-      <input type="text" class="search-input" id="search-input" placeholder="Search shows..." oninput="renderList()">
+      <label class="view-label">View:</label>
       <div class="view-toggle">
         <button class="view-toggle-btn active" data-view="cards" onclick="setViewMode('cards')" title="Cards">▣</button>
         <button class="view-toggle-btn" data-view="tiles" onclick="setViewMode('tiles')" title="Tiles">▦</button>
         <button class="view-toggle-btn" data-view="list" onclick="setViewMode('list')" title="List">☰</button>
       </div>
+      <input type="text" class="search-input" id="search-input" placeholder="Search shows..." oninput="renderList()">
     </div>
     <div class="filter-bar" style="margin-bottom:24px">
       <span class="filter-bar-label">Filter</span>
@@ -3357,7 +3360,7 @@ ${s.location ? `<p>▸ ${esc(s.location)}</p>` : ''}
 <p class="cp-prog">${pct}% planned · ${lbl}</p>
 <div class="cp-actions">
   <button class="btn btn-primary btn-sm" onclick="openEdit('${s.id}');closePopup()">Edit</button>
-  <button class="btn btn-secondary btn-sm" onclick="switchView('list');closePopup();setTimeout(()=>{const c=document.getElementById('card-${s.id}');if(c){c.scrollIntoView({behavior:'smooth'});if(expanded['${s.id}']===false)toggleCard('${s.id}');}},120)">View</button>
+  <button class="btn btn-secondary btn-sm" onclick="switchView('list');closePopup();setTimeout(()=>{const c=document.getElementById('card-${s.id}');if(c){c.scrollIntoView({behavior:'smooth'});if(!expanded['${s.id}'])toggleCard('${s.id}');}},120)">View</button>
 </div>`;
   }).join('');
 
@@ -3418,7 +3421,7 @@ function openDayPane(dateStr) {
         <div class="dp-prog">${pct}% planned · ${lbl}</div>
         <div class="dp-actions">
           <button class="btn btn-primary btn-sm" onclick="openEdit('${s.id}');closeDayPane()">Edit</button>
-          <button class="btn btn-secondary btn-sm" onclick="switchView('list');closeDayPane();setTimeout(()=>{const c=document.getElementById('card-${s.id}');if(c){c.scrollIntoView({behavior:'smooth'});if(expanded['${s.id}']===false)toggleCard('${s.id}');}},120)">View</button>
+          <button class="btn btn-secondary btn-sm" onclick="switchView('list');closeDayPane();setTimeout(()=>{const c=document.getElementById('card-${s.id}');if(c){c.scrollIntoView({behavior:'smooth'});if(!expanded['${s.id}'])toggleCard('${s.id}');}},120)">View</button>
         </div>
       </div>`;
     }).join('');
