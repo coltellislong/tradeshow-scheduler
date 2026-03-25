@@ -2381,7 +2381,7 @@
       </div>
     </div>
 
-    <div class="list-bar" style="margin-bottom:8px">
+    <div class="list-bar" style="margin-bottom:16px">
       <label for="sort-sel">Sort by</label>
       <select id="sort-sel" onchange="sortBy=this.value; renderList()">
         <option value="date">Date</option>
@@ -2396,7 +2396,7 @@
       </div>
       <input type="text" class="search-input" id="search-input" placeholder="Search shows..." oninput="renderList()">
     </div>
-    <div class="filter-bar" style="margin-bottom:24px">
+    <div class="filter-bar" style="margin-bottom:32px">
       <span class="filter-bar-label">Filter</span>
       <button class="filter-pill active" data-filter="all" onclick="setFilter('all')"><span class="pill-dot"></span>All</button>
       <button class="filter-pill" data-filter="national" onclick="setFilter('national')"><span class="pill-dot"></span>National</button>
@@ -3044,6 +3044,23 @@ function toggleCard(id) {
   expanded[id] = isHidden;
 }
 
+function expandChecklist(id) {
+  if (viewMode === 'cards') {
+    if (!expanded[id]) toggleCard(id);
+  } else {
+    const cl = document.getElementById(`tile-cl-${id}`);
+    const card = document.getElementById(`card-${id}`);
+    if (cl && !cl.classList.contains('open')) {
+      document.querySelectorAll('.tile-checklist.open').forEach(el => {
+        el.classList.remove('open');
+        el.closest('.show-card')?.classList.remove('tile-expanded');
+      });
+      cl.classList.add('open');
+      card?.classList.add('tile-expanded');
+    }
+  }
+}
+
 function toggleTileChecklist(id, event) {
   // Only trigger in tile and list views
   if (viewMode !== 'tiles' && viewMode !== 'list') return;
@@ -3360,7 +3377,7 @@ ${s.location ? `<p>▸ ${esc(s.location)}</p>` : ''}
 <p class="cp-prog">${pct}% planned · ${lbl}</p>
 <div class="cp-actions">
   <button class="btn btn-primary btn-sm" onclick="openEdit('${s.id}');closePopup()">Edit</button>
-  <button class="btn btn-secondary btn-sm" onclick="switchView('list');closePopup();setTimeout(()=>{const c=document.getElementById('card-${s.id}');if(c){c.scrollIntoView({behavior:'smooth'});if(!expanded['${s.id}'])toggleCard('${s.id}');}},120)">View</button>
+  <button class="btn btn-secondary btn-sm" onclick="switchView('list');closePopup();setTimeout(()=>{const c=document.getElementById('card-${s.id}');if(c){c.scrollIntoView({behavior:'smooth'});expandChecklist('${s.id}');}},120)">View</button>
 </div>`;
   }).join('');
 
@@ -3421,7 +3438,7 @@ function openDayPane(dateStr) {
         <div class="dp-prog">${pct}% planned · ${lbl}</div>
         <div class="dp-actions">
           <button class="btn btn-primary btn-sm" onclick="openEdit('${s.id}');closeDayPane()">Edit</button>
-          <button class="btn btn-secondary btn-sm" onclick="switchView('list');closeDayPane();setTimeout(()=>{const c=document.getElementById('card-${s.id}');if(c){c.scrollIntoView({behavior:'smooth'});if(!expanded['${s.id}'])toggleCard('${s.id}');}},120)">View</button>
+          <button class="btn btn-secondary btn-sm" onclick="switchView('list');closeDayPane();setTimeout(()=>{const c=document.getElementById('card-${s.id}');if(c){c.scrollIntoView({behavior:'smooth'});expandChecklist('${s.id}');}},120)">View</button>
         </div>
       </div>`;
     }).join('');
