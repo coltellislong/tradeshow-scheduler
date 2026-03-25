@@ -118,6 +118,7 @@
       border: none;
       border-radius: 999px;
       width: 46px;
+      min-width: 46px;
       height: 24px;
       display: flex;
       align-items: center;
@@ -126,6 +127,8 @@
       margin-left: 12px;
       position: relative;
       padding: 0;
+      flex-shrink: 0;
+      box-sizing: border-box;
     }
 
     .theme-toggle:hover {
@@ -165,6 +168,7 @@
       border: none;
       border-radius: 999px;
       width: 46px;
+      min-width: 46px;
       height: 24px;
       display: flex;
       align-items: center;
@@ -173,6 +177,8 @@
       margin-left: 8px;
       position: relative;
       padding: 0;
+      flex-shrink: 0;
+      box-sizing: border-box;
     }
 
     .view-style-toggle:hover {
@@ -384,6 +390,8 @@
       display: flex;
       height: 100%;
       gap: 0;
+      min-width: 0;
+      flex-shrink: 1;
     }
 
     .nav-tab {
@@ -422,6 +430,7 @@
       align-items: center;
       gap: 10px;
       margin-left: 24px;
+      flex-shrink: 0;
     }
 
     .nav-btn {
