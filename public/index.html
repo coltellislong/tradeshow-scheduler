@@ -756,7 +756,7 @@
 
     /* ═══ TILES VIEW ═══ */
     .cards-grid.view-tiles {
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 14px;
     }
 
@@ -1114,8 +1114,8 @@
     }
 
     .filter-pill.active[data-filter="all"] {
-      background: #2E7D32;
-      border-color: #2E7D32;
+      background: var(--dark);
+      border-color: var(--dark);
     }
 
     .filter-pill.active[data-filter="national"] {
@@ -1130,8 +1130,8 @@
     }
 
     .filter-pill.active[data-filter="regional"] {
-      background: #7B1FA2;
-      border-color: #7B1FA2;
+      background: #9C27B0;
+      border-color: #9C27B0;
     }
 
     .filter-pill.active[data-filter="rep"] {
@@ -1152,8 +1152,8 @@
     }
 
     .filter-pill.active[data-value="regional"] {
-      background: #7B1FA2;
-      border-color: #7B1FA2;
+      background: #9C27B0;
+      border-color: #9C27B0;
     }
 
     .filter-pill.active[data-value="rep"] {
@@ -1171,7 +1171,7 @@
     .filter-pill[data-filter="all"] .pill-dot { background: var(--dark-mid); }
     .filter-pill[data-filter="national"] .pill-dot { background: #F9A825; }
     .filter-pill[data-filter="local"] .pill-dot { background: #1565C0; }
-    .filter-pill[data-filter="regional"] .pill-dot { background: #7B1FA2; }
+    .filter-pill[data-filter="regional"] .pill-dot { background: #9C27B0; }
     .filter-pill[data-filter="rep"] .pill-dot { background: #E65100; }
     .filter-pill.active .pill-dot { background: rgba(255,255,255,.7); }
     .filter-pill.active[data-filter="national"] .pill-dot { background: rgba(0,0,0,.4); }
@@ -1468,6 +1468,41 @@
     @media (max-width: 1100px) { .months-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 780px)  { .months-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 480px)  { .months-grid { grid-template-columns: 1fr; } }
+
+    .concluded-months-section { margin-top: 4px; }
+
+    .concluded-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 16px;
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      color: var(--dark-mid);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .concluded-chevron {
+      display: inline-block;
+      transition: transform .2s;
+      font-size: .6rem;
+    }
+    .concluded-chevron::before { content: '▶'; }
+    .concluded-months-section.open .concluded-chevron { transform: rotate(90deg); }
+
+    .concluded-months-grid {
+      display: none;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .concluded-months-section.open .concluded-months-grid { display: grid; }
 
     .month-card {
       background: var(--white);
@@ -2417,13 +2452,28 @@
       .ticker-name { font-size: .72rem; }
       .ticker-countdown { font-size: .72rem; }
 
-      /* Feed sidebar widgets: prevent horizontal overflow */
+      /* Feed sidebar widgets: fit within mobile viewport */
       .feed-layout { grid-template-columns: 1fr !important; }
-      .sidebar-widget { overflow-x: auto; max-width: 100%; box-sizing: border-box; }
-      .widget-body { overflow-x: auto; max-width: 100%; }
+      #feed-sidebar {
+        max-width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+      .sidebar-widget {
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      .widget-body {
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        padding: 10px 12px;
+      }
       .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-      .stat-item { padding: 10px 8px; }
-      .stat-num { font-size: 1.2rem; }
+      .stat-item { padding: 8px 6px; }
+      .stat-value { font-size: 1.1rem; }
+      .stat-label { font-size: .6rem; }
 
       /* Phase progress bars fit on screen */
       .phase-item { gap: 6px; font-size: .72rem; }
@@ -2431,7 +2481,9 @@
 
       /* Schedule upcoming list */
       .upcoming-list { padding: 0; }
-      .upcoming-item { gap: 8px; }
+      .upcoming-item { gap: 8px; overflow: hidden; }
+      .upcoming-item .ui-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .upcoming-item .ui-info { min-width: 0; overflow: hidden; }
 
       /* Show cards: prevent horizontal overflow */
       .show-card { max-width: 100%; overflow: hidden; box-sizing: border-box; }
@@ -2442,11 +2494,8 @@
       .cards-grid.view-list .show-card .card-head-top > div:first-child { flex-wrap: wrap; gap: 8px; }
       .cards-grid.view-list .show-card .card-name { font-size: .8rem; white-space: normal !important; }
 
-      /* Tiles view: single column on mobile */
-      .cards-grid.view-tiles { grid-template-columns: 1fr; }
-      .cards-grid.view-tiles .show-card { height: auto; min-height: 0; }
-      .cards-grid.view-tiles .show-card .card-body,
-      .cards-grid.view-tiles .show-card .card-toggle { display: none !important; }
+      /* Tiles view: hide tile toggle button on mobile */
+      .view-toggle-btn[data-view="tiles"] { display: none; }
 
       /* Import button hidden on mobile */
       .nav-btn-import { display: none !important; }
@@ -3064,7 +3113,7 @@ function formatTs(ts) {
 // ─────────────────────────────────────
 //  BANNER
 // ─────────────────────────────────────
-const TYPE_DOT_COLORS = { national: '#F9A825', local: '#1565C0', regional: '#7B1FA2', rep: '#E65100' };
+const TYPE_DOT_COLORS = { national: '#F9A825', local: '#1565C0', regional: '#9C27B0', rep: '#E65100' };
 
 function checkBanner() {
   const upcoming = shows
@@ -3082,10 +3131,11 @@ function checkBanner() {
     const d = daysUntil(s.startDate);
     const pct = progress(s);
     let countdownClass, countdownText;
+    const dayLabel = d === 1 ? 'DAY' : 'DAYS';
     if (d === 0) { countdownClass = 'live'; countdownText = 'LIVE'; }
-    else if (d <= 7) { countdownClass = 'urgent'; countdownText = `${d}d`; }
-    else if (d <= 30) { countdownClass = 'soon'; countdownText = `${d}d`; }
-    else { countdownClass = 'normal'; countdownText = `${d}d`; }
+    else if (d <= 7) { countdownClass = 'urgent'; countdownText = `${d} ${dayLabel}`; }
+    else if (d <= 30) { countdownClass = 'soon'; countdownText = `${d} ${dayLabel}`; }
+    else { countdownClass = 'normal'; countdownText = `${d} ${dayLabel}`; }
 
     const fillClass = pct < 40 ? 'low' : pct < 75 ? 'med' : '';
     const evType = s.eventType || 'national';
@@ -3154,6 +3204,7 @@ const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', 
 //  LIST VIEW
 // ─────────────────────────────────────
 function setViewMode(mode) {
+  if (mode === 'tiles' && window.innerWidth <= 768) mode = 'cards';
   viewMode = mode;
   document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
   renderList();
@@ -3671,15 +3722,29 @@ function renderCalendar() {
   const currentYear = now.getFullYear();
   const isMobile = window.innerWidth <= 768;
 
-  let monthIndices = MONTHS.map((_, i) => i);
-
   if (isMobile && calYear === currentYear) {
-    // Hide concluded months, put current month first
-    monthIndices = monthIndices.filter(i => i >= currentMonth);
-  }
+    const currentAndFuture = MONTHS.map((_, i) => i).filter(i => i >= currentMonth);
+    const past = MONTHS.map((_, i) => i).filter(i => i < currentMonth);
 
-  document.getElementById('months-grid').innerHTML =
-    monthIndices.map(mi => renderMonth(MONTHS[mi], mi)).join('');
+    let html = currentAndFuture.map(mi => renderMonth(MONTHS[mi], mi)).join('');
+
+    if (past.length) {
+      html += `
+      <div class="concluded-months-section" style="grid-column:1/-1">
+        <button class="concluded-toggle" onclick="this.parentElement.classList.toggle('open')">
+          <span class="concluded-chevron"></span> Past Months (${past.length})
+        </button>
+        <div class="concluded-months-grid">
+          ${past.map(mi => renderMonth(MONTHS[mi], mi)).join('')}
+        </div>
+      </div>`;
+    }
+
+    document.getElementById('months-grid').innerHTML = html;
+  } else {
+    document.getElementById('months-grid').innerHTML =
+      MONTHS.map((name, mi) => renderMonth(name, mi)).join('');
+  }
 }
 
 function renderMonth(name, mi) {
@@ -3692,7 +3757,7 @@ function renderMonth(name, mi) {
 
   const filteredShows = filterType === 'all' ? shows : shows.filter(s => (s.eventType || 'national') === filterType);
 
-  const DOT_COLORS = { national: '#F9A825', local: '#1565C0', regional: '#7B1FA2', rep: '#E65100' };
+  const DOT_COLORS = { national: '#F9A825', local: '#1565C0', regional: '#9C27B0', rep: '#E65100' };
 
   for (let d = 1; d <= daysInMonth; d++) {
     const ds     = `${calYear}-${String(mi+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -4040,8 +4105,8 @@ function renderFeedSidebar() {
           <div class="stat-value" style="color:#1565C0">${locCount}</div>
           <div class="stat-label">Local</div>
         </div>
-        <div class="stat-item" style="border-left-color:#7B1FA2;background:rgba(123,31,162,.06)">
-          <div class="stat-value" style="color:#7B1FA2">${regCount}</div>
+        <div class="stat-item" style="border-left-color:#9C27B0;background:rgba(123,31,162,.06)">
+          <div class="stat-value" style="color:#9C27B0">${regCount}</div>
           <div class="stat-label">Regional</div>
         </div>
         <div class="stat-item" style="border-left-color:#E65100;background:rgba(230,81,0,.06)">
@@ -4116,7 +4181,8 @@ function renderFeedSidebar() {
     </div>`;
   }
 
-  sidebar.innerHTML = countdownHtml + statsHtml + typeBreakdownHtml + upHtml + phaseHtml;
+  const isMobileFeed = window.innerWidth <= 768;
+  sidebar.innerHTML = (isMobileFeed ? '' : countdownHtml) + statsHtml + typeBreakdownHtml + upHtml + phaseHtml;
 }
 
 // ─────────────────────────────────────
@@ -4406,10 +4472,12 @@ applyViewStyle(currentViewStyle);
 renderList();
 checkBanner();
 
-// Re-render calendar on resize so mobile hides concluded months
+// Re-render on resize for mobile adaptations
 window.addEventListener('resize', (() => {
   let t; return () => { clearTimeout(t); t = setTimeout(() => {
     if (document.getElementById('view-cal').classList.contains('active')) renderCalendar();
+    if (document.getElementById('view-feed').classList.contains('active')) renderFeedSidebar();
+    if (viewMode === 'tiles' && window.innerWidth <= 768) setViewMode('cards');
   }, 200); };
 })());
 
