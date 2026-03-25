@@ -2,6 +2,7 @@
   "name": "tradeshow-scheduler-api",
   "version": "1.0.0",
   "description": "Node.js Express API for DAB Tradeshow Scheduler backed by MongoDB",
+  "license": "MIT",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

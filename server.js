@@ -11,8 +11,15 @@ app.use(cors());
 app.use(express.json());
 
 // ─── MongoDB Connection ──────────────────────────────────
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017';
+const MONGO_URI = process.env.MONGO_URI;
 const DB_NAME = process.env.DB_NAME || 'tradeshow_db';
+
+if (!MONGO_URI) {
+  console.error('ERROR: MONGO_URI environment variable is not set.');
+  console.error('Set it to your MongoDB Atlas connection string, e.g.:');
+  console.error('  mongodb+srv://<user>:<pass>@cluster0.xxxxx.mongodb.net/tradeshow_db');
+  process.exit(1);
+}
 
 let db;
 
