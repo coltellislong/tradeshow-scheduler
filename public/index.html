@@ -1085,50 +1085,6 @@
       color: var(--white);
     }
 
-    /* Treemap */
-    .budget-treemap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 3px;
-      margin-bottom: 24px;
-      min-height: 260px;
-    }
-
-    .treemap-cell {
-      position: relative;
-      padding: 12px 14px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      cursor: default;
-      transition: opacity .15s;
-    }
-
-    .treemap-cell:hover { opacity: .85; }
-
-    .treemap-cell-name {
-      font-size: .75rem;
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1.3;
-    }
-
-    .treemap-cell-type {
-      font-size: .6rem;
-      color: rgba(255,255,255,.75);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .treemap-cell-amount {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
-      font-size: .7rem;
-      color: rgba(255,255,255,.9);
-      margin-top: auto;
-      padding-top: 8px;
-    }
 
     .card-btns { display: flex; gap: 4px; flex-shrink: 0; }
 
@@ -1887,12 +1843,11 @@
     /* ═══ NEWS FEED ═══ */
     .feed-layout {
       display: grid;
-      grid-template-columns: 1fr 340px;
+      grid-template-columns: 1fr minmax(280px, 340px);
       gap: 24px;
       align-items: start;
     }
 
-    @media (max-width: 900px) { .feed-layout { grid-template-columns: 1fr; } }
 
     /* Timeline */
     .timeline {
@@ -2595,7 +2550,7 @@
     }
 
     /* ═══ RESPONSIVE ═══ */
-    @media (max-width: 1365px) {
+    @media (max-width: 1400px) {
       .cards-grid { grid-template-columns: 1fr; }
       .fr { grid-template-columns: 1fr; }
       nav { padding: 0 16px; gap: 6px; }
@@ -3439,7 +3394,7 @@ const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', 
 //  LIST VIEW
 // ─────────────────────────────────────
 function setViewMode(mode) {
-  if (mode === 'tiles' && window.innerWidth <= 1365) mode = 'cards';
+  if (mode === 'tiles' && window.innerWidth <= 1400) mode = 'cards';
   viewMode = mode;
   document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
   renderList();
@@ -3959,7 +3914,7 @@ function renderCalendar() {
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
-  const isMobile = window.innerWidth <= 1365;
+  const isMobile = window.innerWidth <= 1400;
 
   if (isMobile && calYear === currentYear) {
     const currentAndFuture = MONTHS.map((_, i) => i).filter(i => i >= currentMonth);
@@ -4260,43 +4215,14 @@ function renderBudget() {
   const totalBudget = shows.reduce((sum, s) => sum + (s.budget || 0), 0);
   document.getElementById('budget-total').textContent = '$' + totalBudget.toLocaleString();
 
-  const sorted = [...shows].filter(s => s.budget > 0).sort((a, b) => (b.budget || 0) - (a.budget || 0));
-
   if (!shows.length) {
     container.innerHTML = '<div class="empty"><div class="empty-icon"></div><p>No shows yet. Add a show with a budget to get started.</p></div>';
     return;
   }
 
-  // ── Treemap ──
-  const TREEMAP_COLORS = { national: '#2E7D32', local: '#1565C0', regional: '#9C27B0', rep: '#E65100' };
-  let treemapHtml = '';
-  if (sorted.length) {
-    const cells = sorted.map(s => {
-      const b = s.budget || 0;
-      const pct = totalBudget ? (b / totalBudget * 100) : 0;
-      const evType = s.eventType || 'national';
-      const bg = TREEMAP_COLORS[evType] || '#2E7D32';
-      // Min width ~12%, flex-grow by pct
-      const basis = Math.max(pct, 12);
-      return `
-      <div class="treemap-cell" style="flex:${basis} 1 0%;background:${bg};min-height:100px">
-        <div class="treemap-cell-name">${esc(s.name)}</div>
-        <div class="treemap-cell-type">${EVENT_TYPE_LABELS[evType]}</div>
-        <div class="treemap-cell-amount">$${b.toLocaleString()}</div>
-      </div>`;
-    }).join('');
-    treemapHtml = `
-    <div class="sidebar-widget" style="margin-bottom:24px">
-      <div class="widget-head">BUDGET TREEMAP <span class="wh-accent">◆</span></div>
-      <div class="widget-body" style="padding:8px">
-        <div class="budget-treemap">${cells}</div>
-      </div>
-    </div>`;
-  }
-
-  // ── Breakdown rows ──
-  const allSorted = [...shows].sort((a, b) => (b.budget || 0) - (a.budget || 0));
-  const rows = allSorted.map(s => {
+  // ── Breakdown rows sorted by date upcoming ──
+  const dateSorted = [...shows].sort((a, b) => a.startDate.localeCompare(b.startDate));
+  const rows = dateSorted.map(s => {
     const b = s.budget || 0;
     const pct = totalBudget ? Math.round(b / totalBudget * 100) : 0;
     const evType = s.eventType || 'national';
@@ -4318,7 +4244,7 @@ function renderBudget() {
     </div>`;
   }).join('');
 
-  container.innerHTML = treemapHtml + `
+  container.innerHTML = `
     <div class="sidebar-widget">
       <div class="widget-head">BUDGET BREAKDOWN <span class="wh-accent">◆</span></div>
       <div class="widget-body">${rows}</div>
@@ -4787,9 +4713,9 @@ checkBanner();
 
 // Re-render on resize for mobile adaptations (only on breakpoint cross)
 window.addEventListener('resize', (() => {
-  let t, lastWasMobile = window.innerWidth <= 1365;
+  let t, lastWasMobile = window.innerWidth <= 1400;
   return () => { clearTimeout(t); t = setTimeout(() => {
-    const isMobile = window.innerWidth <= 1365;
+    const isMobile = window.innerWidth <= 1400;
     const crossed = isMobile !== lastWasMobile;
     lastWasMobile = isMobile;
     if (crossed) {
