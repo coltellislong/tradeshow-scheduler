@@ -2550,7 +2550,7 @@
     }
 
     /* ═══ RESPONSIVE ═══ */
-    @media (max-width: 1400px) {
+    @media (max-width: 1450px) {
       .cards-grid { grid-template-columns: 1fr; }
       .fr { grid-template-columns: 1fr; }
       nav { padding: 0 16px; gap: 6px; }
@@ -3307,7 +3307,7 @@ const TYPE_DOT_COLORS = { national: '#F9A825', local: '#1565C0', regional: '#9C2
 
 function checkBanner() {
   const upcoming = shows
-    .filter(s => { const d = daysUntil(s.startDate); return d >= 0 && d <= 21; })
+    .filter(s => { const d = daysUntil(s.startDate); return d >= 0 && d <= 30; })
     .sort((a, b) => a.startDate.localeCompare(b.startDate))
     .slice(0, 8);
 
@@ -3394,7 +3394,7 @@ const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', 
 //  LIST VIEW
 // ─────────────────────────────────────
 function setViewMode(mode) {
-  if (mode === 'tiles' && window.innerWidth <= 1400) mode = 'cards';
+  if (mode === 'tiles' && window.innerWidth <= 1450) mode = 'cards';
   viewMode = mode;
   document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
   renderList();
@@ -3871,6 +3871,8 @@ function saveShow() {
   renderList();
   checkBanner();
   if (document.getElementById('view-cal').classList.contains('active')) renderCalendar();
+  if (document.getElementById('view-feed').classList.contains('active')) renderFeed();
+  if (document.getElementById('view-budget').classList.contains('active')) renderBudget();
 }
 
 // ─────────────────────────────────────
@@ -3898,6 +3900,8 @@ function confirmDel() {
   renderList();
   checkBanner();
   if (document.getElementById('view-cal').classList.contains('active')) renderCalendar();
+  if (document.getElementById('view-feed').classList.contains('active')) renderFeed();
+  if (document.getElementById('view-budget').classList.contains('active')) renderBudget();
 }
 
 // ─────────────────────────────────────
@@ -3914,7 +3918,7 @@ function renderCalendar() {
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
-  const isMobile = window.innerWidth <= 1400;
+  const isMobile = window.innerWidth <= 1450;
 
   if (isMobile && calYear === currentYear) {
     const currentAndFuture = MONTHS.map((_, i) => i).filter(i => i >= currentMonth);
@@ -4713,9 +4717,9 @@ checkBanner();
 
 // Re-render on resize for mobile adaptations (only on breakpoint cross)
 window.addEventListener('resize', (() => {
-  let t, lastWasMobile = window.innerWidth <= 1400;
+  let t, lastWasMobile = window.innerWidth <= 1450;
   return () => { clearTimeout(t); t = setTimeout(() => {
-    const isMobile = window.innerWidth <= 1400;
+    const isMobile = window.innerWidth <= 1450;
     const crossed = isMobile !== lastWasMobile;
     lastWasMobile = isMobile;
     if (crossed) {
