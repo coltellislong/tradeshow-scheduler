@@ -761,7 +761,7 @@
     /* ═══ CARDS GRID ═══ */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(max(380px, calc(33.34% - 16px)), 1fr));
       gap: 24px;
       align-items: start;
     }
@@ -2162,7 +2162,7 @@
       flex-shrink: 0;
     }
 
-    .upcoming-item.ui-today .ui-days { background: var(--dark); color: #FF1744; font-weight: 900; animation: pulse-dot 1s infinite; }
+    .upcoming-item.ui-today .ui-days { background: var(--dark); color: var(--white); font-weight: 900; animation: pulse-dot 2.5s infinite; }
     .upcoming-item.ui-soon  .ui-days { background: var(--red); }
 
     .ui-info { flex: 1; min-width: 0; }
@@ -2554,7 +2554,7 @@
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 1465px) {
-      .cards-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+      .cards-grid { grid-template-columns: repeat(auto-fill, minmax(max(300px, calc(33.34% - 16px)), 1fr)); }
       .fr { grid-template-columns: 1fr; }
       nav { padding: 0 16px; gap: 6px; }
       .nav-logo-main { font-size: .9rem; }
