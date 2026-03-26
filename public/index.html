@@ -2459,7 +2459,7 @@
     }
 
     /* ═══ RESPONSIVE ═══ */
-    @media (max-width: 1024px) {
+    @media (max-width: 1600px) {
       .cards-grid { grid-template-columns: 1fr; }
       .fr { grid-template-columns: 1fr; }
       nav { padding: 0 16px; gap: 6px; }
@@ -2470,11 +2470,16 @@
       .desktop-only { display: none; }
       .hamburger { display: flex; }
 
-      /* List bar: match desktop layout, search wraps below */
-      .list-bar .search-input {
-        width: 100%;
-        order: 10;
+      /* List bar: View on top row, Sort by left-aligned on next row, search below */
+      .list-bar {
+        flex-wrap: wrap;
+        gap: 8px;
       }
+      .list-bar .view-label { order: 1; }
+      .list-bar .view-toggle { order: 2; flex: 1; }
+      .list-bar label[for="sort-sel"] { order: 3; }
+      .list-bar select { order: 4; width: auto; flex: none; }
+      .list-bar .search-input { order: 10; width: 100%; }
 
       /* Upcoming ticker: hide Progress and Type columns */
       .ticker-table th:nth-child(5),
@@ -2610,49 +2615,6 @@
       }
     }
 
-    /* ═══ PORTRAIT-ONLY ON MOBILE ═══ */
-    .landscape-block {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: var(--dark);
-      color: var(--white);
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px;
-      gap: 16px;
-    }
-
-    .landscape-block-icon {
-      font-size: 3rem;
-      animation: rotate-phone 1.5s ease-in-out infinite alternate;
-    }
-
-    .landscape-block h2 {
-      font-size: 1rem;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .landscape-block p {
-      font-size: .75rem;
-      color: rgba(255,255,255,.6);
-      letter-spacing: 2px;
-    }
-
-    @keyframes rotate-phone {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(-90deg); }
-    }
-
-    @media (max-width: 1024px) and (orientation: landscape) {
-      .landscape-block { display: flex; }
-    }
-
     /* ═══ SCROLLBAR ═══ */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: var(--light); }
@@ -2697,13 +2659,6 @@
   </style>
 </head>
 <body>
-
-<!-- ═══ LANDSCAPE BLOCK ═══ -->
-<div class="landscape-block">
-  <div class="landscape-block-icon">📱</div>
-  <h2>Rotate Your Device</h2>
-  <p>This page is best viewed in portrait mode</p>
-</div>
 
 <!-- ══════════ NAV ══════════ -->
 <nav>
@@ -3313,7 +3268,7 @@ const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', 
 //  LIST VIEW
 // ─────────────────────────────────────
 function setViewMode(mode) {
-  if (mode === 'tiles' && window.innerWidth <= 1024) mode = 'cards';
+  if (mode === 'tiles' && window.innerWidth <= 1600) mode = 'cards';
   viewMode = mode;
   document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
   renderList();
@@ -3422,7 +3377,7 @@ function cardHTML(show) {
       ${show.notes ? `<div class="card-notes-txt">${esc(show.notes)}</div>` : ''}
       <ul class="checklist" id="cl-${show.id}">${items}</ul>
       <div class="add-task-row">
-        <input type="text" id="nt-${show.id}" placeholder="Add custom task..."
+        <input type="text" id="nt-${show.id}" placeholder="Add task..."
           onkeydown="if(event.key==='Enter')addItem('${show.id}')">
         <button onclick="addItem('${show.id}')">+ Add</button>
       </div>
@@ -3448,7 +3403,7 @@ function cardHTML(show) {
           <label for="tcb-${item.id}">${esc(item.text)}</label>
         </div>`).join('')}
       <div class="add-task-row" style="margin-top:8px">
-        <input type="text" id="tnt-${show.id}" placeholder="Add custom task..."
+        <input type="text" id="tnt-${show.id}" placeholder="Add task..."
           onkeydown="if(event.key==='Enter')addTileItem('${show.id}')">
         <button onclick="addTileItem('${show.id}')">+ Add</button>
       </div>
@@ -3829,7 +3784,7 @@ function renderCalendar() {
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
-  const isMobile = window.innerWidth <= 1024;
+  const isMobile = window.innerWidth <= 1600;
 
   if (isMobile && calYear === currentYear) {
     const currentAndFuture = MONTHS.map((_, i) => i).filter(i => i >= currentMonth);
@@ -4583,9 +4538,9 @@ checkBanner();
 
 // Re-render on resize for mobile adaptations (only on breakpoint cross)
 window.addEventListener('resize', (() => {
-  let t, lastWasMobile = window.innerWidth <= 1024;
+  let t, lastWasMobile = window.innerWidth <= 1600;
   return () => { clearTimeout(t); t = setTimeout(() => {
-    const isMobile = window.innerWidth <= 1024;
+    const isMobile = window.innerWidth <= 1600;
     const crossed = isMobile !== lastWasMobile;
     lastWasMobile = isMobile;
     if (crossed) {
