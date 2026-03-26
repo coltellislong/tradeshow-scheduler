@@ -2162,7 +2162,7 @@
       flex-shrink: 0;
     }
 
-    .upcoming-item.ui-today .ui-days { background: var(--dark); color: #E53935; font-weight: 900; }
+    .upcoming-item.ui-today .ui-days { background: var(--dark); color: #FF1744; font-weight: 900; animation: pulse-dot 1s infinite; }
     .upcoming-item.ui-soon  .ui-days { background: var(--red); }
 
     .ui-info { flex: 1; min-width: 0; }
@@ -2945,7 +2945,6 @@
       </div>
       <div class="count-badge">
         <div class="count-num" id="budget-total">$0</div>
-        <div class="count-label">Total Budget<br>Spent</div>
       </div>
     </div>
     <div id="budget-content"></div>
@@ -3517,7 +3516,7 @@ function cardHTML(show) {
   <div id="body-${show.id}" ${open ? '' : 'style="display:none"'}>
     <div class="card-body">
       ${show.attendees ? `<div class="card-notes-txt" style="margin-bottom:8px"><strong style="font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">People Attending</strong><br>${esc(show.attendees)}</div>` : ''}
-      ${show.notes ? `<div class="card-notes-txt">${esc(show.notes)}</div>` : ''}
+      ${show.notes ? `<div class="card-notes-txt"><strong style="font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">Notes</strong><br>${esc(show.notes)}</div>` : ''}
       <ul class="checklist" id="cl-${show.id}">${items}</ul>
       <div class="add-task-row">
         <input type="text" id="nt-${show.id}" placeholder="Add task..."
@@ -3533,7 +3532,7 @@ function cardHTML(show) {
   <div class="tile-checklist" id="tile-cl-${show.id}" onclick="event.stopPropagation()">
     <div class="tile-checklist-inner">
       ${show.attendees ? `<div class="card-notes-txt" style="margin-bottom:6px"><strong style="font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">People Attending</strong><br>${esc(show.attendees)}</div>` : ''}
-      ${show.notes ? `<div class="card-notes-txt">${esc(show.notes)}</div>` : ''}
+      ${show.notes ? `<div class="card-notes-txt"><strong style="font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">Notes</strong><br>${esc(show.notes)}</div>` : ''}
       <div class="tile-cl-head">Checklist <span>${pct}%</span></div>
       ${(show.checklist || []).map(item => `
         <div class="tile-cl-item ${item.completed ? 'done' : ''}" draggable="true"
@@ -4284,9 +4283,6 @@ function renderBudget() {
         <span class="budget-row-name">${esc(s.name)}</span>
         <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[evType]}" style="font-size:.5rem;margin:0">${EVENT_TYPE_LABELS[evType]}</span>
         <span class="budget-row-loc">${esc(s.location || '')}</span>
-      </div>
-      <div class="budget-row-bar">
-        <div class="budget-row-fill" style="width:${pct}%"></div>
       </div>
       <div class="budget-row-amount">${b ? '$' + b.toLocaleString() : '—'}</div>
       <div class="budget-row-btns">
