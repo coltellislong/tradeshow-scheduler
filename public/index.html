@@ -2459,7 +2459,7 @@
     }
 
     /* ═══ RESPONSIVE ═══ */
-    @media (max-width: 1600px) {
+    @media (max-width: 1300px) {
       .cards-grid { grid-template-columns: 1fr; }
       .fr { grid-template-columns: 1fr; }
       nav { padding: 0 16px; gap: 6px; }
@@ -2478,7 +2478,14 @@
       .list-bar .view-label { order: 1; }
       .list-bar .view-toggle { order: 2; flex: 1; }
       .list-bar label[for="sort-sel"] { order: 3; }
-      .list-bar select { order: 4; width: auto; flex: none; }
+      .list-bar select {
+        order: 4;
+        width: auto;
+        flex: none;
+        padding: 6px 26px 6px 10px;
+        font-size: .7rem;
+        background-position: right 8px center;
+      }
       .list-bar .search-input { order: 10; width: 100%; }
 
       /* Upcoming ticker: hide Progress and Type columns */
@@ -3268,7 +3275,7 @@ const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', 
 //  LIST VIEW
 // ─────────────────────────────────────
 function setViewMode(mode) {
-  if (mode === 'tiles' && window.innerWidth <= 1600) mode = 'cards';
+  if (mode === 'tiles' && window.innerWidth <= 1300) mode = 'cards';
   viewMode = mode;
   document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
   renderList();
@@ -3784,7 +3791,7 @@ function renderCalendar() {
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
-  const isMobile = window.innerWidth <= 1600;
+  const isMobile = window.innerWidth <= 1300;
 
   if (isMobile && calYear === currentYear) {
     const currentAndFuture = MONTHS.map((_, i) => i).filter(i => i >= currentMonth);
@@ -4538,9 +4545,9 @@ checkBanner();
 
 // Re-render on resize for mobile adaptations (only on breakpoint cross)
 window.addEventListener('resize', (() => {
-  let t, lastWasMobile = window.innerWidth <= 1600;
+  let t, lastWasMobile = window.innerWidth <= 1300;
   return () => { clearTimeout(t); t = setTimeout(() => {
-    const isMobile = window.innerWidth <= 1600;
+    const isMobile = window.innerWidth <= 1300;
     const crossed = isMobile !== lastWasMobile;
     lastWasMobile = isMobile;
     if (crossed) {
