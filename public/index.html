@@ -768,7 +768,7 @@
 
     /* ═══ TILES VIEW ═══ */
     .cards-grid.view-tiles {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 14px;
     }
 
@@ -1843,7 +1843,7 @@
     /* ═══ NEWS FEED ═══ */
     .feed-layout {
       display: grid;
-      grid-template-columns: 1fr minmax(280px, 340px);
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
       gap: 24px;
       align-items: start;
     }
@@ -2550,8 +2550,8 @@
     }
 
     /* ═══ RESPONSIVE ═══ */
-    @media (max-width: 1450px) {
-      .cards-grid { grid-template-columns: 1fr; }
+    @media (max-width: 1465px) {
+      .cards-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
       .fr { grid-template-columns: 1fr; }
       nav { padding: 0 16px; gap: 6px; }
       .nav-logo-main { font-size: .9rem; }
@@ -2561,22 +2561,24 @@
       .desktop-only { display: none; }
       .hamburger { display: flex; }
 
-      /* List bar: View on top row, Sort by left-aligned on next row, search below */
+      /* List bar: Sort by + dropdown left, view toggle right, search full width below */
       .list-bar {
         flex-wrap: wrap;
         gap: 8px;
+        align-items: center;
       }
-      .list-bar .view-label { order: 1; }
-      .list-bar .view-toggle { order: 2; flex: 1; }
-      .list-bar label[for="sort-sel"] { order: 3; }
+      .list-bar label[for="sort-sel"] { order: 1; }
       .list-bar select {
-        order: 4;
+        order: 2;
         width: auto;
+        max-width: 80px;
         flex: none;
-        padding: 6px 26px 6px 10px;
+        padding: 6px 22px 6px 8px;
         font-size: .7rem;
-        background-position: right 8px center;
+        background-position: right 6px center;
       }
+      .list-bar .view-label { order: 3; margin-left: auto; }
+      .list-bar .view-toggle { order: 4; flex: none; }
       .list-bar .search-input { order: 10; width: 100%; }
 
       /* Upcoming ticker: hide Progress and Type columns */
@@ -2590,7 +2592,6 @@
       .ticker-countdown { font-size: .72rem; }
 
       /* Feed sidebar widgets: fit within mobile viewport */
-      .feed-layout { grid-template-columns: 1fr !important; }
       #feed-sidebar {
         max-width: 100%;
         overflow: hidden;
@@ -3394,7 +3395,7 @@ const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', 
 //  LIST VIEW
 // ─────────────────────────────────────
 function setViewMode(mode) {
-  if (mode === 'tiles' && window.innerWidth <= 1450) mode = 'cards';
+  if (mode === 'tiles' && window.innerWidth <= 1465) mode = 'cards';
   viewMode = mode;
   document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
   renderList();
@@ -3918,7 +3919,7 @@ function renderCalendar() {
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
-  const isMobile = window.innerWidth <= 1450;
+  const isMobile = window.innerWidth <= 1465;
 
   if (isMobile && calYear === currentYear) {
     const currentAndFuture = MONTHS.map((_, i) => i).filter(i => i >= currentMonth);
@@ -4717,9 +4718,9 @@ checkBanner();
 
 // Re-render on resize for mobile adaptations (only on breakpoint cross)
 window.addEventListener('resize', (() => {
-  let t, lastWasMobile = window.innerWidth <= 1450;
+  let t, lastWasMobile = window.innerWidth <= 1465;
   return () => { clearTimeout(t); t = setTimeout(() => {
-    const isMobile = window.innerWidth <= 1450;
+    const isMobile = window.innerWidth <= 1465;
     const crossed = isMobile !== lastWasMobile;
     lastWasMobile = isMobile;
     if (crossed) {
