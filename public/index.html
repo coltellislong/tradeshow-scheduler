@@ -994,6 +994,79 @@
       margin-top: 3px;
     }
 
+    .card-budget {
+      color: var(--green);
+      font-weight: 700;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .65rem;
+    }
+
+    .card-budget-inline {
+      display: none;
+      margin-left: 12px;
+      color: var(--green);
+      font-weight: 700;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .7rem;
+    }
+
+    .cards-grid.view-list .card-budget-inline { display: inline; }
+
+    /* Budget view */
+    .budget-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .budget-row:last-child { border-bottom: none; }
+
+    .budget-row-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .budget-row-name {
+      font-weight: 700;
+      font-size: .82rem;
+      color: var(--dark);
+    }
+
+    .budget-row-loc {
+      font-size: .68rem;
+      color: var(--dark-mid);
+    }
+
+    .budget-row-bar {
+      width: 120px;
+      height: 6px;
+      background: var(--off-white);
+      border-radius: 3px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .budget-row-fill {
+      height: 100%;
+      background: var(--red);
+      border-radius: 3px;
+    }
+
+    .budget-row-amount {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: .8rem;
+      color: var(--green);
+      min-width: 80px;
+      text-align: right;
+    }
+
     .card-btns { display: flex; gap: 4px; flex-shrink: 0; }
 
     .icon-btn {
@@ -2199,7 +2272,7 @@
 
     .fr { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-    input[type="text"], input[type="date"], textarea {
+    input[type="text"], input[type="date"], input[type="number"], textarea {
       width: 100%;
       padding: 9px 12px;
       border: 1.5px solid var(--border);
@@ -2459,7 +2532,7 @@
     }
 
     /* ═══ RESPONSIVE ═══ */
-    @media (max-width: 1300px) {
+    @media (max-width: 1390px) {
       .cards-grid { grid-template-columns: 1fr; }
       .fr { grid-template-columns: 1fr; }
       nav { padding: 0 16px; gap: 6px; }
@@ -2691,6 +2764,9 @@
     <button class="nav-tab" id="tab-feed" onclick="switchView('feed')">
       <span class="tab-icon">◈</span> Feed
     </button>
+    <button class="nav-tab" id="tab-budget" onclick="switchView('budget')">
+      <span class="tab-icon">$</span> Budget
+    </button>
   </div>
 
   <div class="nav-actions">
@@ -2715,6 +2791,9 @@
     </button>
     <button class="mobile-menu-item" id="mob-tab-feed" onclick="switchView('feed');closeMobileMenu()">
       <span class="tab-icon">◈</span> Feed
+    </button>
+    <button class="mobile-menu-item" id="mob-tab-budget" onclick="switchView('budget');closeMobileMenu()">
+      <span class="tab-icon">$</span> Budget
     </button>
   </div>
   <div class="mobile-menu-actions">
@@ -2835,6 +2914,21 @@
     </div>
   </div>
 
+  <!-- ══ BUDGET VIEW ══ -->
+  <div class="view" id="view-budget">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Show <span>Budget</span></div>
+        <div class="page-subtitle">Budget overview & tracking</div>
+      </div>
+      <div class="count-badge">
+        <div class="count-num" id="budget-total">$0</div>
+        <div class="count-label">Total<br>Budget</div>
+      </div>
+    </div>
+    <div id="budget-content"></div>
+  </div>
+
 </main>
 
 <!-- ══════════ ADD/EDIT MODAL ══════════ -->
@@ -2868,6 +2962,10 @@
           <label>Booth Number</label>
           <input type="text" id="f-booth" placeholder="e.g. #1234">
         </div>
+      </div>
+      <div class="fg">
+        <label>Budget</label>
+        <input type="number" id="f-budget" placeholder="e.g. 5000" min="0" step="0.01">
       </div>
       <div class="fg">
         <label>Event Type</label>
@@ -3123,11 +3221,13 @@ async function initFromAPI() {
 //  VIEWS
 // ─────────────────────────────────────
 function switchView(v) {
-  ['list','cal','feed'].forEach(n => {
-    document.getElementById(`view-${n === 'cal' ? 'cal' : n === 'feed' ? 'feed' : 'list'}`).classList.toggle('active', false);
-    document.getElementById(`tab-${n === 'cal' ? 'cal' : n === 'feed' ? 'feed' : 'list'}`).classList.toggle('active', false);
-    const mob = document.getElementById(`mob-tab-${n === 'cal' ? 'cal' : n === 'feed' ? 'feed' : 'list'}`);
-    if (mob) mob.classList.toggle('active', false);
+  ['list','cal','feed','budget'].forEach(n => {
+    const el = document.getElementById(`view-${n}`);
+    if (el) el.classList.remove('active');
+    const tab = document.getElementById(`tab-${n}`);
+    if (tab) tab.classList.remove('active');
+    const mob = document.getElementById(`mob-tab-${n}`);
+    if (mob) mob.classList.remove('active');
   });
   const key = v === 'calendar' ? 'cal' : v;
   document.getElementById(`view-${key}`).classList.add('active');
@@ -3136,6 +3236,7 @@ function switchView(v) {
   if (mobActive) mobActive.classList.add('active');
   if (v === 'calendar') renderCalendar();
   if (v === 'feed') renderFeed();
+  if (v === 'budget') renderBudget();
 }
 
 // ─────────────────────────────────────
@@ -3275,7 +3376,7 @@ const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', 
 //  LIST VIEW
 // ─────────────────────────────────────
 function setViewMode(mode) {
-  if (mode === 'tiles' && window.innerWidth <= 1300) mode = 'cards';
+  if (mode === 'tiles' && window.innerWidth <= 1390) mode = 'cards';
   viewMode = mode;
   document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
   renderList();
@@ -3334,9 +3435,10 @@ function cardHTML(show) {
   const pct  = progress(show);
   const open = expanded[show.id] === true;
   const endStr = (show.endDate && show.endDate !== show.startDate) ? ` – ${fmt(show.endDate)}` : '';
+  const budgetStr = show.budget ? `$${Number(show.budget).toLocaleString()}` : '';
   const locStr = show.location
-    ? `<div class="card-loc">▸ ${esc(show.location)}${show.booth ? ' · Booth ' + esc(show.booth) : ''}</div>`
-    : '';
+    ? `<div class="card-loc">▸ ${esc(show.location)}${show.booth ? ' · Booth ' + esc(show.booth) : ''}${budgetStr ? ' · <span class="card-budget">' + budgetStr + '</span>' : ''}</div>`
+    : (budgetStr ? `<div class="card-loc"><span class="card-budget">${budgetStr}</span></div>` : '');
 
   const items = (show.checklist || []).map(item => `
     <li class="${item.completed ? 'done' : ''}" id="li-${item.id}" draggable="true"
@@ -3356,7 +3458,7 @@ function cardHTML(show) {
   <div class="card-head">
     <div class="card-head-top">
       <div>
-        <div class="card-name">${esc(show.name)}</div>
+        <div class="card-name">${esc(show.name)}${budgetStr ? `<span class="card-budget-inline">${budgetStr}</span>` : ''}</div>
         <div class="card-meta">◈ ${fmt(show.startDate)}${endStr}</div>
         ${locStr}
         <span class="status-badge ${badgeClass}"><span class="status-dot"></span>${badgeTxt}</span>
@@ -3674,7 +3776,7 @@ initTouchDrag();
 function openAdd() {
   editId = null;
   document.getElementById('modal-title').textContent = 'Add Tradeshow';
-  ['f-name','f-start','f-end','f-loc','f-booth','f-notes'].forEach(id => {
+  ['f-name','f-start','f-end','f-loc','f-booth','f-budget','f-notes'].forEach(id => {
     document.getElementById(id).value = '';
   });
   selectEventType('national');
@@ -3692,6 +3794,7 @@ function openEdit(id) {
   document.getElementById('f-end').value   = s.endDate || '';
   document.getElementById('f-loc').value   = s.location || '';
   document.getElementById('f-booth').value = s.booth || '';
+  document.getElementById('f-budget').value = s.budget || '';
   document.getElementById('f-notes').value = s.notes || '';
   selectEventType(s.eventType || 'national');
   document.getElementById('show-overlay').classList.remove('hidden');
@@ -3720,6 +3823,7 @@ function saveShow() {
       s.endDate   = end || start;
       s.location  = document.getElementById('f-loc').value.trim();
       s.booth     = document.getElementById('f-booth').value.trim();
+      s.budget    = parseFloat(document.getElementById('f-budget').value) || 0;
       s.notes     = document.getElementById('f-notes').value.trim();
       s.eventType = eventType;
       addFeedEvent('update', `Show updated`, `${name} details were modified`, s.id);
@@ -3732,6 +3836,7 @@ function saveShow() {
       endDate: end || start,
       location: document.getElementById('f-loc').value.trim(),
       booth:    document.getElementById('f-booth').value.trim(),
+      budget:   parseFloat(document.getElementById('f-budget').value) || 0,
       notes:    document.getElementById('f-notes').value.trim(),
       eventType: eventType,
       checklist: DEFAULT_TASKS.map(t => ({ id: uid(), text: t, completed: false }))
@@ -3791,7 +3896,7 @@ function renderCalendar() {
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
-  const isMobile = window.innerWidth <= 1300;
+  const isMobile = window.innerWidth <= 1390;
 
   if (isMobile && calYear === currentYear) {
     const currentAndFuture = MONTHS.map((_, i) => i).filter(i => i >= currentMonth);
@@ -4087,6 +4192,45 @@ function feedItemHTML(item) {
 </div>`;
 }
 
+function renderBudget() {
+  const container = document.getElementById('budget-content');
+  const totalBudget = shows.reduce((sum, s) => sum + (s.budget || 0), 0);
+  document.getElementById('budget-total').textContent = '$' + totalBudget.toLocaleString();
+
+  const sorted = [...shows].sort((a, b) => (b.budget || 0) - (a.budget || 0));
+
+  if (!sorted.length) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon"></div><p>No shows yet. Add a show with a budget to get started.</p></div>';
+    return;
+  }
+
+  const rows = sorted.map(s => {
+    const b = s.budget || 0;
+    const pct = totalBudget ? Math.round(b / totalBudget * 100) : 0;
+    const evType = s.eventType || 'national';
+    return `
+    <div class="budget-row">
+      <div class="budget-row-info">
+        <span class="budget-row-name">${esc(s.name)}</span>
+        <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[evType]}" style="font-size:.5rem;margin:0">${EVENT_TYPE_LABELS[evType]}</span>
+        <span class="budget-row-loc">${esc(s.location || '')}</span>
+      </div>
+      <div class="budget-row-bar">
+        <div class="budget-row-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="budget-row-amount">$${b.toLocaleString()}</div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="budget-summary">
+      <div class="sidebar-widget">
+        <div class="widget-head">BUDGET BREAKDOWN <span class="wh-accent">◆</span></div>
+        <div class="widget-body">${rows}</div>
+      </div>
+    </div>`;
+}
+
 function renderFeedSidebar() {
   const sidebar = document.getElementById('feed-sidebar');
   const all = [...shows].sort((a, b) => a.startDate.localeCompare(b.startDate));
@@ -4327,7 +4471,8 @@ const COL_ALIASES = {
   location: ['location','city','venue','place','city/state'],
   booth:    ['booth','booth number','booth #','booth no','booth num'],
   notes:    ['notes','note','comments','description','details'],
-  eventType:['event type','eventtype','type','category','event category']
+  eventType:['event type','eventtype','type','category','event category'],
+  budget:   ['budget','cost','amount','price','spend']
 };
 
 function findCol(headers, field) {
@@ -4363,6 +4508,7 @@ function parseImportRows(rows) {
   const bthCol = findCol(sample, 'booth');
   const ntsCol = findCol(sample, 'notes');
   const etCol  = findCol(sample, 'eventType');
+  const budCol = findCol(sample, 'budget');
 
   importedRows = [];
   const errors = [];
@@ -4386,7 +4532,8 @@ function parseImportRows(rows) {
       location: locCol ? String(row[locCol] ?? '').trim() : '',
       booth:    bthCol ? String(row[bthCol] ?? '').trim() : '',
       notes:    ntsCol ? String(row[ntsCol] ?? '').trim() : '',
-      eventType: evType
+      eventType: evType,
+      budget:   budCol ? (parseFloat(row[budCol]) || 0) : 0
     });
   });
 
@@ -4406,7 +4553,7 @@ function parseImportRows(rows) {
 
   document.getElementById('imp-table').innerHTML = `
     <thead><tr>
-      <th>Show Name</th><th>Start</th><th>End</th><th>Location</th><th>Booth</th><th>Notes</th>
+      <th>Show Name</th><th>Start</th><th>End</th><th>Location</th><th>Booth</th><th>Budget</th><th>Notes</th>
     </tr></thead>
     <tbody>
       ${importedRows.map(r => `<tr>
@@ -4415,6 +4562,7 @@ function parseImportRows(rows) {
         <td>${r.endDate !== r.startDate ? fmt(r.endDate) : ''}</td>
         <td>${esc(r.location)}</td>
         <td>${esc(r.booth)}</td>
+        <td>${r.budget ? '$' + r.budget.toLocaleString() : ''}</td>
         <td>${esc(r.notes)}</td>
       </tr>`).join('')}
     </tbody>`;
@@ -4477,11 +4625,11 @@ function confirmImport() {
 function downloadTemplate() {
   if (typeof XLSX === 'undefined') { alert('Library still loading.'); return; }
   const ws = XLSX.utils.aoa_to_sheet([
-    ['Show Name','Start Date','End Date','Location','Booth Number','Notes','Event Type'],
-    ['Example Trade Show','2026-06-15','2026-06-17','Las Vegas, NV','#1234','Sample notes','National'],
-    ['Another Show','2026-09-10','2026-09-12','Chicago, IL','#500','','Local']
+    ['Show Name','Start Date','End Date','Location','Booth Number','Budget','Notes','Event Type'],
+    ['Example Trade Show','2026-06-15','2026-06-17','Las Vegas, NV','#1234',5000,'Sample notes','National'],
+    ['Another Show','2026-09-10','2026-09-12','Chicago, IL','#500',3500,'','Local']
   ]);
-  ws['!cols'] = [22,14,14,20,14,30,14].map(w => ({ wch: w }));
+  ws['!cols'] = [22,14,14,20,14,12,30,14].map(w => ({ wch: w }));
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Shows');
   XLSX.writeFile(wb, 'tradeshow-template.xlsx');
@@ -4545,9 +4693,9 @@ checkBanner();
 
 // Re-render on resize for mobile adaptations (only on breakpoint cross)
 window.addEventListener('resize', (() => {
-  let t, lastWasMobile = window.innerWidth <= 1300;
+  let t, lastWasMobile = window.innerWidth <= 1390;
   return () => { clearTimeout(t); t = setTimeout(() => {
-    const isMobile = window.innerWidth <= 1300;
+    const isMobile = window.innerWidth <= 1390;
     const crossed = isMobile !== lastWasMobile;
     lastWasMobile = isMobile;
     if (crossed) {
