@@ -995,7 +995,7 @@
     }
 
     .card-budget {
-      color: var(--green);
+      color: #00C853;
       font-weight: 700;
       font-family: 'Orbitron', sans-serif;
       font-size: .65rem;
@@ -1004,7 +1004,7 @@
     .card-budget-inline {
       display: none;
       margin-left: 12px;
-      color: var(--green);
+      color: #00C853;
       font-weight: 700;
       font-family: 'Orbitron', sans-serif;
       font-size: .7rem;
@@ -1062,9 +1062,72 @@
       font-family: 'Orbitron', sans-serif;
       font-weight: 700;
       font-size: .8rem;
-      color: var(--green);
+      color: #00C853;
       min-width: 80px;
       text-align: right;
+    }
+
+    .budget-row-btns {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .budget-row-btns .icon-btn {
+      background: var(--off-white);
+      border: 1.5px solid var(--border);
+      color: var(--dark-mid);
+    }
+
+    .budget-row-btns .icon-btn:hover {
+      background: var(--red);
+      border-color: var(--red);
+      color: var(--white);
+    }
+
+    /* Treemap */
+    .budget-treemap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-bottom: 24px;
+      min-height: 260px;
+    }
+
+    .treemap-cell {
+      position: relative;
+      padding: 12px 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      cursor: default;
+      transition: opacity .15s;
+    }
+
+    .treemap-cell:hover { opacity: .85; }
+
+    .treemap-cell-name {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.3;
+    }
+
+    .treemap-cell-type {
+      font-size: .6rem;
+      color: rgba(255,255,255,.75);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .treemap-cell-amount {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: .7rem;
+      color: rgba(255,255,255,.9);
+      margin-top: auto;
+      padding-top: 8px;
     }
 
     .card-btns { display: flex; gap: 4px; flex-shrink: 0; }
@@ -2532,7 +2595,7 @@
     }
 
     /* ═══ RESPONSIVE ═══ */
-    @media (max-width: 1390px) {
+    @media (max-width: 1365px) {
       .cards-grid { grid-template-columns: 1fr; }
       .fr { grid-template-columns: 1fr; }
       nav { padding: 0 16px; gap: 6px; }
@@ -2923,7 +2986,7 @@
       </div>
       <div class="count-badge">
         <div class="count-num" id="budget-total">$0</div>
-        <div class="count-label">Total<br>Budget</div>
+        <div class="count-label">Total Budget<br>Spent</div>
       </div>
     </div>
     <div id="budget-content"></div>
@@ -3376,7 +3439,7 @@ const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', 
 //  LIST VIEW
 // ─────────────────────────────────────
 function setViewMode(mode) {
-  if (mode === 'tiles' && window.innerWidth <= 1390) mode = 'cards';
+  if (mode === 'tiles' && window.innerWidth <= 1365) mode = 'cards';
   viewMode = mode;
   document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
   renderList();
@@ -3896,7 +3959,7 @@ function renderCalendar() {
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
-  const isMobile = window.innerWidth <= 1390;
+  const isMobile = window.innerWidth <= 1365;
 
   if (isMobile && calYear === currentYear) {
     const currentAndFuture = MONTHS.map((_, i) => i).filter(i => i >= currentMonth);
@@ -4197,14 +4260,43 @@ function renderBudget() {
   const totalBudget = shows.reduce((sum, s) => sum + (s.budget || 0), 0);
   document.getElementById('budget-total').textContent = '$' + totalBudget.toLocaleString();
 
-  const sorted = [...shows].sort((a, b) => (b.budget || 0) - (a.budget || 0));
+  const sorted = [...shows].filter(s => s.budget > 0).sort((a, b) => (b.budget || 0) - (a.budget || 0));
 
-  if (!sorted.length) {
+  if (!shows.length) {
     container.innerHTML = '<div class="empty"><div class="empty-icon"></div><p>No shows yet. Add a show with a budget to get started.</p></div>';
     return;
   }
 
-  const rows = sorted.map(s => {
+  // ── Treemap ──
+  const TREEMAP_COLORS = { national: '#2E7D32', local: '#1565C0', regional: '#9C27B0', rep: '#E65100' };
+  let treemapHtml = '';
+  if (sorted.length) {
+    const cells = sorted.map(s => {
+      const b = s.budget || 0;
+      const pct = totalBudget ? (b / totalBudget * 100) : 0;
+      const evType = s.eventType || 'national';
+      const bg = TREEMAP_COLORS[evType] || '#2E7D32';
+      // Min width ~12%, flex-grow by pct
+      const basis = Math.max(pct, 12);
+      return `
+      <div class="treemap-cell" style="flex:${basis} 1 0%;background:${bg};min-height:100px">
+        <div class="treemap-cell-name">${esc(s.name)}</div>
+        <div class="treemap-cell-type">${EVENT_TYPE_LABELS[evType]}</div>
+        <div class="treemap-cell-amount">$${b.toLocaleString()}</div>
+      </div>`;
+    }).join('');
+    treemapHtml = `
+    <div class="sidebar-widget" style="margin-bottom:24px">
+      <div class="widget-head">BUDGET TREEMAP <span class="wh-accent">◆</span></div>
+      <div class="widget-body" style="padding:8px">
+        <div class="budget-treemap">${cells}</div>
+      </div>
+    </div>`;
+  }
+
+  // ── Breakdown rows ──
+  const allSorted = [...shows].sort((a, b) => (b.budget || 0) - (a.budget || 0));
+  const rows = allSorted.map(s => {
     const b = s.budget || 0;
     const pct = totalBudget ? Math.round(b / totalBudget * 100) : 0;
     const evType = s.eventType || 'national';
@@ -4218,16 +4310,18 @@ function renderBudget() {
       <div class="budget-row-bar">
         <div class="budget-row-fill" style="width:${pct}%"></div>
       </div>
-      <div class="budget-row-amount">$${b.toLocaleString()}</div>
+      <div class="budget-row-amount">${b ? '$' + b.toLocaleString() : '—'}</div>
+      <div class="budget-row-btns">
+        <button class="icon-btn" onclick="openEdit('${s.id}')" title="Edit">✎</button>
+        <button class="icon-btn" onclick="openDel('${s.id}')" title="Delete">⌫</button>
+      </div>
     </div>`;
   }).join('');
 
-  container.innerHTML = `
-    <div class="budget-summary">
-      <div class="sidebar-widget">
-        <div class="widget-head">BUDGET BREAKDOWN <span class="wh-accent">◆</span></div>
-        <div class="widget-body">${rows}</div>
-      </div>
+  container.innerHTML = treemapHtml + `
+    <div class="sidebar-widget">
+      <div class="widget-head">BUDGET BREAKDOWN <span class="wh-accent">◆</span></div>
+      <div class="widget-body">${rows}</div>
     </div>`;
 }
 
@@ -4693,9 +4787,9 @@ checkBanner();
 
 // Re-render on resize for mobile adaptations (only on breakpoint cross)
 window.addEventListener('resize', (() => {
-  let t, lastWasMobile = window.innerWidth <= 1390;
+  let t, lastWasMobile = window.innerWidth <= 1365;
   return () => { clearTimeout(t); t = setTimeout(() => {
-    const isMobile = window.innerWidth <= 1390;
+    const isMobile = window.innerWidth <= 1365;
     const crossed = isMobile !== lastWasMobile;
     lastWasMobile = isMobile;
     if (crossed) {
