@@ -761,7 +761,7 @@
     /* ═══ CARDS GRID ═══ */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(max(380px, calc(33.34% - 16px)), 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       align-items: start;
     }
@@ -996,18 +996,18 @@
 
     .card-budget {
       color: #00C853;
-      font-weight: 700;
-      font-family: 'Orbitron', sans-serif;
-      font-size: .65rem;
+      font-weight: 900;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .72rem;
     }
 
     .card-budget-inline {
       display: none;
       margin-left: 12px;
       color: #00C853;
-      font-weight: 700;
-      font-family: 'Orbitron', sans-serif;
-      font-size: .7rem;
+      font-weight: 900;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .75rem;
     }
 
     .cards-grid.view-list .card-budget-inline { display: inline; }
@@ -1059,8 +1059,8 @@
     }
 
     .budget-row-amount {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: 900;
       font-size: .8rem;
       color: #00C853;
       min-width: 80px;
@@ -2554,7 +2554,7 @@
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 1465px) {
-      .cards-grid { grid-template-columns: repeat(auto-fill, minmax(max(300px, calc(33.34% - 16px)), 1fr)); }
+      .cards-grid { grid-template-columns: repeat(3, 1fr); }
       .fr { grid-template-columns: 1fr; }
       nav { padding: 0 16px; gap: 6px; }
       .nav-logo-main { font-size: .9rem; }
@@ -2715,6 +2715,13 @@
         display: flex !important;
         flex-direction: column-reverse !important;
       }
+    }
+
+    @media (max-width: 900px) {
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .cards-grid { grid-template-columns: 1fr; }
     }
 
     /* ═══ SCROLLBAR ═══ */
@@ -4261,7 +4268,7 @@ function renderBudget() {
       <div style="flex:1;background:var(--light);border-radius:4px;height:22px;overflow:hidden">
         <div style="width:${pct}%;height:100%;background:${typeColors[t]};border-radius:4px;transition:width .3s"></div>
       </div>
-      <div style="width:70px;font-size:.7rem;font-weight:700;font-family:'Orbitron',sans-serif;color:var(--dark);flex-shrink:0">$${val.toLocaleString()}</div>
+      <div style="width:70px;font-size:.7rem;font-weight:900;font-family:'Share Tech Mono',monospace;color:var(--dark);flex-shrink:0">$${val.toLocaleString()}</div>
     </div>`;
   }).join('');
 
