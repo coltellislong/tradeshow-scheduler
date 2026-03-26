@@ -1702,7 +1702,7 @@
       flex-shrink: 0;
     }
     .day.has-event {
-      padding-bottom: 12px;
+      padding-bottom: 2px;
     }
 
     /* ═══ DAY PANE (slide-in from right) ═══ */
@@ -2162,10 +2162,7 @@
       flex-shrink: 0;
     }
 
-    .upcoming-item.ui-today .ui-days { background: #E53935; color: var(--white); }
-    .upcoming-item.ui-today .ui-name,
-    .upcoming-item.ui-today .ui-date,
-    .upcoming-item.ui-today .ui-prog { color: #E53935; }
+    .upcoming-item.ui-today .ui-days { background: var(--dark); color: #E53935; font-weight: 900; }
     .upcoming-item.ui-soon  .ui-days { background: var(--red); }
 
     .ui-info { flex: 1; min-width: 0; }
@@ -3003,6 +3000,10 @@
         <input type="hidden" id="f-event-type" value="national">
       </div>
       <div class="fg">
+        <label>People Attending</label>
+        <textarea id="f-attendees" placeholder="e.g. John Smith, Jane Doe..." rows="2"></textarea>
+      </div>
+      <div class="fg">
         <label>Notes</label>
         <textarea id="f-notes" placeholder="Any additional details..."></textarea>
       </div>
@@ -3407,16 +3408,23 @@ function setViewMode(mode) {
   renderList();
 }
 
+function isShowConcluded(s) {
+  const endStr = s.endDate || s.startDate;
+  return daysUntil(endStr) < 0;
+}
+
 function renderList() {
   const grid  = document.getElementById('cards-grid');
   const empty = document.getElementById('empty-state');
-  document.getElementById('count-num').textContent = shows.length;
+
+  const activeShows = shows.filter(s => !isShowConcluded(s));
+  document.getElementById('count-num').textContent = activeShows.length;
 
   const searchTerm = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
 
   let filtered = filterType === 'all'
-    ? shows
-    : shows.filter(s => (s.eventType || 'national') === filterType);
+    ? activeShows
+    : activeShows.filter(s => (s.eventType || 'national') === filterType);
 
   if (searchTerm) {
     filtered = filtered.filter(s =>
@@ -3508,6 +3516,7 @@ function cardHTML(show) {
   </div>
   <div id="body-${show.id}" ${open ? '' : 'style="display:none"'}>
     <div class="card-body">
+      ${show.attendees ? `<div class="card-notes-txt" style="margin-bottom:8px"><strong style="font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">People Attending</strong><br>${esc(show.attendees)}</div>` : ''}
       ${show.notes ? `<div class="card-notes-txt">${esc(show.notes)}</div>` : ''}
       <ul class="checklist" id="cl-${show.id}">${items}</ul>
       <div class="add-task-row">
@@ -3523,6 +3532,7 @@ function cardHTML(show) {
   </div>
   <div class="tile-checklist" id="tile-cl-${show.id}" onclick="event.stopPropagation()">
     <div class="tile-checklist-inner">
+      ${show.attendees ? `<div class="card-notes-txt" style="margin-bottom:6px"><strong style="font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">People Attending</strong><br>${esc(show.attendees)}</div>` : ''}
       ${show.notes ? `<div class="card-notes-txt">${esc(show.notes)}</div>` : ''}
       <div class="tile-cl-head">Checklist <span>${pct}%</span></div>
       ${(show.checklist || []).map(item => `
@@ -3801,7 +3811,7 @@ initTouchDrag();
 function openAdd() {
   editId = null;
   document.getElementById('modal-title').textContent = 'Add Tradeshow';
-  ['f-name','f-start','f-end','f-loc','f-booth','f-budget','f-notes'].forEach(id => {
+  ['f-name','f-start','f-end','f-loc','f-booth','f-budget','f-attendees','f-notes'].forEach(id => {
     document.getElementById(id).value = '';
   });
   selectEventType('national');
@@ -3820,6 +3830,7 @@ function openEdit(id) {
   document.getElementById('f-loc').value   = s.location || '';
   document.getElementById('f-booth').value = s.booth || '';
   document.getElementById('f-budget').value = s.budget || '';
+  document.getElementById('f-attendees').value = s.attendees || '';
   document.getElementById('f-notes').value = s.notes || '';
   selectEventType(s.eventType || 'national');
   document.getElementById('show-overlay').classList.remove('hidden');
@@ -3849,6 +3860,7 @@ function saveShow() {
       s.location  = document.getElementById('f-loc').value.trim();
       s.booth     = document.getElementById('f-booth').value.trim();
       s.budget    = parseFloat(document.getElementById('f-budget').value) || 0;
+      s.attendees = document.getElementById('f-attendees').value.trim();
       s.notes     = document.getElementById('f-notes').value.trim();
       s.eventType = eventType;
       addFeedEvent('update', `Show updated`, `${name} details were modified`, s.id);
@@ -3862,6 +3874,7 @@ function saveShow() {
       location: document.getElementById('f-loc').value.trim(),
       booth:    document.getElementById('f-booth').value.trim(),
       budget:   parseFloat(document.getElementById('f-budget').value) || 0,
+      attendees: document.getElementById('f-attendees').value.trim(),
       notes:    document.getElementById('f-notes').value.trim(),
       eventType: eventType,
       checklist: DEFAULT_TASKS.map(t => ({ id: uid(), text: t, completed: false }))
@@ -4531,7 +4544,8 @@ const COL_ALIASES = {
   booth:    ['booth','booth number','booth #','booth no','booth num'],
   notes:    ['notes','note','comments','description','details'],
   eventType:['event type','eventtype','type','category','event category'],
-  budget:   ['budget','cost','amount','price','spend']
+  budget:   ['budget','cost','amount','price','spend'],
+  attendees:['attendees','attending','people','people attending','staff','team','reps']
 };
 
 function findCol(headers, field) {
@@ -4568,6 +4582,7 @@ function parseImportRows(rows) {
   const ntsCol = findCol(sample, 'notes');
   const etCol  = findCol(sample, 'eventType');
   const budCol = findCol(sample, 'budget');
+  const attCol = findCol(sample, 'attendees');
 
   importedRows = [];
   const errors = [];
@@ -4591,6 +4606,7 @@ function parseImportRows(rows) {
       location: locCol ? String(row[locCol] ?? '').trim() : '',
       booth:    bthCol ? String(row[bthCol] ?? '').trim() : '',
       notes:    ntsCol ? String(row[ntsCol] ?? '').trim() : '',
+      attendees: attCol ? String(row[attCol] ?? '').trim() : '',
       eventType: evType,
       budget:   budCol ? (parseFloat(row[budCol]) || 0) : 0
     });
