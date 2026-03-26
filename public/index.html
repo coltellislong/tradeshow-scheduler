@@ -1688,7 +1688,7 @@
     /* Day event dots container */
     .day-dots {
       position: absolute;
-      bottom: 5px;
+      bottom: 3px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -1696,10 +1696,13 @@
       justify-content: center;
     }
     .day-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       flex-shrink: 0;
+    }
+    .day.has-event {
+      padding-bottom: 12px;
     }
 
     /* ═══ DAY PANE (slide-in from right) ═══ */
@@ -2159,7 +2162,10 @@
       flex-shrink: 0;
     }
 
-    .upcoming-item.ui-today .ui-days { background: var(--green); color: var(--dark); }
+    .upcoming-item.ui-today .ui-days { background: #E53935; color: var(--white); }
+    .upcoming-item.ui-today .ui-name,
+    .upcoming-item.ui-today .ui-date,
+    .upcoming-item.ui-today .ui-prog { color: #E53935; }
     .upcoming-item.ui-soon  .ui-days { background: var(--red); }
 
     .ui-info { flex: 1; min-width: 0; }
@@ -2561,15 +2567,17 @@
       .desktop-only { display: none; }
       .hamburger { display: flex; }
 
-      /* List bar: Sort by + dropdown left, view toggle right, search full width below */
+      /* List bar: View top-left, Sort by below-left, search full width below */
       .list-bar {
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
       }
-      .list-bar label[for="sort-sel"] { order: 1; }
+      .list-bar .view-label { order: 1; }
+      .list-bar .view-toggle { order: 2; flex: 1; }
+      .list-bar label[for="sort-sel"] { order: 3; flex-basis: auto; }
       .list-bar select {
-        order: 2;
+        order: 4;
         width: auto;
         max-width: 80px;
         flex: none;
@@ -2577,8 +2585,6 @@
         font-size: .7rem;
         background-position: right 6px center;
       }
-      .list-bar .view-label { order: 3; margin-left: auto; }
-      .list-bar .view-toggle { order: 4; flex: none; }
       .list-bar .search-input { order: 10; width: 100%; }
 
       /* Upcoming ticker: hide Progress and Type columns */
@@ -4225,6 +4231,34 @@ function renderBudget() {
     return;
   }
 
+  // ── Event Type Bar Chart ──
+  const typeColors = { national: '#F9A825', local: '#1565C0', regional: '#9C27B0', rep: '#E65100' };
+  const typeLabels = { national: 'National', local: 'Local', regional: 'Regional', rep: 'Rep Event' };
+  const typeTotals = {};
+  shows.forEach(s => {
+    const t = s.eventType || 'national';
+    typeTotals[t] = (typeTotals[t] || 0) + (s.budget || 0);
+  });
+  const maxTypeVal = Math.max(...Object.values(typeTotals), 1);
+  const barRows = Object.keys(typeLabels).filter(t => typeTotals[t]).map(t => {
+    const val = typeTotals[t];
+    const pct = Math.round(val / maxTypeVal * 100);
+    return `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="width:70px;font-size:.68rem;font-weight:600;color:var(--dark);text-align:right;flex-shrink:0">${typeLabels[t]}</div>
+      <div style="flex:1;background:var(--light);border-radius:4px;height:22px;overflow:hidden">
+        <div style="width:${pct}%;height:100%;background:${typeColors[t]};border-radius:4px;transition:width .3s"></div>
+      </div>
+      <div style="width:70px;font-size:.7rem;font-weight:700;font-family:'Orbitron',sans-serif;color:var(--dark);flex-shrink:0">$${val.toLocaleString()}</div>
+    </div>`;
+  }).join('');
+
+  const barChartHtml = barRows ? `
+    <div class="sidebar-widget" style="margin-bottom:20px">
+      <div class="widget-head">SPEND BY EVENT TYPE <span class="wh-accent">◆</span></div>
+      <div class="widget-body" style="padding:16px">${barRows}</div>
+    </div>` : '';
+
   // ── Breakdown rows sorted by date upcoming ──
   const dateSorted = [...shows].sort((a, b) => a.startDate.localeCompare(b.startDate));
   const rows = dateSorted.map(s => {
@@ -4249,7 +4283,7 @@ function renderBudget() {
     </div>`;
   }).join('');
 
-  container.innerHTML = `
+  container.innerHTML = `${barChartHtml}
     <div class="sidebar-widget">
       <div class="widget-head">BUDGET BREAKDOWN <span class="wh-accent">◆</span></div>
       <div class="widget-body">${rows}</div>
