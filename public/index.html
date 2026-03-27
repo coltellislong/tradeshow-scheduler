@@ -1627,7 +1627,9 @@
       padding-top: 12px;
     }
     .concluded-months-section.open .concluded-months-grid { display: grid; }
-    .concluded-months-grid > .cards-grid { grid-column: 1 / -1; }
+    .concluded-months-grid > .cards-grid { grid-column: 1 / -1; align-items: stretch; }
+    .concluded-months-grid > .cards-grid .show-card { display: flex; flex-direction: column; }
+    .concluded-months-grid > .cards-grid .show-card .card-body { flex: 1; }
 
     .month-card {
       background: var(--white);
