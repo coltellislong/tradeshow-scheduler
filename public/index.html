@@ -1042,6 +1042,12 @@
       color: var(--dark-mid);
     }
 
+    .budget-row-date {
+      font-size: .62rem;
+      color: var(--mid);
+      font-weight: 500;
+    }
+
     .budget-row-bar {
       width: 120px;
       height: 6px;
@@ -1621,6 +1627,7 @@
       padding-top: 12px;
     }
     .concluded-months-section.open .concluded-months-grid { display: grid; }
+    .concluded-months-grid > .cards-grid { grid-column: 1 / -1; }
 
     .month-card {
       background: var(--white);
@@ -1849,7 +1856,8 @@
       gap: 16px;
       margin-bottom: 24px;
     }
-    #feed-sidebar .sidebar-widget { margin-bottom: 0; }
+    #feed-sidebar .sidebar-widget { margin-bottom: 0; display: flex; flex-direction: column; }
+    #feed-sidebar .sidebar-widget .widget-body { flex: 1; display: flex; flex-direction: column; }
 
 
     /* Timeline */
@@ -2194,12 +2202,13 @@
     }
 
     /* Phase checklist */
-    .phase-list { list-style: none; }
+    .phase-list { list-style: none; display: flex; flex-direction: column; height: 100%; }
 
     .phase-item {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      flex: 1;
       padding: 5px 0;
       font-size: .78rem;
       font-weight: 600;
@@ -2208,11 +2217,12 @@
 
     .phase-bar {
       flex: 1;
-      height: 3px;
+      height: 8px;
       background: var(--light);
+      border-radius: 4px;
     }
 
-    .phase-bar-fill { height: 100%; background: var(--red); }
+    .phase-bar-fill { height: 100%; background: var(--red); border-radius: 4px; }
     .phase-pct { font-size: .65rem; font-family: 'Share Tech Mono', monospace; color: var(--dark-mid); white-space: nowrap; }
 
     /* ═══ MODAL ═══ */
@@ -3468,7 +3478,7 @@ function renderList() {
           <span class="concluded-months-count">${pastShows.length}</span>
         </button>
         <div class="concluded-months-grid">
-          <div class="cards-grid${vcls}" style="padding:16px">${pastSorted.map(cardHTML).join('')}</div>
+          <div class="cards-grid${vcls}">${pastSorted.map(cardHTML).join('')}</div>
         </div>
       </div>`;
   } else {
@@ -3975,7 +3985,7 @@ function renderCalendar() {
           <span class="concluded-months-count">${past.length}</span>
         </button>
         <div class="concluded-months-grid">
-          ${past.map(mi => renderMonth(MONTHS[mi], mi)).join('')}
+          ${[...past].reverse().map(mi => renderMonth(MONTHS[mi], mi)).join('')}
         </div>
       </div>`;
     }
@@ -4303,6 +4313,7 @@ function renderBudget() {
         <span class="budget-row-name">${esc(s.name)}</span>
         <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[evType]}" style="font-size:.5rem;margin:0">${EVENT_TYPE_LABELS[evType]}</span>
         <span class="budget-row-loc">${esc(s.location || '')}</span>
+        <span class="budget-row-date">${fmt(s.startDate)}${s.endDate && s.endDate !== s.startDate ? ' – ' + fmt(s.endDate) : ''}</span>
       </div>
       <div class="budget-row-amount">${b ? '$' + b.toLocaleString() : '—'}</div>
       <div class="budget-row-btns">
@@ -4326,7 +4337,10 @@ function renderBudget() {
         <span class="concluded-months-count">${pastB.length}</span>
       </button>
       <div class="concluded-months-grid">
-        <div style="padding:12px 0">${pastRows}</div>
+        <div class="sidebar-widget" style="margin-top:0">
+          <div class="widget-head">PAST BUDGET BREAKDOWN <span class="wh-accent">◆</span></div>
+          <div class="widget-body">${pastRows}</div>
+        </div>
       </div>
     </div>` : '';
 
