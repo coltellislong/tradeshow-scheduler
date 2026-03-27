@@ -3488,13 +3488,14 @@ function renderList() {
 
 function cardHTML(show) {
   const d = daysUntil(show.startDate);
-  const isPast  = d < 0;
-  const isToday = d === 0;
+  const dEnd = daysUntil(show.endDate || show.startDate);
+  const isPast  = dEnd < 0;
+  const isLive  = d <= 0 && dEnd >= 0;
   const isSoon  = d > 0 && d <= 30;
 
-  const statusClass = isPast ? 'status-past' : isToday ? 'status-today' : isSoon ? 'status-soon' : 'status-upcoming';
-  const badgeClass  = isPast ? 's-past' : isToday ? 's-today' : isSoon ? 's-soon' : 's-upcoming';
-  const badgeTxt    = isPast ? 'Concluded' : isToday ? 'Live Today' : isSoon ? `${d}d away` : `${d} days`;
+  const statusClass = isPast ? 'status-past' : isLive ? 'status-today' : isSoon ? 'status-soon' : 'status-upcoming';
+  const badgeClass  = isPast ? 's-past' : isLive ? 's-today' : isSoon ? 's-soon' : 's-upcoming';
+  const badgeTxt    = isPast ? 'Concluded' : isLive ? 'Live Today' : isSoon ? `${d}d away` : `${d} days`;
 
   const pct  = progress(show);
   const open = expanded[show.id] === true;
@@ -4027,9 +4028,7 @@ function renderMonth(name, mi) {
     let dotsHtml = '';
     if (dayShows.length) {
       cls += ' has-event';
-      // Deduplicate by event type to avoid redundant dots
-      const uniqueTypes = [...new Set(dayShows.map(s => s.eventType || 'national'))];
-      const dots = uniqueTypes.map(t => `<span class="day-dot" style="background:${DOT_COLORS[t]}"></span>`).join('');
+      const dots = dayShows.slice(0, 4).map(s => `<span class="day-dot" style="background:${DOT_COLORS[s.eventType || 'national']}"></span>`).join('');
       dotsHtml = `<span class="day-dots">${dots}</span>`;
     }
 
@@ -4112,6 +4111,7 @@ function openDayPane(dateStr) {
       <div class="day-pane-empty">
         <span class="empty-icon">◇</span>
         No shows on this date
+        <button class="btn btn-primary btn-sm" style="margin-top:16px" onclick="closeDayPane();openAdd();document.getElementById('f-start').value='${dateStr}';">+ Add Show</button>
       </div>`;
   } else {
     body.innerHTML = dayShows.map(s => {
