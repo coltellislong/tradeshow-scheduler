@@ -1843,12 +1843,13 @@
     .cp-actions button { flex: 1; font-size: .7rem; }
 
     /* ═══ NEWS FEED ═══ */
-    .feed-layout {
+    #feed-sidebar {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 24px;
-      align-items: start;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
     }
+    #feed-sidebar .sidebar-widget { margin-bottom: 0; }
 
 
     /* Timeline */
@@ -2593,8 +2594,9 @@
       .ticker-name { font-size: .72rem; }
       .ticker-countdown { font-size: .72rem; }
 
-      /* Feed sidebar widgets: fit within mobile viewport */
+      /* Feed sidebar widgets: single column on mobile */
       #feed-sidebar {
+        grid-template-columns: 1fr;
         max-width: 100%;
         overflow: hidden;
         box-sizing: border-box;
@@ -2709,11 +2711,6 @@
       .modal-foot { padding: 12px 16px; }
       .btn { padding: 7px 14px; font-size: .68rem; }
 
-      /* Feed tab: sidebar (stats) above timeline on mobile */
-      .feed-layout {
-        display: flex !important;
-        flex-direction: column-reverse !important;
-      }
     }
 
     @media (max-width: 900px) {
@@ -2900,6 +2897,7 @@
       <h3>No Shows Loaded</h3>
       <p>Click <strong>+ Add Show</strong> to initialize</p>
     </div>
+    <div id="past-shows-section"></div>
   </div>
 
   <!-- ══ CALENDAR VIEW ══ -->
@@ -2936,9 +2934,8 @@
         <div class="page-subtitle">Activity stream & intelligence</div>
       </div>
     </div>
-    <div class="feed-layout">
-      <div id="feed-timeline"></div>
-      <div id="feed-sidebar"></div>
+    <div id="feed-sidebar"></div>
+    <div id="feed-timeline"></div>
     </div>
   </div>
 
@@ -3444,20 +3441,39 @@ function renderList() {
     grid.innerHTML = '';
     grid.className = 'cards-grid';
     empty.classList.remove('hidden');
-    return;
+  } else {
+    empty.classList.add('hidden');
+
+    const sorted = [...filtered].sort((a, b) => {
+      if (sortBy === 'date')     return a.startDate.localeCompare(b.startDate);
+      if (sortBy === 'name')     return a.name.localeCompare(b.name);
+      if (sortBy === 'progress') return progress(b) - progress(a);
+      return 0;
+    });
+
+    grid.className = 'cards-grid' + (viewMode !== 'cards' ? ' view-' + viewMode : '');
+    grid.innerHTML = sorted.map(cardHTML).join('');
   }
 
-  empty.classList.add('hidden');
-
-  const sorted = [...filtered].sort((a, b) => {
-    if (sortBy === 'date')     return a.startDate.localeCompare(b.startDate);
-    if (sortBy === 'name')     return a.name.localeCompare(b.name);
-    if (sortBy === 'progress') return progress(b) - progress(a);
-    return 0;
-  });
-
-  grid.className = 'cards-grid' + (viewMode !== 'cards' ? ' view-' + viewMode : '');
-  grid.innerHTML = sorted.map(cardHTML).join('');
+  // ── Past shows collapsible section ──
+  const pastSection = document.getElementById('past-shows-section');
+  const pastShows = shows.filter(s => isShowConcluded(s));
+  if (pastShows.length) {
+    const pastSorted = [...pastShows].sort((a, b) => b.startDate.localeCompare(a.startDate));
+    const vcls = viewMode !== 'cards' ? ' view-' + viewMode : '';
+    pastSection.innerHTML = `
+      <div class="concluded-months-section" style="margin-top:24px">
+        <button class="concluded-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('open')">
+          <span class="concluded-chevron"></span> Past Shows
+          <span class="concluded-months-count">${pastShows.length}</span>
+        </button>
+        <div class="concluded-months-grid">
+          <div class="cards-grid${vcls}" style="padding:16px">${pastSorted.map(cardHTML).join('')}</div>
+        </div>
+      </div>`;
+  } else {
+    pastSection.innerHTML = '';
+  }
 }
 
 function cardHTML(show) {
@@ -4277,11 +4293,9 @@ function renderBudget() {
       <div class="widget-body" style="padding:16px">${barRows}</div>
     </div>` : '';
 
-  // ── Breakdown rows sorted by date upcoming ──
-  const dateSorted = [...shows].sort((a, b) => a.startDate.localeCompare(b.startDate));
-  const rows = dateSorted.map(s => {
+  // ── Budget row helper ──
+  function budgetRowHTML(s) {
     const b = s.budget || 0;
-    const pct = totalBudget ? Math.round(b / totalBudget * 100) : 0;
     const evType = s.eventType || 'national';
     return `
     <div class="budget-row">
@@ -4296,13 +4310,31 @@ function renderBudget() {
         <button class="icon-btn" onclick="openDel('${s.id}')" title="Delete">⌫</button>
       </div>
     </div>`;
-  }).join('');
+  }
+
+  // ── Active + Past breakdown ──
+  const activeB = [...shows].filter(s => !isShowConcluded(s)).sort((a, b) => a.startDate.localeCompare(b.startDate));
+  const pastB = [...shows].filter(s => isShowConcluded(s)).sort((a, b) => b.startDate.localeCompare(a.startDate));
+
+  const activeRows = activeB.map(budgetRowHTML).join('');
+  const pastRows = pastB.map(budgetRowHTML).join('');
+
+  const pastSection = pastB.length ? `
+    <div class="concluded-months-section" style="margin-top:20px">
+      <button class="concluded-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('open')">
+        <span class="concluded-chevron"></span> Past Shows
+        <span class="concluded-months-count">${pastB.length}</span>
+      </button>
+      <div class="concluded-months-grid">
+        <div style="padding:12px 0">${pastRows}</div>
+      </div>
+    </div>` : '';
 
   container.innerHTML = `${barChartHtml}
     <div class="sidebar-widget">
       <div class="widget-head">BUDGET BREAKDOWN <span class="wh-accent">◆</span></div>
-      <div class="widget-body">${rows}</div>
-    </div>`;
+      <div class="widget-body">${activeRows}</div>
+    </div>${pastSection}`;
 }
 
 function renderFeedSidebar() {
