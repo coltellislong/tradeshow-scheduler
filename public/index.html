@@ -2658,6 +2658,8 @@
 
       /* Page title: keep inline on mobile */
       .page-title { font-size: 1.6rem; white-space: nowrap; letter-spacing: 3px; }
+      #budget-total { font-size: 1.4rem; }
+      .count-badge { overflow: hidden; flex-shrink: 1; min-width: 0; }
 
       /* List view: prevent entries from being cut off */
       .cards-grid.view-list .show-card .card-head {
@@ -4110,8 +4112,8 @@ function openDayPane(dateStr) {
     body.innerHTML = `
       <div class="day-pane-empty">
         <span class="empty-icon">◇</span>
-        No shows on this date
-        <button class="btn btn-primary btn-sm" style="margin-top:16px" onclick="closeDayPane();openAdd();document.getElementById('f-start').value='${dateStr}';">+ Add Show</button>
+        <div style="margin-bottom:20px">No shows on this date</div>
+        <button class="btn btn-primary btn-sm" onclick="closeDayPane();openAdd();document.getElementById('f-start').value='${dateStr}';">+ Add Show</button>
       </div>`;
   } else {
     body.innerHTML = dayShows.map(s => {
