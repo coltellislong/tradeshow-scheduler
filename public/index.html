@@ -2660,6 +2660,8 @@
       .page-title { font-size: 1.6rem; white-space: nowrap; letter-spacing: 3px; }
       #budget-total { font-size: 1.4rem; }
       .count-badge { overflow: hidden; flex-shrink: 1; min-width: 0; }
+      .count-num { font-size: 1.4rem; }
+      .count-label { font-size: .5rem; }
 
       /* List view: prevent entries from being cut off */
       .cards-grid.view-list .show-card .card-head {
@@ -2798,11 +2800,11 @@
     <button class="nav-tab" id="tab-cal" onclick="switchView('calendar')">
       <span class="tab-icon">◫</span> Calendar
     </button>
-    <button class="nav-tab" id="tab-feed" onclick="switchView('feed')">
-      <span class="tab-icon">◈</span> Feed
-    </button>
     <button class="nav-tab" id="tab-budget" onclick="switchView('budget')">
       <span class="tab-icon">$</span> Budget
+    </button>
+    <button class="nav-tab" id="tab-feed" onclick="switchView('feed')">
+      <span class="tab-icon">◈</span> Feed
     </button>
   </div>
 
@@ -2826,11 +2828,11 @@
     <button class="mobile-menu-item" id="mob-tab-cal" onclick="switchView('calendar');closeMobileMenu()">
       <span class="tab-icon">◫</span> Calendar
     </button>
-    <button class="mobile-menu-item" id="mob-tab-feed" onclick="switchView('feed');closeMobileMenu()">
-      <span class="tab-icon">◈</span> Feed
-    </button>
     <button class="mobile-menu-item" id="mob-tab-budget" onclick="switchView('budget');closeMobileMenu()">
       <span class="tab-icon">$</span> Budget
+    </button>
+    <button class="mobile-menu-item" id="mob-tab-feed" onclick="switchView('feed');closeMobileMenu()">
+      <span class="tab-icon">◈</span> Feed
     </button>
   </div>
   <div class="mobile-menu-actions">
@@ -2955,11 +2957,8 @@
   <div class="view" id="view-budget">
     <div class="page-header">
       <div>
-        <div class="page-title">Show <span>Budget</span></div>
+        <div class="page-title"><span id="budget-total" style="color:var(--red)">$0</span> Show <span>Budget</span></div>
         <div class="page-subtitle">Budget overview & tracking</div>
-      </div>
-      <div class="count-badge">
-        <div class="count-num" id="budget-total">$0</div>
       </div>
     </div>
     <div id="budget-content"></div>
