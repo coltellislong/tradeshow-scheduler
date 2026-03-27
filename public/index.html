@@ -2658,10 +2658,9 @@
 
       /* Page title: keep inline on mobile */
       .page-title { font-size: 1.6rem; white-space: nowrap; letter-spacing: 3px; }
-      #budget-total { font-size: 1.4rem; }
-      .count-badge { overflow: hidden; flex-shrink: 1; min-width: 0; }
-      .count-num { font-size: 1.4rem; }
-      .count-label { font-size: .5rem; }
+      .count-badge { overflow: hidden; flex-shrink: 1; min-width: 0; text-align: right; }
+      .count-num { font-size: 1.6rem; }
+      .count-label { font-size: .55rem; letter-spacing: 1.5px; }
 
       /* List view: prevent entries from being cut off */
       .cards-grid.view-list .show-card .card-head {
@@ -2957,8 +2956,11 @@
   <div class="view" id="view-budget">
     <div class="page-header">
       <div>
-        <div class="page-title"><span id="budget-total" style="color:var(--red)">$0</span> Show <span>Budget</span></div>
+        <div class="page-title">Show <span>Budget</span></div>
         <div class="page-subtitle">Budget overview & tracking</div>
+      </div>
+      <div class="count-badge">
+        <div class="count-num" id="budget-total" style="color:var(--red)">$0</div>
       </div>
     </div>
     <div id="budget-content"></div>
