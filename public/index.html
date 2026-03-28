@@ -861,20 +861,15 @@
     }
 
     .tile-checklist {
-      display: grid;
-      grid-template-rows: 0fr;
+      max-height: 0;
       overflow: hidden;
-      transition: grid-template-rows .3s ease;
+      transition: max-height .35s cubic-bezier(.4,0,.2,1);
       background: var(--white);
       border-top: 1px solid var(--border);
     }
 
-    .tile-checklist > .tile-checklist-inner {
-      overflow: hidden;
-    }
-
     .tile-checklist.open {
-      grid-template-rows: 1fr;
+      max-height: 600px;
     }
 
     .cards-grid.view-tiles .show-card.tile-expanded {
