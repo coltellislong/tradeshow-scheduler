@@ -3630,7 +3630,13 @@ function expandChecklist(id) {
     if (cl && !cl.classList.contains('open')) {
       document.querySelectorAll('.tile-checklist.open').forEach(el => {
         el.classList.remove('open');
-        el.closest('.show-card')?.classList.remove('tile-expanded');
+        const parentCard = el.closest('.show-card');
+        if (parentCard) {
+          el.addEventListener('transitionend', function handler() {
+            if (!el.classList.contains('open')) parentCard.classList.remove('tile-expanded');
+            el.removeEventListener('transitionend', handler);
+          });
+        }
       });
       cl.classList.add('open');
       card?.classList.add('tile-expanded');
@@ -3649,7 +3655,13 @@ function toggleTileChecklist(id, event) {
   // Close all other open tile checklists
   document.querySelectorAll('.tile-checklist.open').forEach(el => {
     el.classList.remove('open');
-    el.closest('.show-card')?.classList.remove('tile-expanded');
+    const parentCard = el.closest('.show-card');
+    if (parentCard) {
+      el.addEventListener('transitionend', function handler() {
+        if (!el.classList.contains('open')) parentCard.classList.remove('tile-expanded');
+        el.removeEventListener('transitionend', handler);
+      });
+    }
   });
   if (!isOpen) {
     cl.classList.add('open');
