@@ -806,6 +806,11 @@
       right: 16px;
     }
 
+    .cards-grid.view-tiles .show-card.tile-expanded .card-btns {
+      flex-direction: column;
+      gap: 2px;
+    }
+
     /* ═══ LIST VIEW (rows) ═══ */
     .cards-grid.view-list {
       grid-template-columns: 1fr;
@@ -856,15 +861,20 @@
     }
 
     .tile-checklist {
-      max-height: 0;
+      display: grid;
+      grid-template-rows: 0fr;
       overflow: hidden;
-      transition: max-height .35s cubic-bezier(.4,0,.2,1);
+      transition: grid-template-rows .3s ease;
       background: var(--white);
       border-top: 1px solid var(--border);
     }
 
+    .tile-checklist > .tile-checklist-inner {
+      overflow: hidden;
+    }
+
     .tile-checklist.open {
-      max-height: 600px;
+      grid-template-rows: 1fr;
     }
 
     .cards-grid.view-tiles .show-card.tile-expanded {
@@ -1399,6 +1409,7 @@
     }
 
     .checklist li:hover .del-item { opacity: 1; }
+    .tile-cl-item:hover .del-item { opacity: 1; }
     .del-item:hover { color: var(--red); }
 
     /* Drag handle */
@@ -3592,6 +3603,7 @@ function cardHTML(show) {
           <input type="checkbox" id="tcb-${item.id}" ${item.completed ? 'checked' : ''}
             onchange="toggleItem('${show.id}','${item.id}',this.checked); updateTileChecklist('${show.id}')">
           <label for="tcb-${item.id}">${esc(item.text)}</label>
+          <button class="del-item" onclick="event.stopPropagation();removeItem('${show.id}','${item.id}')" title="Remove">✕</button>
         </div>`).join('')}
       <div class="add-task-row" style="margin-top:8px">
         <input type="text" id="tnt-${show.id}" placeholder="Add task..."
@@ -3721,6 +3733,12 @@ function removeItem(showId, itemId) {
   persist();
   apiUpdateShow(show);
   renderList();
+  // Re-open tile checklist if in tile/list view
+  if (viewMode === 'tiles' || viewMode === 'list') {
+    const cl = document.getElementById(`tile-cl-${showId}`);
+    const card = document.getElementById(`card-${showId}`);
+    if (cl) { cl.classList.add('open'); card?.classList.add('tile-expanded'); }
+  }
 }
 
 // ─────────────────────────────────────
