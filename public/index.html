@@ -3348,7 +3348,7 @@ const TYPE_DOT_COLORS = { national: '#F9A825', local: '#1565C0', regional: '#9C2
 
 function checkBanner() {
   const upcoming = shows
-    .filter(s => { const d = daysUntil(s.startDate); return d >= 0 && d <= 30; })
+    .filter(s => { const d = daysUntil(s.startDate); const limit = (s.eventType || 'national') === 'national' ? 90 : 30; return d >= 0 && d <= limit; })
     .sort((a, b) => a.startDate.localeCompare(b.startDate))
     .slice(0, 8);
 
