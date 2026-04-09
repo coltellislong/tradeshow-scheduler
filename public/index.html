@@ -1023,10 +1023,14 @@
     .cards-grid.view-list .card-budget-inline { display: inline; }
 
     .card-drayage {
-      color: #00C853;
+      color: #E67E22;
       font-weight: 700;
       font-family: 'Roboto', sans-serif;
       font-size: .65rem;
+    }
+
+    .card-drayage-inline {
+      color: #E67E22 !important;
     }
 
     /* Budget view */
@@ -3565,7 +3569,7 @@ function cardHTML(show) {
   const endStr = (show.endDate && show.endDate !== show.startDate) ? ` – ${fmt(show.endDate)}` : '';
   const budgetStr = show.budget ? `$${Number(show.budget).toLocaleString()}` : '';
   const drayageStr = show.drayage ? `$${Number(show.drayage).toLocaleString()}` : '';
-  const costParts = [budgetStr ? '<span class="card-budget">' + budgetStr + '</span>' : '', drayageStr ? '<span class="card-drayage">Drayage: ' + drayageStr + '</span>' : ''].filter(Boolean).join(' · ');
+  const costParts = [budgetStr ? '<span class="card-budget">' + budgetStr + '</span>' : '', drayageStr ? '<span class="card-drayage">' + drayageStr + '</span>' : ''].filter(Boolean).join(' · ');
   const locStr = show.location
     ? `<div class="card-loc">▸ ${esc(show.location)}${show.booth ? ' · Booth ' + esc(show.booth) : ''}${costParts ? ' · ' + costParts : ''}</div>`
     : (costParts ? `<div class="card-loc">${costParts}</div>` : '');
@@ -3588,7 +3592,7 @@ function cardHTML(show) {
   <div class="card-head">
     <div class="card-head-top">
       <div>
-        <div class="card-name">${esc(show.name)}${budgetStr ? `<span class="card-budget-inline">${budgetStr}</span>` : ''}${drayageStr ? `<span class="card-budget-inline card-drayage-inline">Dray: ${drayageStr}</span>` : ''}</div>
+        <div class="card-name">${esc(show.name)}${budgetStr ? `<span class="card-budget-inline">${budgetStr}</span>` : ''}${drayageStr ? `<span class="card-budget-inline card-drayage-inline">${drayageStr}</span>` : ''}</div>
         <div class="card-meta">◈ ${fmt(show.startDate)}${endStr}</div>
         ${locStr}
         <span class="status-badge ${badgeClass}"><span class="status-dot"></span>${badgeTxt}</span>
