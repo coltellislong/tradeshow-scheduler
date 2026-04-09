@@ -2827,6 +2827,7 @@
 
   <div class="nav-actions">
     <button class="nav-btn-import nav-btn" onclick="openImport()">+ Import</button>
+    <button class="nav-btn-import nav-btn" onclick="exportShows()">↓ Export</button>
     <button class="nav-btn nav-btn-primary" onclick="openAdd()">+ Add Show</button>
   </div>
 
@@ -2854,6 +2855,7 @@
   </div>
   <div class="mobile-menu-actions">
     <button class="nav-btn nav-btn-primary" onclick="openAdd();closeMobileMenu()" style="width:100%">+ Add Show</button>
+    <button class="nav-btn" onclick="exportShows();closeMobileMenu()" style="width:100%;margin-top:8px">↓ Export</button>
   </div>
   <div class="mobile-menu-toggles">
     <div class="mobile-toggle-row">
@@ -2910,7 +2912,7 @@
       <button class="filter-pill active" data-filter="all" onclick="setFilter('all')"><span class="pill-dot"></span>All</button>
       <button class="filter-pill" data-filter="national" onclick="setFilter('national')"><span class="pill-dot"></span>National</button>
       <button class="filter-pill" data-filter="local" onclick="setFilter('local')"><span class="pill-dot"></span>Local</button>
-      <button class="filter-pill" data-filter="regional" onclick="setFilter('regional')"><span class="pill-dot"></span>Regional</button>
+      <button class="filter-pill" data-filter="regional" onclick="setFilter('regional')"><span class="pill-dot"></span>Customer</button>
       <button class="filter-pill" data-filter="rep" onclick="setFilter('rep')"><span class="pill-dot"></span>Rep Event</button>
     </div>
 
@@ -2951,7 +2953,7 @@
       <button class="filter-pill active" data-filter="all" onclick="setFilter('all')"><span class="pill-dot"></span>All</button>
       <button class="filter-pill" data-filter="national" onclick="setFilter('national')"><span class="pill-dot"></span>National</button>
       <button class="filter-pill" data-filter="local" onclick="setFilter('local')"><span class="pill-dot"></span>Local</button>
-      <button class="filter-pill" data-filter="regional" onclick="setFilter('regional')"><span class="pill-dot"></span>Regional</button>
+      <button class="filter-pill" data-filter="regional" onclick="setFilter('regional')"><span class="pill-dot"></span>Customer</button>
       <button class="filter-pill" data-filter="rep" onclick="setFilter('rep')"><span class="pill-dot"></span>Rep Event</button>
     </div>
     <div class="months-grid" id="months-grid"></div>
@@ -3027,10 +3029,14 @@
         <div class="event-type-selector" id="f-event-type-group">
           <button type="button" class="filter-pill active" data-value="national" onclick="selectEventType('national')"><span class="pill-dot"></span>National</button>
           <button type="button" class="filter-pill" data-value="local" onclick="selectEventType('local')"><span class="pill-dot"></span>Local</button>
-          <button type="button" class="filter-pill" data-value="regional" onclick="selectEventType('regional')"><span class="pill-dot"></span>Regional</button>
+          <button type="button" class="filter-pill" data-value="regional" onclick="selectEventType('regional')"><span class="pill-dot"></span>Customer</button>
           <button type="button" class="filter-pill" data-value="rep" onclick="selectEventType('rep')"><span class="pill-dot"></span>Rep Event</button>
         </div>
         <input type="hidden" id="f-event-type" value="national">
+      </div>
+      <div class="fg">
+        <label>Event Tier</label>
+        <input type="text" id="f-event-tier" placeholder="e.g. Tier 1, Gold, Premium...">
       </div>
       <div class="fg">
         <label>People Attending</label>
@@ -3428,7 +3434,7 @@ function selectEventType(type) {
   });
 }
 
-const EVENT_TYPE_LABELS = { national: 'National', local: 'Local', regional: 'Regional', rep: 'Rep Event' };
+const EVENT_TYPE_LABELS = { national: 'National', local: 'Local', regional: 'Customer', rep: 'Rep Event' };
 const EVENT_TYPE_PILL_CLASS = { national: 'pill-national', local: 'pill-local', regional: 'pill-regional', rep: 'pill-rep' };
 
 // ─────────────────────────────────────
@@ -3569,6 +3575,7 @@ function cardHTML(show) {
   </div>
   <div id="body-${show.id}" ${open ? '' : 'style="display:none"'}>
     <div class="card-body">
+      ${show.eventTier ? `<div class="card-notes-txt" style="margin-bottom:8px"><strong style="font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">Event Tier</strong><br>${esc(show.eventTier)}</div>` : ''}
       ${show.attendees ? `<div class="card-notes-txt" style="margin-bottom:8px"><strong style="font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">People Attending</strong><br>${esc(show.attendees)}</div>` : ''}
       ${show.notes ? `<div class="card-notes-txt"><strong style="font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">Notes</strong><br>${esc(show.notes)}</div>` : ''}
       <ul class="checklist" id="cl-${show.id}">${items}</ul>
@@ -3585,6 +3592,7 @@ function cardHTML(show) {
   </div>
   <div class="tile-checklist" id="tile-cl-${show.id}" onclick="event.stopPropagation()">
     <div class="tile-checklist-inner">
+      ${show.eventTier ? `<div class="card-notes-txt" style="margin-bottom:6px"><strong style="font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">Event Tier</strong><br>${esc(show.eventTier)}</div>` : ''}
       ${show.attendees ? `<div class="card-notes-txt" style="margin-bottom:6px"><strong style="font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">People Attending</strong><br>${esc(show.attendees)}</div>` : ''}
       ${show.notes ? `<div class="card-notes-txt"><strong style="font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">Notes</strong><br>${esc(show.notes)}</div>` : ''}
       <div class="tile-cl-head">Checklist <span>${pct}%</span></div>
@@ -3883,7 +3891,7 @@ initTouchDrag();
 function openAdd() {
   editId = null;
   document.getElementById('modal-title').textContent = 'Add Tradeshow';
-  ['f-name','f-start','f-end','f-loc','f-booth','f-budget','f-attendees','f-notes'].forEach(id => {
+  ['f-name','f-start','f-end','f-loc','f-booth','f-budget','f-event-tier','f-attendees','f-notes'].forEach(id => {
     document.getElementById(id).value = '';
   });
   selectEventType('national');
@@ -3902,6 +3910,7 @@ function openEdit(id) {
   document.getElementById('f-loc').value   = s.location || '';
   document.getElementById('f-booth').value = s.booth || '';
   document.getElementById('f-budget').value = s.budget || '';
+  document.getElementById('f-event-tier').value = s.eventTier || '';
   document.getElementById('f-attendees').value = s.attendees || '';
   document.getElementById('f-notes').value = s.notes || '';
   selectEventType(s.eventType || 'national');
@@ -3932,6 +3941,7 @@ function saveShow() {
       s.location  = document.getElementById('f-loc').value.trim();
       s.booth     = document.getElementById('f-booth').value.trim();
       s.budget    = parseFloat(document.getElementById('f-budget').value) || 0;
+      s.eventTier = document.getElementById('f-event-tier').value.trim();
       s.attendees = document.getElementById('f-attendees').value.trim();
       s.notes     = document.getElementById('f-notes').value.trim();
       s.eventType = eventType;
@@ -3946,6 +3956,7 @@ function saveShow() {
       location: document.getElementById('f-loc').value.trim(),
       booth:    document.getElementById('f-booth').value.trim(),
       budget:   parseFloat(document.getElementById('f-budget').value) || 0,
+      eventTier: document.getElementById('f-event-tier').value.trim(),
       attendees: document.getElementById('f-attendees').value.trim(),
       notes:    document.getElementById('f-notes').value.trim(),
       eventType: eventType,
@@ -4317,7 +4328,7 @@ function renderBudget() {
 
   // ── Event Type Bar Chart ──
   const typeColors = { national: '#F9A825', local: '#1565C0', regional: '#9C27B0', rep: '#E65100' };
-  const typeLabels = { national: 'National', local: 'Local', regional: 'Regional', rep: 'Rep Event' };
+  const typeLabels = { national: 'National', local: 'Local', regional: 'Customer', rep: 'Rep Event' };
   const typeTotals = {};
   shows.forEach(s => {
     const t = s.eventType || 'national';
@@ -4483,7 +4494,7 @@ function renderFeedSidebar() {
         </div>
         <div class="stat-item" style="border-left-color:#9C27B0;background:rgba(123,31,162,.06)">
           <div class="stat-value" style="color:#9C27B0">${regCount}</div>
-          <div class="stat-label">Regional</div>
+          <div class="stat-label">Customer</div>
         </div>
         <div class="stat-item" style="border-left-color:#E65100;background:rgba(230,81,0,.06)">
           <div class="stat-value" style="color:#E65100">${repCount}</div>
@@ -4633,7 +4644,8 @@ const COL_ALIASES = {
   notes:    ['notes','note','comments','description','details'],
   eventType:['event type','eventtype','type','category','event category'],
   budget:   ['budget','cost','amount','price','spend'],
-  attendees:['attendees','attending','people','people attending','staff','team','reps']
+  attendees:['attendees','attending','people','people attending','staff','team','reps'],
+  eventTier:['event tier','tier','level','tier level','show tier']
 };
 
 function findCol(headers, field) {
@@ -4671,6 +4683,7 @@ function parseImportRows(rows) {
   const etCol  = findCol(sample, 'eventType');
   const budCol = findCol(sample, 'budget');
   const attCol = findCol(sample, 'attendees');
+  const tierCol = findCol(sample, 'eventTier');
 
   importedRows = [];
   const errors = [];
@@ -4685,7 +4698,7 @@ function parseImportRows(rows) {
     let evType = etCol ? String(row[etCol] ?? '').trim().toLowerCase() : 'national';
     if (!['national','local','regional','rep'].includes(evType)) {
       if (evType.includes('rep')) evType = 'rep';
-      else if (evType.includes('regional')) evType = 'regional';
+      else if (evType.includes('regional') || evType.includes('customer')) evType = 'regional';
       else if (evType.includes('local')) evType = 'local';
       else evType = 'national';
     }
@@ -4695,6 +4708,7 @@ function parseImportRows(rows) {
       booth:    bthCol ? String(row[bthCol] ?? '').trim() : '',
       notes:    ntsCol ? String(row[ntsCol] ?? '').trim() : '',
       attendees: attCol ? String(row[attCol] ?? '').trim() : '',
+      eventTier: tierCol ? String(row[tierCol] ?? '').trim() : '',
       eventType: evType,
       budget:   budCol ? (parseFloat(row[budCol]) || 0) : 0
     });
@@ -4783,6 +4797,29 @@ function confirmImport() {
   if (dupes > 0) {
     alert(`Imported ${added} show${added!==1?'s':''}. ${dupes} duplicate${dupes!==1?' were':' was'} skipped.`);
   }
+}
+
+function exportShows() {
+  if (typeof XLSX === 'undefined') { alert('Excel library still loading. Try again.'); return; }
+  const headers = ['Show Name','Start Date','End Date','Location','Booth Number','Budget','Event Type','Event Tier','People Attending','Notes'];
+  function showToRow(s) {
+    return [
+      s.name || '', s.startDate || '', s.endDate || '', s.location || '',
+      s.booth || '', s.budget || 0, EVENT_TYPE_LABELS[s.eventType || 'national'],
+      s.eventTier || '', s.attendees || '', s.notes || ''
+    ];
+  }
+  const active = shows.filter(s => !isShowConcluded(s)).sort((a, b) => a.startDate.localeCompare(b.startDate));
+  const past = shows.filter(s => isShowConcluded(s)).sort((a, b) => b.startDate.localeCompare(a.startDate));
+  const ws1 = XLSX.utils.aoa_to_sheet([headers, ...active.map(showToRow)]);
+  const ws2 = XLSX.utils.aoa_to_sheet([headers, ...past.map(showToRow)]);
+  const colWidths = [22,12,12,20,14,10,12,12,20,30].map(w => ({ wch: w }));
+  ws1['!cols'] = colWidths;
+  ws2['!cols'] = colWidths;
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws1, 'Current Shows');
+  XLSX.utils.book_append_sheet(wb, ws2, 'Past Shows');
+  XLSX.writeFile(wb, 'DAB-Event-Tracker-Export.xlsx');
 }
 
 function downloadTemplate() {
