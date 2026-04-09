@@ -1201,6 +1201,7 @@
       color: rgba(255,255,255,.85);
       border: 1px solid rgba(255,255,255,.25);
       margin-top: 6px;
+      margin-left: 6px;
     }
 
     /* ═══ FILTER PILLS BAR ═══ */
@@ -3041,6 +3042,10 @@
         <input type="number" id="f-budget" placeholder="e.g. 5000" min="0" step="0.01">
       </div>
       <div class="fg">
+        <label>Drayage</label>
+        <input type="number" id="f-drayage" placeholder="e.g. 1200" min="0" step="0.01">
+      </div>
+      <div class="fg">
         <label>Event Type</label>
         <div class="event-type-selector" id="f-event-type-group">
           <button type="button" class="filter-pill active" data-value="national" onclick="selectEventType('national')"><span class="pill-dot"></span>National</button>
@@ -3548,7 +3553,8 @@ function cardHTML(show) {
   const pct  = progress(show);
   const open = expanded[show.id] === true;
   const endStr = (show.endDate && show.endDate !== show.startDate) ? ` – ${fmt(show.endDate)}` : '';
-  const budgetStr = show.budget ? `$${Number(show.budget).toLocaleString()}` : '';
+  const totalBudget = (show.budget || 0) + (show.drayage || 0);
+  const budgetStr = totalBudget ? `$${totalBudget.toLocaleString()}` : '';
   const locStr = show.location
     ? `<div class="card-loc">▸ ${esc(show.location)}${show.booth ? ' · Booth ' + esc(show.booth) : ''}${budgetStr ? ' · <span class="card-budget">' + budgetStr + '</span>' : ''}</div>`
     : (budgetStr ? `<div class="card-loc"><span class="card-budget">${budgetStr}</span></div>` : '');
@@ -3912,7 +3918,7 @@ initTouchDrag();
 function openAdd() {
   editId = null;
   document.getElementById('modal-title').textContent = 'Add Tradeshow';
-  ['f-name','f-start','f-end','f-loc','f-booth','f-budget','f-event-tier','f-attendees','f-notes'].forEach(id => {
+  ['f-name','f-start','f-end','f-loc','f-booth','f-budget','f-drayage','f-event-tier','f-attendees','f-notes'].forEach(id => {
     document.getElementById(id).value = '';
   });
   selectEventType('national');
@@ -3931,6 +3937,7 @@ function openEdit(id) {
   document.getElementById('f-loc').value   = s.location || '';
   document.getElementById('f-booth').value = s.booth || '';
   document.getElementById('f-budget').value = s.budget || '';
+  document.getElementById('f-drayage').value = s.drayage || '';
   document.getElementById('f-event-tier').value = s.eventTier || '';
   document.getElementById('f-attendees').value = s.attendees || '';
   document.getElementById('f-notes').value = s.notes || '';
@@ -3962,6 +3969,7 @@ function saveShow() {
       s.location  = document.getElementById('f-loc').value.trim();
       s.booth     = document.getElementById('f-booth').value.trim();
       s.budget    = parseFloat(document.getElementById('f-budget').value) || 0;
+      s.drayage   = parseFloat(document.getElementById('f-drayage').value) || 0;
       s.eventTier = document.getElementById('f-event-tier').value.trim();
       s.attendees = document.getElementById('f-attendees').value.trim();
       s.notes     = document.getElementById('f-notes').value.trim();
@@ -3977,6 +3985,7 @@ function saveShow() {
       location: document.getElementById('f-loc').value.trim(),
       booth:    document.getElementById('f-booth').value.trim(),
       budget:   parseFloat(document.getElementById('f-budget').value) || 0,
+      drayage:  parseFloat(document.getElementById('f-drayage').value) || 0,
       eventTier: document.getElementById('f-event-tier').value.trim(),
       attendees: document.getElementById('f-attendees').value.trim(),
       notes:    document.getElementById('f-notes').value.trim(),
@@ -4339,7 +4348,7 @@ function feedItemHTML(item) {
 
 function renderBudget() {
   const container = document.getElementById('budget-content');
-  const totalBudget = shows.reduce((sum, s) => sum + (s.budget || 0), 0);
+  const totalBudget = shows.reduce((sum, s) => sum + (s.budget || 0) + (s.drayage || 0), 0);
   document.getElementById('budget-total').textContent = '$' + totalBudget.toLocaleString();
 
   if (!shows.length) {
@@ -4353,7 +4362,7 @@ function renderBudget() {
   const typeTotals = {};
   shows.forEach(s => {
     const t = s.eventType || 'national';
-    typeTotals[t] = (typeTotals[t] || 0) + (s.budget || 0);
+    typeTotals[t] = (typeTotals[t] || 0) + (s.budget || 0) + (s.drayage || 0);
   });
   const maxTypeVal = Math.max(...Object.values(typeTotals), 1);
   const barRows = Object.keys(typeLabels).filter(t => typeTotals[t]).map(t => {
@@ -4377,7 +4386,7 @@ function renderBudget() {
 
   // ── Budget row helper ──
   function budgetRowHTML(s) {
-    const b = s.budget || 0;
+    const b = (s.budget || 0) + (s.drayage || 0);
     const evType = s.eventType || 'national';
     return `
     <div class="budget-row">
@@ -4666,7 +4675,8 @@ const COL_ALIASES = {
   eventType:['event type','eventtype','type','category','event category'],
   budget:   ['budget','cost','amount','price','spend'],
   attendees:['attendees','attending','people','people attending','staff','team','reps'],
-  eventTier:['event tier','tier','level','tier level','show tier']
+  eventTier:['event tier','tier','level','tier level','show tier'],
+  drayage:['drayage','drayage cost','drayage fee','shipping']
 };
 
 function findCol(headers, field) {
@@ -4705,6 +4715,7 @@ function parseImportRows(rows) {
   const budCol = findCol(sample, 'budget');
   const attCol = findCol(sample, 'attendees');
   const tierCol = findCol(sample, 'eventTier');
+  const drgCol = findCol(sample, 'drayage');
 
   importedRows = [];
   const errors = [];
@@ -4731,7 +4742,8 @@ function parseImportRows(rows) {
       attendees: attCol ? String(row[attCol] ?? '').trim() : '',
       eventTier: tierCol ? String(row[tierCol] ?? '').trim() : '',
       eventType: evType,
-      budget:   budCol ? (parseFloat(row[budCol]) || 0) : 0
+      budget:   budCol ? (parseFloat(row[budCol]) || 0) : 0,
+      drayage:  drgCol ? (parseFloat(row[drgCol]) || 0) : 0
     });
   });
 
@@ -4822,7 +4834,7 @@ function confirmImport() {
 
 function exportShows() {
   if (typeof XLSX === 'undefined') { alert('Excel library still loading. Try again.'); return; }
-  const headers = ['Show Name','Start Date','End Date','Location','Booth Number','Budget','Event Type','Event Tier','People Attending','Notes'];
+  const headers = ['Show Name','Start Date','End Date','Location','Booth Number','Budget','Drayage','Event Type','Event Tier','People Attending','Notes'];
   function fmtExport(dateStr) {
     if (!dateStr) return '';
     const [y, m, d] = dateStr.split('-');
@@ -4831,7 +4843,7 @@ function exportShows() {
   function showToRow(s) {
     return [
       s.name || '', fmtExport(s.startDate), fmtExport(s.endDate), s.location || '',
-      s.booth || '', s.budget || 0, EVENT_TYPE_LABELS[s.eventType || 'national'],
+      s.booth || '', s.budget || 0, s.drayage || 0, EVENT_TYPE_LABELS[s.eventType || 'national'],
       s.eventTier || '', s.attendees || '', s.notes || ''
     ];
   }
@@ -4839,7 +4851,7 @@ function exportShows() {
   const past = shows.filter(s => isShowConcluded(s)).sort((a, b) => b.startDate.localeCompare(a.startDate));
   const ws1 = XLSX.utils.aoa_to_sheet([headers, ...active.map(showToRow)]);
   const ws2 = XLSX.utils.aoa_to_sheet([headers, ...past.map(showToRow)]);
-  const colWidths = [22,12,12,20,14,10,12,12,20,30].map(w => ({ wch: w }));
+  const colWidths = [22,12,12,20,14,10,10,12,12,20,30].map(w => ({ wch: w }));
   ws1['!cols'] = colWidths;
   ws2['!cols'] = colWidths;
   const wb = XLSX.utils.book_new();
@@ -4851,9 +4863,9 @@ function exportShows() {
 function downloadTemplate() {
   if (typeof XLSX === 'undefined') { alert('Library still loading.'); return; }
   const ws = XLSX.utils.aoa_to_sheet([
-    ['Show Name','Start Date','End Date','Location','Booth Number','Budget','Notes','Event Type'],
-    ['Example Trade Show','2026-06-15','2026-06-17','Las Vegas, NV','#1234',5000,'Sample notes','National'],
-    ['Another Show','2026-09-10','2026-09-12','Chicago, IL','#500',3500,'','Local']
+    ['Show Name','Start Date','End Date','Location','Booth Number','Budget','Drayage','Notes','Event Type','Event Tier'],
+    ['Example Trade Show','2026-06-15','2026-06-17','Las Vegas, NV','#1234',5000,1200,'Sample notes','National','T1'],
+    ['Another Show','2026-09-10','2026-09-12','Chicago, IL','#500',3500,0,'','Local','T2']
   ]);
   ws['!cols'] = [22,14,14,20,14,12,30,14].map(w => ({ wch: w }));
   const wb = XLSX.utils.book_new();
