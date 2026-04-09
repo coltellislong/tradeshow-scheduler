@@ -1022,6 +1022,13 @@
 
     .cards-grid.view-list .card-budget-inline { display: inline; }
 
+    .card-drayage {
+      color: #00C853;
+      font-weight: 700;
+      font-family: 'Roboto', sans-serif;
+      font-size: .65rem;
+    }
+
     /* Budget view */
     .budget-row {
       display: flex;
@@ -2273,7 +2280,8 @@
       width: 100%;
       max-width: 540px;
       max-height: 92vh;
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
       box-shadow: 0 20px 60px rgba(0,0,0,.4);
     }
 
@@ -2287,6 +2295,7 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 3px solid var(--red);
+      flex-shrink: 0;
     }
 
     .modal-head.danger { border-bottom-color: var(--red); background: var(--dark); }
@@ -2308,7 +2317,7 @@
 
     .modal-x:hover { color: var(--red); }
 
-    .modal-body { padding: 24px; }
+    .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
 
     .modal-foot {
       padding: 16px 24px;
@@ -2317,6 +2326,7 @@
       justify-content: flex-end;
       gap: 10px;
       background: var(--off-white);
+      flex-shrink: 0;
     }
 
     /* ═══ FORM ═══ */
@@ -2739,7 +2749,7 @@
       .modal { max-height: 95vh; max-width: 100%; box-sizing: border-box; }
       .modal-head { padding: 14px 16px; }
       .modal-head h2 { font-size: .75rem; letter-spacing: 3px; }
-      .modal-body { padding: 14px 16px; overflow: hidden; }
+      .modal-body { padding: 14px 16px; overflow-y: auto; }
       .fg { margin-bottom: 10px; }
       .fg label { margin-bottom: 4px; font-size: .6rem; letter-spacing: 2px; }
       .fr {
@@ -3553,11 +3563,12 @@ function cardHTML(show) {
   const pct  = progress(show);
   const open = expanded[show.id] === true;
   const endStr = (show.endDate && show.endDate !== show.startDate) ? ` – ${fmt(show.endDate)}` : '';
-  const totalBudget = (show.budget || 0) + (show.drayage || 0);
-  const budgetStr = totalBudget ? `$${totalBudget.toLocaleString()}` : '';
+  const budgetStr = show.budget ? `$${Number(show.budget).toLocaleString()}` : '';
+  const drayageStr = show.drayage ? `$${Number(show.drayage).toLocaleString()}` : '';
+  const costParts = [budgetStr ? '<span class="card-budget">' + budgetStr + '</span>' : '', drayageStr ? '<span class="card-drayage">Drayage: ' + drayageStr + '</span>' : ''].filter(Boolean).join(' · ');
   const locStr = show.location
-    ? `<div class="card-loc">▸ ${esc(show.location)}${show.booth ? ' · Booth ' + esc(show.booth) : ''}${budgetStr ? ' · <span class="card-budget">' + budgetStr + '</span>' : ''}</div>`
-    : (budgetStr ? `<div class="card-loc"><span class="card-budget">${budgetStr}</span></div>` : '');
+    ? `<div class="card-loc">▸ ${esc(show.location)}${show.booth ? ' · Booth ' + esc(show.booth) : ''}${costParts ? ' · ' + costParts : ''}</div>`
+    : (costParts ? `<div class="card-loc">${costParts}</div>` : '');
 
   const items = (show.checklist || []).map(item => `
     <li class="${item.completed ? 'done' : ''}" id="li-${item.id}" draggable="true"
@@ -3577,7 +3588,7 @@ function cardHTML(show) {
   <div class="card-head">
     <div class="card-head-top">
       <div>
-        <div class="card-name">${esc(show.name)}${budgetStr ? `<span class="card-budget-inline">${budgetStr}</span>` : ''}</div>
+        <div class="card-name">${esc(show.name)}${budgetStr ? `<span class="card-budget-inline">${budgetStr}</span>` : ''}${drayageStr ? `<span class="card-budget-inline card-drayage-inline">Dray: ${drayageStr}</span>` : ''}</div>
         <div class="card-meta">◈ ${fmt(show.startDate)}${endStr}</div>
         ${locStr}
         <span class="status-badge ${badgeClass}"><span class="status-dot"></span>${badgeTxt}</span>
