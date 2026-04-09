@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAB Event Tracker</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='8' y='16' width='48' height='40' rx='4' fill='%231A2E1F' stroke='%23295135' stroke-width='2'/><rect x='8' y='16' width='48' height='12' rx='4' fill='%23C62828'/><rect x='16' y='10' width='4' height='12' rx='2' fill='%23295135'/><rect x='44' y='10' width='4' height='12' rx='2' fill='%23295135'/><circle cx='24' cy='40' r='3' fill='%23F9A825'/><circle cx='40' cy='40' r='3' fill='%231565C0'/><circle cx='24' cy='50' r='3' fill='%239C27B0'/><circle cx='40' cy='50' r='3' fill='%23E65100'/></svg>"
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3036,7 +3037,12 @@
       </div>
       <div class="fg">
         <label>Event Tier</label>
-        <input type="text" id="f-event-tier" placeholder="e.g. Tier 1, Gold, Premium...">
+        <select id="f-event-tier">
+          <option value="">— Select —</option>
+          <option value="T1">T1</option>
+          <option value="T2">T2</option>
+          <option value="T3">T3</option>
+        </select>
       </div>
       <div class="fg">
         <label>People Attending</label>
@@ -4802,9 +4808,14 @@ function confirmImport() {
 function exportShows() {
   if (typeof XLSX === 'undefined') { alert('Excel library still loading. Try again.'); return; }
   const headers = ['Show Name','Start Date','End Date','Location','Booth Number','Budget','Event Type','Event Tier','People Attending','Notes'];
+  function fmtExport(dateStr) {
+    if (!dateStr) return '';
+    const [y, m, d] = dateStr.split('-');
+    return `${m}/${d}/${y}`;
+  }
   function showToRow(s) {
     return [
-      s.name || '', s.startDate || '', s.endDate || '', s.location || '',
+      s.name || '', fmtExport(s.startDate), fmtExport(s.endDate), s.location || '',
       s.booth || '', s.budget || 0, EVENT_TYPE_LABELS[s.eventType || 'national'],
       s.eventTier || '', s.attendees || '', s.notes || ''
     ];
