@@ -3081,12 +3081,12 @@
       </div>
       <div class="fg">
         <label>Event Tier</label>
-        <select id="f-event-tier">
-          <option value="">— Select —</option>
-          <option value="T1">T1</option>
-          <option value="T2">T2</option>
-          <option value="T3">T3</option>
-        </select>
+        <div class="event-type-selector" id="f-event-tier-group">
+          <button type="button" class="filter-pill" data-value="T1" onclick="selectEventTier('T1')"><span class="pill-dot"></span>T1</button>
+          <button type="button" class="filter-pill" data-value="T2" onclick="selectEventTier('T2')"><span class="pill-dot"></span>T2</button>
+          <button type="button" class="filter-pill" data-value="T3" onclick="selectEventTier('T3')"><span class="pill-dot"></span>T3</button>
+        </div>
+        <input type="hidden" id="f-event-tier" value="">
       </div>
       <div class="fg">
         <label>People Attending</label>
@@ -3481,6 +3481,13 @@ function selectEventType(type) {
   document.getElementById('f-event-type').value = type;
   document.querySelectorAll('#f-event-type-group .filter-pill').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.value === type);
+  });
+}
+
+function selectEventTier(tier) {
+  document.getElementById('f-event-tier').value = tier;
+  document.querySelectorAll('#f-event-tier-group .filter-pill').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.value === tier);
   });
 }
 
@@ -3947,6 +3954,7 @@ function openAdd() {
     document.getElementById(id).value = '';
   });
   selectEventType('national');
+  document.querySelectorAll('#f-event-tier-group .filter-pill').forEach(btn => btn.classList.remove('active'));
   document.getElementById('show-overlay').classList.remove('hidden');
   setTimeout(() => document.getElementById('f-name').focus(), 50);
 }
@@ -3964,6 +3972,9 @@ function openEdit(id) {
   document.getElementById('f-budget').value = s.budget || '';
   document.getElementById('f-drayage').value = s.drayage || '';
   document.getElementById('f-event-tier').value = s.eventTier || '';
+  document.querySelectorAll('#f-event-tier-group .filter-pill').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.value === (s.eventTier || ''));
+  });
   document.getElementById('f-attendees').value = s.attendees || '';
   document.getElementById('f-notes').value = s.notes || '';
   selectEventType(s.eventType || 'national');
@@ -4418,7 +4429,7 @@ function renderBudget() {
       <div class="budget-row-info">
         <span class="budget-row-name">${esc(s.name)}</span>
         <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[evType]}" style="font-size:.5rem;margin:0">${EVENT_TYPE_LABELS[evType]}</span>
-        ${s.eventTier ? `<span class="tier-badge budget-tier">${s.eventTier}</span>` : ''}
+        ${s.eventTier ? `<span class="tier-badge budget-tier" style="color:var(--dark);background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.2);margin:0;font-size:.5rem">${s.eventTier}</span>` : ''}
         <span class="budget-row-loc">${esc(s.location || '')}</span>
         <span class="budget-row-date">${fmt(s.startDate)}${s.endDate && s.endDate !== s.startDate ? ' – ' + fmt(s.endDate) : ''}</span>
       </div>
