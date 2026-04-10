@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAB Event Tracker</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='8' y='16' width='48' height='40' rx='4' fill='%231A2E1F' stroke='%23295135' stroke-width='2'/><rect x='8' y='16' width='48' height='12' rx='4' fill='%23295135'/><rect x='16' y='10' width='4' height='12' rx='2' fill='%23295135'/><rect x='44' y='10' width='4' height='12' rx='2' fill='%23295135'/></svg>"
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='8' y='16' width='48' height='40' rx='4' fill='%231A2E1F' stroke='%23295135' stroke-width='2'/><rect x='8' y='16' width='48' height='12' rx='4' fill='%23295135'/><rect x='16' y='10' width='4' height='12' rx='2' fill='%23295135'/><rect x='44' y='10' width='4' height='12' rx='2' fill='%23295135'/><text x='32' y='49' text-anchor='middle' font-family='Arial,sans-serif' font-size='26' font-weight='bold' fill='white'>D</text></svg>"
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -768,7 +768,23 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
-      align-items: start;
+      align-items: stretch;
+      grid-auto-rows: 1fr;
+    }
+
+    .cards-grid:not(.view-tiles):not(.view-list) .show-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cards-grid:not(.view-tiles):not(.view-list) .show-card > div[id^="body-"] {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cards-grid:not(.view-tiles):not(.view-list) .show-card .card-body {
+      flex: 1;
     }
 
     /* ═══ TILES VIEW ═══ */
