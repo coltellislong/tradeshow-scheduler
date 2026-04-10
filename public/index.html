@@ -855,6 +855,10 @@
     .cards-grid.view-list .show-card .status-badge { margin-top: 0; }
     .cards-grid.view-list .show-card .event-type-pill { margin-top: 0; }
     .cards-grid.view-list .show-card .tier-badge { margin-top: 0; }
+    .cards-grid.view-list .show-card .tier-badge.tier-bottom { margin-left: 3px; }
+    .cards-grid.view-list .show-card .tier-badge.tier-inline { display: none; }
+    .cards-grid:not(.view-list) .show-card .tier-badge.tier-bottom { display: none; }
+    .tier-badge.tier-inline { margin: 0 0 0 8px; padding: 1px 7px; font-size: .5rem; vertical-align: middle; }
     .cards-grid.view-list .show-card .card-body,
     .cards-grid.view-list .show-card .card-toggle { display: none !important; }
     .cards-grid.view-list .show-card::before { width: 3px; }
@@ -3622,10 +3626,10 @@ function cardHTML(show) {
     <div class="card-head-top">
       <div>
         <div class="card-name">${esc(show.name)}${budgetStr ? `<span class="card-budget-inline">${budgetStr}</span>` : ''}${drayageStr ? `<span class="card-budget-inline card-drayage-inline">${drayageStr}</span>` : ''}</div>
-        <div class="card-meta">◈ ${fmt(show.startDate)}${endStr}</div>
+        <div class="card-meta">◈ ${fmt(show.startDate)}${endStr}${show.eventTier ? `<span class="tier-badge tier-inline">${show.eventTier}</span>` : ''}</div>
         ${locStr}
         <span class="status-badge ${badgeClass}"><span class="status-dot"></span>${badgeTxt}</span>
-        <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[show.eventType || 'national']}">${EVENT_TYPE_LABELS[show.eventType || 'national']}</span>${show.eventTier ? `<span class="tier-badge">${show.eventTier}</span>` : ''}
+        <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[show.eventType || 'national']}">${EVENT_TYPE_LABELS[show.eventType || 'national']}</span>${show.eventTier ? `<span class="tier-badge tier-bottom">${show.eventTier}</span>` : ''}
       </div>
       <div class="card-btns">
         <button class="icon-btn" onclick="event.stopPropagation();openEdit('${show.id}')" title="Edit">✎</button>
@@ -4411,7 +4415,10 @@ function renderBudget() {
     typeTotals[t] = (typeTotals[t] || 0) + (s.budget || 0) + (s.drayage || 0);
   });
   const maxTypeVal = Math.max(...Object.values(typeTotals), 1);
-  const barRows = Object.keys(typeLabels).filter(t => typeTotals[t]).map(t => {
+  const barRows = Object.keys(typeLabels)
+    .filter(t => typeTotals[t])
+    .sort((a, b) => typeTotals[b] - typeTotals[a])
+    .map(t => {
     const val = typeTotals[t];
     const pct = Math.round(val / maxTypeVal * 100);
     return `
