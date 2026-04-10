@@ -772,7 +772,7 @@
     }
 
     .cards-grid:not(.view-tiles):not(.view-list) .show-card {
-      min-height: 260px;
+      min-height: 230px;
     }
 
     /* ═══ TILES VIEW ═══ */
@@ -3634,7 +3634,6 @@ function cardHTML(show) {
   </div>
   <div id="body-${show.id}" ${open ? '' : 'style="display:none"'}>
     <div class="card-body">
-      ${show.eventTier ? `<div class="card-notes-txt" style="margin-bottom:8px"><strong style="font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">Event Tier</strong><br>${esc(show.eventTier)}</div>` : ''}
       ${show.attendees ? `<div class="card-notes-txt" style="margin-bottom:8px"><strong style="font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">People Attending</strong><br>${esc(show.attendees)}</div>` : ''}
       ${show.notes ? `<div class="card-notes-txt"><strong style="font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">Notes</strong><br>${esc(show.notes)}</div>` : ''}
       <ul class="checklist" id="cl-${show.id}">${items}</ul>
@@ -3651,7 +3650,6 @@ function cardHTML(show) {
   </div>
   <div class="tile-checklist" id="tile-cl-${show.id}" onclick="event.stopPropagation()">
     <div class="tile-checklist-inner">
-      ${show.eventTier ? `<div class="card-notes-txt" style="margin-bottom:6px"><strong style="font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">Event Tier</strong><br>${esc(show.eventTier)}</div>` : ''}
       ${show.attendees ? `<div class="card-notes-txt" style="margin-bottom:6px"><strong style="font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">People Attending</strong><br>${esc(show.attendees)}</div>` : ''}
       ${show.notes ? `<div class="card-notes-txt"><strong style="font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)">Notes</strong><br>${esc(show.notes)}</div>` : ''}
       <div class="tile-cl-head">Checklist <span>${pct}%</span></div>
