@@ -768,7 +768,11 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
-      align-items: stretch;
+      align-items: start;
+    }
+
+    .cards-grid:not(.view-tiles):not(.view-list) .show-card {
+      min-height: 260px;
     }
 
     /* ═══ TILES VIEW ═══ */
@@ -1064,6 +1068,13 @@
     }
 
     .budget-row .event-type-pill { color: var(--dark); }
+    .budget-row .tier-badge.budget-tier {
+      color: var(--dark);
+      background: rgba(0,0,0,.06);
+      border-color: rgba(0,0,0,.2);
+      margin: 0;
+      font-size: .5rem;
+    }
 
     .budget-row-date {
       font-size: .62rem;
@@ -4407,6 +4418,7 @@ function renderBudget() {
       <div class="budget-row-info">
         <span class="budget-row-name">${esc(s.name)}</span>
         <span class="event-type-pill ${EVENT_TYPE_PILL_CLASS[evType]}" style="font-size:.5rem;margin:0">${EVENT_TYPE_LABELS[evType]}</span>
+        ${s.eventTier ? `<span class="tier-badge budget-tier">${s.eventTier}</span>` : ''}
         <span class="budget-row-loc">${esc(s.location || '')}</span>
         <span class="budget-row-date">${fmt(s.startDate)}${s.endDate && s.endDate !== s.startDate ? ' – ' + fmt(s.endDate) : ''}</span>
       </div>
