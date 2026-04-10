@@ -772,7 +772,7 @@
     }
 
     .cards-grid:not(.view-tiles):not(.view-list) .show-card {
-      min-height: 230px;
+      min-height: 221px;
     }
 
     /* ═══ TILES VIEW ═══ */
@@ -1318,6 +1318,18 @@
       background: #E65100;
       border-color: #E65100;
     }
+
+    .filter-pill.active[data-value="T1"],
+    .filter-pill.active[data-value="T2"],
+    .filter-pill.active[data-value="T3"] {
+      background: var(--green);
+      border-color: var(--green);
+      color: var(--white);
+    }
+
+    .filter-pill[data-value="T1"] .pill-dot,
+    .filter-pill[data-value="T2"] .pill-dot,
+    .filter-pill[data-value="T3"] .pill-dot { background: var(--green); }
 
     .filter-pill .pill-dot {
       width: 6px;
@@ -3404,7 +3416,7 @@ const TYPE_DOT_COLORS = { national: '#F9A825', local: '#1565C0', regional: '#9C2
 
 function checkBanner() {
   const upcoming = shows
-    .filter(s => { const d = daysUntil(s.startDate); const limit = (s.eventType || 'national') === 'national' ? 90 : 30; return d >= 0 && d <= limit; })
+    .filter(s => { const d = daysUntil(s.startDate); const limit = (s.eventType || 'national') === 'national' ? 60 : 30; return d >= 0 && d <= limit; })
     .sort((a, b) => a.startDate.localeCompare(b.startDate))
     .slice(0, 8);
 
